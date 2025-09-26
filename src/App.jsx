@@ -504,7 +504,7 @@ const getItemsForSub = (catKey, subKey) => {
         id={`ce-${item.id}`} 
         key={item.id} 
         className={`relative w-[72px] h-[72px] ${isPulse ? "pulse-border" : ""}`}
-        style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
+        style={{ cursor: isViewingShared ? "default" : "pointer", touchAction: "pan-y" }}
         onMouseDown={handleInteractionStart}
         onTouchStart={handleInteractionStart}
         onMouseEnter={() => handleDragOver(item)}
@@ -942,79 +942,79 @@ const getItemsForSub = (catKey, subKey) => {
                 {active.special !== "generate" && <div className={`mt-1 font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}</div>}
               </div>
 
-              {/* Main content */}
-              {active.special === "generate" ? (
-                <div className="flex-1 p-6 overflow-auto text-black dark:text-white bg-white dark:bg-gray-800">
-                  {isViewingShared ? (
-                    <>
-                      <h3 className="text-lg font-bold mb-2">Looking for {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} items)` : ""}</h3>
-                      <SmallList map={viewLookingFor} listName="looking" expandAll="looking" />
-                      <h3 className="text-lg font-bold mt-4 mb-2">Offering {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} items)` : ""}</h3>
-                      <SmallList map={viewOffering} listName="offering" expandAll="offering" />
-                      <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
-                      <p className="mt-4 text-sm text-gray-400">Viewing only — controls are hidden.</p>
-                    </>
-                  ) : (
-                    <>
-                      <h2 className="text-lg font-bold mb-2">Share Your Collection</h2>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Enter your 9 or 12 digit ID, then click <strong>Generate Hash</strong> to create a shareable link.</p>
-                      <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g,''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="123456789" />
-                      <div className="flex gap-2 mb-3">
-                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch {} }}>Generate Hash</button>
-                        <button className="px-4 py-2 rounded-xl bg-gray-300" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
-                      </div>
-                      <div className="flex gap-3 mb-4">
-                        <button className={`px-3 py-2 rounded-xl ${offerAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>{offerAll ? "Undo Offer Everything" : "Offer everything I have"}</button>
-                        <button className={`px-3 py-2 rounded-xl ${lookingAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setLookingAll(v => !v); if (!lookingAll) setLookingFor({}); }}>{lookingAll ? "Undo Looking for Everything" : "Looking for everything I don't have"}</button>
-                      </div>
-                      {generatedUrl && <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-xl cursor-pointer hover:bg-green-200 dark:hover:bg-green-800 transition" onClick={() => { navigator.clipboard.writeText(generatedUrl); }}><p className="text-sm font-semibold mb-1">Your link:</p><p className="break-all text-sm text-green-700 dark:text-green-300">{generatedUrl}</p></div>}
-                      <div className="mt-6 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-xl text-sm"><p className="mb-1 font-semibold">Tips:</p><ul className="list-disc pl-5 space-y-1"><li>You can click items in the preview to remove them from explicit lists.</li><li>Paste your 9/12 digit ID or drag a text onto this window.</li><li>The link contains your data compressed for sharing.</li></ul></div>
-                      <div className="mt-6">
-                        <h4 className="font-bold">Preview: Looking for {lookingAll ? `(${data.filter(d => !collection[d.id]).length} items)` : ""}</h4>
-                        <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" />
-                        <h4 className="font-bold mt-3">Preview: Offering {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} items)` : ""}</h4>
-                        <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" />
-                      </div>
-                      <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
-                    </>
-                  )}
-                </div>
-              ) : (
-                (() => {
-                  const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
-                  if (active.label === "Bond CEs") return renderItemsWithHeaders(items);
-                  if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories);
-                  if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
-                  if (active.label === "Event free") {
-                    const rarities = [5, 4, 3];
-                    const subFlags = [{ key: "svtEquipEventReward", label: "Event Reward" }, { key: "svtEquipExp", label: "CE EXP" }];
-                    return (
-                      <div className="flex-1 p-4 overflow-auto">
-                        {rarities.map(r => (
-                          <div key={r}>
-                            <h3 className={`text-lg font-bold my-4 ${theme === "dark" ? "text-white" : "text-black"}`}>Rarity {r}</h3>
-                            {subFlags.map(sf => {
-                              const subs = items.filter(it => it.rarity === r && (it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key))));
-                              if (!subs.length) return null;
-                              const allComplete = subs.every(it => mapOwned(it.id));
-                              return (
-                                <div key={sf.key} className="mb-6">
-                                  <h4 className={`text-md font-semibold mb-1 ${theme === "dark" ? "text-white" : "text-black"}`}>{sf.label}</h4>
-                                  {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
-                                  <div className={`grid ${gridColsClass} gap-1`}>{subs.map(it => <CECell key={it.id} item={it} />)}</div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ))}
-                      </div>
-                    );
-                  }
-                  if (active.raritySplit) return renderByRarity(items);
-                  return renderGrid(items);
-                })()
-              )}
-            </motion.div>
+                {/* Main content */}
+                {active.special === "generate" ? (
+                  <div className="flex-1 p-6 overflow-auto text-black dark:text-white bg-white dark:bg-gray-800">
+                    {isViewingShared ? (
+                      <>
+                        <h3 className="text-lg font-bold mb-2">Looking for {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} items)` : ""}</h3>
+                        <SmallList map={viewLookingFor} listName="looking" expandAll="looking" />
+                        <h3 className="text-lg font-bold mt-4 mb-2">Offering {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} items)` : ""}</h3>
+                        <SmallList map={viewOffering} listName="offering" expandAll="offering" />
+                        <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
+                        <p className="mt-4 text-sm text-gray-400">Viewing only — controls are hidden.</p>
+                      </>
+                    ) : (
+                      <>
+                        <h2 className="text-lg font-bold mb-2">Share Your Collection</h2>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Enter your 9 or 12 digit ID, then click <strong>Generate Hash</strong> to create a shareable link.</p>
+                        <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g,''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="123456789" />
+                        <div className="flex gap-2 mb-3">
+                          <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch {} }}>Generate Hash</button>
+                          <button className="px-4 py-2 rounded-xl bg-gray-300" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
+                        </div>
+                        <div className="flex gap-3 mb-4">
+                          <button className={`px-3 py-2 rounded-xl ${offerAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>{offerAll ? "Undo Offer Everything" : "Offer everything I have"}</button>
+                          <button className={`px-3 py-2 rounded-xl ${lookingAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setLookingAll(v => !v); if (!lookingAll) setLookingFor({}); }}>{lookingAll ? "Undo Looking for Everything" : "Looking for everything I don't have"}</button>
+                        </div>
+                        {generatedUrl && <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-xl cursor-pointer hover:bg-green-200 dark:hover:bg-green-800 transition" onClick={() => { navigator.clipboard.writeText(generatedUrl); }}><p className="text-sm font-semibold mb-1">Your link:</p><p className="break-all text-sm text-green-700 dark:text-green-300">{generatedUrl}</p></div>}
+                        <div className="mt-6 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-xl text-sm"><p className="mb-1 font-semibold">Tips:</p><ul className="list-disc pl-5 space-y-1"><li>You can click items in the preview to remove them from explicit lists.</li><li>Paste your 9/12 digit ID or drag a text onto this window.</li><li>The link contains your data compressed for sharing.</li></ul></div>
+                        <div className="mt-6">
+                          <h4 className="font-bold">Preview: Looking for {lookingAll ? `(${data.filter(d => !collection[d.id]).length} items)` : ""}</h4>
+                          <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" />
+                          <h4 className="font-bold mt-3">Preview: Offering {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} items)` : ""}</h4>
+                          <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" />
+                        </div>
+                        <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  (() => {
+                    const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
+                    if (active.label === "Bond CEs") return renderItemsWithHeaders(items);
+                    if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories);
+                    if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
+                    if (active.label === "Event free") {
+                      const rarities = [5, 4, 3];
+                      const subFlags = [{ key: "svtEquipEventReward", label: "Event Reward" }, { key: "svtEquipExp", label: "CE EXP" }];
+                      return (
+                        <div className="flex-1 p-4 overflow-auto">
+                          {rarities.map(r => (
+                            <div key={r}>
+                              <h3 className={`text-lg font-bold my-4 ${theme === "dark" ? "text-white" : "text-black"}`}>Rarity {r}</h3>
+                              {subFlags.map(sf => {
+                                const subs = items.filter(it => it.rarity === r && (it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key))));
+                                if (!subs.length) return null;
+                                const allComplete = subs.every(it => mapOwned(it.id));
+                                return (
+                                  <div key={sf.key} className="mb-6">
+                                    <h4 className={`text-md font-semibold mb-1 ${theme === "dark" ? "text-white" : "text-black"}`}>{sf.label}</h4>
+                                    {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
+                                    <div className={`grid ${gridColsClass} gap-1`}>{subs.map(it => <CECell key={it.id} item={it} />)}</div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }
+                    if (active.raritySplit) return renderByRarity(items);
+                    return renderGrid(items);
+                  })()
+                )}
+              </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
