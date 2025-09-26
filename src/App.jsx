@@ -1,32 +1,50 @@
-// src/App.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
 import LZString from "lz-string";
 
-// Categories (8th uses special: 'generate')
 const categories = [
   { id: 1, label: "Bond CEs", flag: "svtEquipFriendShip" },
   { id: 2, label: "Chocolate", flag: "svtEquipChocolate" },
   { id: 3, label: "Commemorative", flag: "svtEquipCampaign" },
   { id: 4, label: "Normal", flag: "normal", raritySplit: true },
   { id: 5, label: "Event gacha", flag: "svtEquipEvent", raritySplit: true },
-  { id: 6, label: "Event free", flag: "svtEquipEventReward", raritySplit: true },
+  { id: 6, label: "Event free", flags: ["svtEquipEventReward", "svtEquipExp"], raritySplit: true },
   { id: 7, label: "Manaprism exchange", flag: "svtEquipManaExchange", raritySplit: true },
   { id: 8, label: "Export data", special: "generate" },
 ];
 
-// example subcategories for chocolate / commemorative (edit later)
 const commemorativeSubcategories = [
+  { label: "5M Downloads Heroic Portrait", range: [99, 108] },
+  { label: "Fate/EXTELLA Release", range: [361, 366] },
   { label: "2nd Anni", range: [594, 640] },
   { label: "3rd Anni", range: [819, 857] },
+  { label: "4th Anni", range: [1038, 1076] },
+  { label: "5th Anni", range: [1222, 1269] },
+  { label: "6th Anni", range: [1421, 1457] },
+  { label: "7th Anni", range: [1626, 1663] },
+  { label: "8th Anni", range: [1843, 1886] },
+  { label: "Stay night 20th Anniversary", range: [1973, 1979] },
+  { label: "9th Anni", range: [2058, 2099] },
+  { label: "10th Anni", range: [2284, 2396] },
+  { label: "Over the Same Sky June", range: [2240, 2258] },
+  { label: "Over the Same Sky July", range: [2265, 2282] },
+  { label: "Over the Same Sky August", range: [2421, 2436] },
+  { label: "Over the Same Sky September", range: [2443, 2458] },
 ];
 const chocolateSubcategories = [
   { label: "2016 Valentine", range: [113, 153] },
   { label: "2017 Valentine", range: [430, 544] },
+  { label: "2018 Valentine", range: [718, 761] },
+  { label: "2019 Valentine", range: [949, 987] },
+  { label: "2020 Valentine", range: [1155, 1195] },
+  { label: "2021 Valentine", range: [1353, 1383] },
+  { label: "2022 Valentine", range: [1533, 1563] },
+  { label: "2023 Valentine", range: [1757, 1795] },
+  { label: "2024 Valentine", range: [1986, 2019] },
+  { label: "2025 Valentine", range: [2180, 2207] },
 ];
 
-// simple persisted state hook
 const usePersistedState = (key, initial) => {
   const [state, setState] = useState(() => {
     try {
@@ -52,88 +70,193 @@ export default function App() {
   const [lookingFor, setLookingFor] = usePersistedState("lookingFor", {}); // id -> true map
   const [offering, setOffering] = usePersistedState("offering", {}); // id -> true map
 
-  // NEW persisted flags and lastId
   const [lastId, setLastId] = usePersistedState("lastId", "");
   const [offerAll, setOfferAll] = usePersistedState("offerAll", false);
   const [lookingAll, setLookingAll] = usePersistedState("lookingAll", false);
 
-  // selection mode in opened window: 'none' | 'looking' | 'offering'
   const [selectionMode, setSelectionMode] = useState("none");
 
-  // viewer/read-only mode (decoded from URL hash #/view/<userId>/<encoded>)
   const [isViewingShared, setIsViewingShared] = useState(false);
   const [sharedUserId, setSharedUserId] = useState("");
   const [viewCollection, setViewCollection] = useState({});
   const [viewLookingFor, setViewLookingFor] = useState({});
   const [viewOffering, setViewOffering] = useState({});
 
-  // search
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
 
-  // highlight id used for pulsing border (we'll still keep a small state for UI reasons)
   const [highlightId, setHighlightId] = useState(null);
 
-  // generate modal state
   const [genUserId, setGenUserId] = useState("");
   const [generatedUrl, setGeneratedUrl] = useState("");
 
   const [data, setCollectionData] = useState([]);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  
+  // State and refs for range-based drag selection
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragToggleMode, setDragToggleMode] = useState(null); // 'check' or 'uncheck'
+  const dragStartItem = useRef(null);
+  const collectionSnapshot = useRef({});
+  const lastDraggedOverId = useRef(null);
+
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     fetch("https://api.atlasacademy.io/export/JP/basic_equip_lang_en.json")
       .then((res) => res.json())
       .then((data) => setCollectionData(data));
   }, []);
-
-  // refs
-  const modalRef = useRef(null);
-
-  // ESC closes modal or exits shared view
-  useEffect(() => {
-  const onKey = (e) => {
-    if (e.key === "Escape") {
-      // If search is active, clear it first
-      if (query) {
-        setQuery("");
-        setResults([]);
-        return; // don’t close modals yet
-      }
-
-      // existing ESC logic
-      if (isViewingShared) {
-        exitViewerMode();
-      } else {
-        setActive(null);
-        setSelectionMode("none");
-      }
+  // Expand compressed collection payload into flat { id: true }
+const expandCollection = (encoded) => {
+  const result = {};
+  // Iterate top-level categories
+  for (const [catKey, catVal] of Object.entries(encoded)) {
+    // Case: simple mode (EMPTY / FULL / LIST / ALMOST_FULL)
+    if (catVal.mode) {
+      expandSection(catVal, getItemsForCategory(catKey), result);
+      continue;
     }
-  };
-  window.addEventListener("keydown", onKey);
-  return () => window.removeEventListener("keydown", onKey);
-}, [query, isViewingShared]);
 
+    // Case: subgroups (rarity groups, ranges, etc.)
+    for (const [subKey, subVal] of Object.entries(catVal)) {
+      const items = getItemsForSub(catKey, subKey);
+      expandSection(subVal, items, result);
+    }
+  }
+  return result;
+};
+
+// Helper: expand one compressed section
+function expandSection(section, items, result) {
+  if (!section || !section.mode) return;
+
+  if (section.mode === "F") {
+    items.forEach(it => { result[it.id] = true; });
+  } else if (section.mode === "E") {
+    // nothing
+  } else if (section.mode === "L") {
+    section.owned.forEach(id => { result[String(id)] = true; });
+  } else if (section.mode === "AF") {
+    const missing = new Set(section.missing || []);
+    items.forEach(it => {
+      if (!missing.has(it.id)) result[it.id] = true;
+    });
+  }
+}
+const getItemsForCategory = (catKey) => {
+  // catKey = "1", "2", "3", etc.
+  // Return all CE objects in that category
+  return allItems.filter(it => it.categoryId === Number(catKey));
+};
+
+const getItemsForSub = (catKey, subKey) => {
+  const items = getItemsForCategory(catKey);
+
+  if (subKey.startsWith("rarity-")) {
+    const rarity = Number(subKey.split("-")[1]);
+    return items.filter(it => it.rarity === rarity);
+  }
+
+  if (subKey.includes("-svtEquipEventReward") || subKey.includes("-svtEquipExp")) {
+    const [rarity, flag] = subKey.split("-");
+    return items.filter(it =>
+      it.rarity === Number(rarity) &&
+      (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
+    );
+  }
+
+  if (subKey.includes("-")) {
+    const [start, end] = subKey.split("-").map(Number);
+    return items.filter(it => it.collectionNo >= start && it.collectionNo <= end);
+  }
+
+  return items; // fallback
+};
+  
+  // Effect to handle ending a drag selection globally
   useEffect(() => {
-    const onKey = (e) => {
-      // ignore if typing in an input/textarea already
-      const tag = document.activeElement.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
-      if (e.key === "Escape") return;
-
-      // ignore if modal/window is active
-      if (active) return;
-
-      // focus the search input
-      if (searchInputRef.current) {
-        searchInputRef.current.focus();
+    const handleDragEnd = () => {
+      if (isDragging) {
+        setIsDragging(false);
+        setDragToggleMode(null);
+        dragStartItem.current = null;
+        collectionSnapshot.current = {};
+        lastDraggedOverId.current = null;
       }
     };
 
+    const handleTouchMove = (e) => {
+      if (!isDragging) return;
+
+      const touch = e.touches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+      if (element) {
+        const cell = element.closest('[id^="ce-"]');
+        const cellId = cell?.id;
+        
+        if (cellId && cellId !== lastDraggedOverId.current) {
+          const itemId = cellId.split('-')[1];
+          const item = data.find(d => String(d.id) === itemId);
+          if (item) {
+            lastDraggedOverId.current = cellId;
+            handleDragOver(item);
+          }
+        }
+      }
+    };
+    
+    window.addEventListener('mouseup', handleDragEnd);
+    window.addEventListener('touchend', handleDragEnd);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    
+    return () => {
+      window.removeEventListener('mouseup', handleDragEnd);
+      window.removeEventListener('touchend', handleDragEnd);
+      window.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [isDragging, data]); // Rerun if dragging state or data changes
+
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        if (query) {
+          setQuery("");
+          setResults([]);
+          return;
+        }
+        if (isViewingShared) {
+          exitViewerMode();
+        } else {
+          setActive(null);
+          setSelectionMode("none");
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [query, isViewingShared]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      const tag = document.activeElement.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || e.key === "Escape" || active) return;
+      if (searchInputRef.current) searchInputRef.current.focus();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
 
-  // decode shared link from hash: #/view/<userId>/<encoded>
   useEffect(() => {
     const tryDecode = () => {
       const hash = window.location.hash || "";
@@ -141,19 +264,17 @@ export default function App() {
       const parts = hash.split("/");
       if (parts.length < 4) return;
       const uid = parts[2];
-      const compressed = parts.slice(3).join("/"); // everything after uid
+      const compressed = parts.slice(3).join("/");
 
       try {
         const json = LZString.decompressFromEncodedURIComponent(compressed);
         const decoded = JSON.parse(json);
-        // expected shape: { collection: [ids], lookingFor: [ids] or "ALL", offering: [ids] or "ALL" }
-        const cArr = Array.isArray(decoded.collection) ? decoded.collection : [];
+        const cm = expandCollection(decoded.collection || {});
         const lf = decoded.lookingFor;
         const of = decoded.offering;
-        const cm = {}; const lfm = {}; const ofm = {};
+        setViewCollection(cm);
         cArr.forEach(id => cm[String(id)] = true);
         if (lf === "ALL") {
-          // mark special sentinel
           setViewLookingFor("ALL");
         } else {
           (Array.isArray(lf) ? lf : []).forEach(id => lfm[String(id)] = true);
@@ -165,22 +286,20 @@ export default function App() {
           (Array.isArray(of) ? of : []).forEach(id => ofm[String(id)] = true);
           setViewOffering(ofm);
         }
-
         setIsViewingShared(true);
         setSharedUserId(uid);
         setViewCollection(cm);
         setActive(null);
-    } catch (err) {
-      console.warn("Failed to decode shared link:", err);
-    }
-  };
+      } catch (err) {
+        console.warn("Failed to decode shared link:", err);
+      }
+    };
     tryDecode();
     window.addEventListener("hashchange", tryDecode);
     return () => window.removeEventListener("hashchange", tryDecode);
   }, []);
 
   const searchRef = useRef(null);
-  // Close search dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -209,33 +328,125 @@ export default function App() {
     return { owned, total, percentage: total ? Math.round((owned / total) * 100) : 0 };
   };
 
-  // toggle interactions: when selectionMode is active, clicking an item toggles that list; otherwise toggles owned
+  // Click handler for non-drag modes ('looking', 'offering')
   const onItemClick = (item) => {
-    if (isViewingShared) return; // read-only
+    if (isViewingShared) return;
+
     if (selectionMode === "looking") {
-      setLookingFor(prev => {
-        const copy = { ...prev };
-        if (copy[item.id]) delete copy[item.id];
-        else copy[item.id] = true;
-        return copy;
-      });
+      setLookingFor(prev => ({ ...prev, [item.id]: !prev[item.id] }));
       pulse(item.id);
       return;
     }
+
     if (selectionMode === "offering") {
-      setOffering(prev => {
-        const copy = { ...prev };
-        if (copy[item.id]) delete copy[item.id];
-        else copy[item.id] = true;
-        return copy;
-      });
+      setOffering(prev => ({ ...prev, [item.id]: !prev[item.id] }));
       pulse(item.id);
       return;
     }
-    // normal owned toggle
-    setCollection(prev => ({ ...prev, [item.id]: !prev[item.id] }));
-    pulse(item.id);
   };
+
+  // Handlers for range-based drag selection
+  const handleDragStart = (item) => {
+    if (isViewingShared || selectionMode !== 'none') return;
+    
+    setIsDragging(true);
+    dragStartItem.current = item;
+    collectionSnapshot.current = collection; // Take snapshot of state at drag start
+
+    const currentlyOwned = !!collection[item.id];
+    const newMode = currentlyOwned ? 'uncheck' : 'check';
+    setDragToggleMode(newMode);
+    
+    setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
+  };
+  
+  const handleDragOver = (item) => {
+    if (!isDragging || !dragStartItem.current || selectionMode !== 'none') return;
+
+    const start = dragStartItem.current;
+    const end = item;
+
+    // 🔹 Restrict drag selection to only the subcategory currently being hovered
+    const visibleItems = getItems(active);
+
+    // Find which "section" the drag started in (rarity or subheader group)
+    const sectionItems = (() => {
+      // Case: Event free (rarity + subgroup flag)
+      if (active.label === "Event free") {
+        const isEventReward =
+          start.flag === "svtEquipEventReward" ||
+          (Array.isArray(start.flags) && start.flags.includes("svtEquipEventReward"));
+
+        const isCEExp =
+          start.flag === "svtEquipExp" ||
+          (Array.isArray(start.flags) && start.flags.includes("svtEquipExp"));
+
+        if (isEventReward) {
+          return visibleItems.filter(
+            (it) =>
+              it.rarity === start.rarity &&
+              (it.flag === "svtEquipEventReward" ||
+                (Array.isArray(it.flags) && it.flags.includes("svtEquipEventReward")))
+          );
+        }
+        if (isCEExp) {
+          return visibleItems.filter(
+            (it) =>
+              it.rarity === start.rarity &&
+              (it.flag === "svtEquipExp" ||
+                (Array.isArray(it.flags) && it.flags.includes("svtEquipExp")))
+          );
+        }
+      }
+
+      // Case: generic rarity-split categories
+      if (active.raritySplit) {
+        return visibleItems.filter((it) => it.rarity === start.rarity);
+      }
+
+      // Case: Chocolate / Commemorative (subranges)
+      if (active.label === "Chocolate") {
+        const sub = chocolateSubcategories.find(
+          (s) => start.collectionNo >= s.range[0] && start.collectionNo <= s.range[1]
+        );
+        return sub
+          ? visibleItems.filter(
+              (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+            )
+          : visibleItems;
+      }
+      if (active.label === "Commemorative") {
+        const sub = commemorativeSubcategories.find(
+          (s) => start.collectionNo >= s.range[0] && start.collectionNo <= s.range[1]
+        );
+        return sub
+          ? visibleItems.filter(
+              (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+            )
+          : visibleItems;
+      }
+
+      // Default (BondCEs, Normal, etc.)
+      return visibleItems;
+    })();
+
+    // Apply range selection inside that section only
+    const startIndex = sectionItems.findIndex(it => it.id === start.id);
+    const endIndex = sectionItems.findIndex(it => it.id === end.id);
+
+    if (startIndex === -1 || endIndex === -1) return;
+
+    const minIndex = Math.min(startIndex, endIndex);
+    const maxIndex = Math.max(startIndex, endIndex);
+
+    const changes = {};
+    for (let i = minIndex; i <= maxIndex; i++) {
+      changes[sectionItems[i].id] = dragToggleMode === 'check';
+    }
+
+    setCollection({ ...collectionSnapshot.current, ...changes });
+  };
+
   const getCategoryPercentage = (cat) => {
     const items = getItems(cat);
     if (!items.length) return 0;
@@ -253,13 +464,16 @@ export default function App() {
   };
 
   const getItems = (cat) => {
-    if (!data || !data.length) return [];
+    if (!data || !data.length || !cat) return [];
+
     if (cat.flag === "normal") {
-      // many normals have item.flag === 'normal' OR flags === []
       return data.filter(it => it.flag === "normal" || !Array.isArray(it.flags) || it.flags.length === 0);
     }
     if (cat.flag) {
       return data.filter(it => it.flag === cat.flag || (Array.isArray(it.flags) && it.flags.includes(cat.flag)));
+    }
+    if (cat.flags) {
+      return data.filter(it => cat.flags.some(f => it.flag === f || (Array.isArray(it.flags) && it.flags.includes(f))));
     }
     if (cat.range) {
       return data.filter(it => it.collectionNo >= cat.range[0] && it.collectionNo <= cat.range[1]);
@@ -267,64 +481,82 @@ export default function App() {
     return [];
   };
 
-  // uniform CE cell (ensures consistent layout and bottom-right badge)
+  // UPDATED: CECell handles new range-drag events
   const CECell = ({ item }) => {
     const owned = mapOwned(item.id);
     const isPulse = highlightId === item.id;
+    
+    const handleInteractionStart = (e) => {
+      if (e.button !== 0) return; // ignore middle/right clicks
+      e.preventDefault();
+
+      if (isViewingShared) return;
+
+      if (selectionMode !== "none") {
+        onItemClick(item);
+      } else {
+        handleDragStart(item);
+      }
+    };
+    
     return (
-      <div id={`ce-${item.id}`} key={item.id} className={`relative w-[72px] h-[72px] ${isPulse ? "pulse-border" : ""}`}>
+      <div 
+        id={`ce-${item.id}`} 
+        key={item.id} 
+        className={`relative w-[72px] h-[72px] ${isPulse ? "pulse-border" : ""}`}
+        style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
+        onMouseDown={handleInteractionStart}
+        onTouchStart={handleInteractionStart}
+        onMouseEnter={() => handleDragOver(item)}
+      >
         <img
           src={item.face}
           alt={item.name}
-          title={item.name}
-          className={`w-full h-full object-contain cursor-pointer transition ${owned ? "opacity-100" : "opacity-50"}`}
-          onClick={() => onItemClick(item)}
-          style={{ pointerEvents: isViewingShared ? "none" : "auto" }}
+          title={item.name} 
+          className={`w-full h-full object-contain transition ${owned ? "opacity-100" : "opacity-50"}`}
+          draggable="false"
+          style={{ pointerEvents: "none" }}
         />
-        <span className="absolute bottom-0 right-0 text-[14px] leading-none bg-black/60 text-white px-1 rounded">
+        <a
+          href={`https://apps.atlasacademy.io/db/JP/craft-essence/${item.collectionNo}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-0 right-0 text-[14px] leading-none bg-black/60 text-white px-1 rounded cursor-pointer hover:underline"
+          onClick={(e) => e.stopPropagation()}
+        >
           {item.collectionNo}
-        </span>
+        </a>
       </div>
     );
   };
 
-  // pulse/highlight helper (restarts CSS animation immediately by touching DOM)
   const pulse = (id) => {
-    // quick state set for accessibility or other logic
     setHighlightId(id);
-    // directly manipulate DOM to restart the animation immediately and allow parallel plays
     const el = document.getElementById(`ce-${id}`);
     if (el) {
-      // remove class, force reflow, re-add class so animation restarts every time
       el.classList.remove("pulse-border");
-      // force reflow
-      // eslint-disable-next-line no-unused-expressions
       void el.offsetWidth;
       el.classList.add("pulse-border");
     }
-    // also clear highlightId after animation duration (optional)
     setTimeout(() => setHighlightId(null), 1800);
   };
 
-  // search logic
   useEffect(() => {
     if (!query) {
       setResults([]);
       return;
     }
     const q = query.toLowerCase();
-    const qNum = Number(query); // try numeric match
+    const qNum = Number(query);
     const filtered = data.filter(it =>
       (it.name && it.name.toLowerCase().includes(q)) ||
       (it.originalName && it.originalName.toLowerCase().includes(q)) ||
-      (!isNaN(qNum) && it.collectionNo === qNum) // search by collectionNo
+      (!isNaN(qNum) && it.collectionNo === qNum)
     );
     setResults(filtered.slice(0, 50));
-  }, [query]);
+  }, [query, data]);
 
-  // when user clicks a search result: open the card it belongs to, scroll it into view and pulse
   const onSearchSelect = (item) => {
-    // find category that contains this item
     const matched = categories.find(cat => {
       if (cat.flag === "normal") return item.flag === "normal" || (!Array.isArray(item.flags) || item.flags.length === 0);
       if (cat.flag) return item.flag === cat.flag || (Array.isArray(item.flags) && item.flags.includes(cat.flag));
@@ -334,47 +566,107 @@ export default function App() {
     setActive(matched);
     setSelectionMode("none");
 
-    // scroll into view
-    const scrollDelay = 550; // approximate smooth scroll duration
     setTimeout(() => {
       const el = document.getElementById(`ce-${item.id}`);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         pulse(item.id);
 
-        // trigger flash after scroll is done
         if (!isViewingShared) {
           setTimeout(() => {
             setCollection(prev => ({ ...prev, [item.id]: !prev[item.id] }));
             setTimeout(() => {
               setCollection(prev => ({ ...prev, [item.id]: !prev[item.id] }));
             }, 500);
-          }, scrollDelay); // flash starts after scrolling
+          }, 550);
         }
       }
-    }, 50); // tiny delay to ensure modal is active
+    }, 50);
 
     setQuery("");
     setResults([]);
   };
 
-  // generate link: compress arrays into base64 JSON (small)
   const generateLink = (uid) => {
-    const ownedArr = Object.keys(collection).filter(k => collection[k]);
-    const lfArr = Object.keys(lookingFor).filter(k => lookingFor[k]);
-    const ofArr = Object.keys(offering).filter(k => offering[k]);
+    const compressSection = (items, map) => {
+      const ids = items.map(it => it.collectionNo);
+      const owned = ids.filter(id => map[id]);
+      const total = ids.length;
+      const count = owned.length;
+
+      if (count === 0) return { mode: "E" }; // empty
+      if (count === total) return { mode: "F" }; // full
+      if (count / total >= 0.95) {
+        const missing = ids.filter(id => !map[id]);
+        return { mode: "AF", missing }; // almost full
+      }
+      if (count / total <= 0.05) return { mode: "S", owned }; // sparse
+      return { mode: "LIST", owned }; // partial
+    };
+
+    const compressedCategories = {};
+
+    categories.forEach(cat => {
+      const items = getItems(cat);
+      // compress entire category first
+      const catCompression = compressSection(items, collection);
+      // if category is fully empty/full/almost full/sparse, skip subcategories
+      if (["E", "F"].includes(catCompression.mode)) {
+        compressedCategories[cat.id] = catCompression;
+        return;
+      }
+
+      // otherwise, split into subcategories as needed
+      compressedCategories[cat.id] = {};
+
+      if (cat.label === "Event free") {
+        const rarities = [5, 4, 3];
+        const subFlags = ["svtEquipEventReward", "svtEquipExp"];
+        rarities.forEach(r => {
+          subFlags.forEach(flag => {
+            const subs = items.filter(it =>
+              it.rarity === r &&
+              (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
+            );
+            if (subs.length) {
+              compressedCategories[cat.id][`${r}-${flag}`] = compressSection(subs, collection);
+            }
+          });
+        });
+
+      } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
+        const subs = (cat.label === "Chocolate" ? chocolateSubcategories : commemorativeSubcategories);
+        subs.forEach(sub => {
+          const subsItems = items.filter(it =>
+            it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+          );
+          if (subsItems.length) {
+            compressedCategories[cat.id][`${sub.range[0]}-${sub.range[1]}`] = compressSection(subsItems, collection);
+          }
+        });
+
+      } else if (cat.raritySplit) {
+        [5, 4, 3].forEach(r => {
+          const subs = items.filter(it => it.rarity === r);
+          if (subs.length) {
+            compressedCategories[cat.id][`rarity-${r}`] = compressSection(subs, collection);
+          }
+        });
+
+      } else {
+        compressedCategories[cat.id] = compressSection(items, collection);
+      }
+    });
 
     const payload = {
-      collection: ownedArr,
-      lookingFor: lookingAll ? "ALL" : lfArr,
-      offering: offerAll ? "ALL" : ofArr,
+      collection: compressedCategories,
+      lookingFor: lookingAll ? "ALL" : Object.keys(lookingFor).filter(k => lookingFor[k]),
+      offering: offerAll ? "ALL" : Object.keys(offering).filter(k => offering[k])
     };
 
     const json = JSON.stringify(payload);
-
     const compressed = LZString.compressToEncodedURIComponent(json);
-
-    return `${window.location.origin}/#/view/${uid}/${compressed}`;
+    return `${window.location.origin}/#/${uid}/${compressed}`;
   };
 
   const exitViewerMode = () => {
@@ -383,12 +675,48 @@ export default function App() {
     setViewCollection({});
     setViewLookingFor({});
     setViewOffering({});
+    window.location.hash = "";
   };
 
-  // small helpers for rendering sections
+  const gridColsClass = (() => {
+    if (!active) return 'grid-cols-10';
+    const modalWidth = windowWidth * (11 / 12);
+    const contentAreaWidth = modalWidth * (3 / 4);
+    const padding = 32;
+    const availableGridWidth = contentAreaWidth - padding;
+
+    if (availableGridWidth > 756) return 'grid-cols-10';
+    if (availableGridWidth > 680) return 'grid-cols-9';
+    if (availableGridWidth > 604) return 'grid-cols-8';
+    if (availableGridWidth > 528) return 'grid-cols-7';
+    if (availableGridWidth > 452) return 'grid-cols-6';
+    if (availableGridWidth > 376) return 'grid-cols-5';
+    if (availableGridWidth > 300) return 'grid-cols-4';
+    if (availableGridWidth > 224) return 'grid-cols-3';
+    return 'grid-cols-2';
+  })();
+
+  const renderSection = (title, sectionItems) => {
+    if (!sectionItems || !sectionItems.length) return null;
+    const allComplete = sectionItems.every(it => mapOwned(it.id));
+    return (
+      <div key={title}>
+        <h3 className={`text-lg font-bold my-2 ${theme === "dark" ? "text-white" : "text-black"}`}>{title}</h3>
+        {!isViewingShared && (
+          <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(sectionItems, !allComplete)}>
+            {allComplete ? "Undo this subcategory" : "Complete this subcategory"}
+          </p>
+        )}
+        <div className={`grid ${gridColsClass} gap-1 mb-6`}>
+          {sectionItems.map((it) => <CECell key={it.id} item={it} />)}
+        </div>
+      </div>
+    );
+  };
+
   const renderGrid = (items) => (
     <div className="flex-1 p-4 overflow-auto">
-      <div className="grid grid-cols-10 gap-1">
+      <div className={`grid ${gridColsClass} gap-1`}>
         {items.map(it => <CECell key={it.id} item={it} />)}
       </div>
     </div>
@@ -398,78 +726,25 @@ export default function App() {
     const chunks = [];
     for (let i = 0; i < items.length; i += chunkSize) {
       chunks.push({
-        header: `${i + 1}-${Math.min(i + chunkSize, items.length)}`,
+        header: `CEs ${i + 1}-${Math.min(i + chunkSize, items.length)}`,
         cards: items.slice(i, i + chunkSize),
       });
     }
-
-    return (
-      <div className="flex-1 p-4 overflow-auto">
-        {chunks.map((c, idx) => {
-          const allComplete = c.cards.every((item) => mapOwned(item.id));
-          return (
-            <div key={idx}>
-              <h3 className="text-lg font-bold my-2 text-black dark:text-white">{c.header}</h3>
-              {!isViewingShared && (
-                <p
-                  className="text-sm text-blue-500 hover:underline cursor-pointer mb-2"
-                  onClick={() => markAll(c.cards, !allComplete)}
-                >
-                  {allComplete ? "Undo this subcategory" : "Complete this subcategory"}
-                </p>
-              )}
-              <div className="grid grid-cols-10 gap-1 mb-6">
-                {c.cards.map((it) => (
-                  <CECell key={it.id} item={it} />
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
+    return <div className="flex-1 p-4 overflow-auto">{chunks.map(c => renderSection(c.header, c.cards))}</div>;
   };
 
   const renderWithSubcategories = (items, subs) => {
     const used = new Set();
     return (
       <div className="flex-1 p-4 overflow-auto">
-        {subs.map((sub, idx) => {
+        {subs.map((sub) => {
           const subItems = items.filter(it => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]);
           subItems.forEach(si => used.add(si.id));
-          const allComplete = subItems.length > 0 && subItems.every(it => mapOwned(it.id));
-          return (
-            <div key={idx}>
-              <h3 className="text-lg font-bold my-2 text-black dark:text-white">{sub.label}</h3>
-              {!isViewingShared && (
-                <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subItems, !allComplete)}>
-                  {allComplete ? "Undo this subcategory" : "Complete this subcategory"}
-                </p>
-              )}
-              <div className="grid grid-cols-10 gap-1 mb-6">
-                {subItems.map(it => <CECell key={it.id} item={it} />)}
-              </div>
-            </div>
-          );
+          return renderSection(sub.label, subItems);
         })}
-        {/* The rest */}
         {(() => {
           const rest = items.filter(it => !used.has(it.id));
-          if (!rest.length) return null;
-          const allComplete = rest.every(it => mapOwned(it.id));
-          return (
-            <div>
-              <h3 className="text-lg font-bold my-2 text-black dark:text-white">The rest</h3>
-              {!isViewingShared && (
-                <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(rest, !allComplete)}>
-                  {allComplete ? "Undo this subcategory" : "Complete this subcategory"}
-                </p>
-              )}
-              <div className="grid grid-cols-10 gap-1 mb-6">
-                {rest.map(it => <CECell key={it.id} item={it} />)}
-              </div>
-            </div>
-          );
+          return renderSection("The rest", rest);
         })()}
       </div>
     );
@@ -479,51 +754,16 @@ export default function App() {
     const rarities = [5, 4, 3, 2, 1];
     return (
       <div className="flex-1 p-4 overflow-auto">
-        {rarities.map((r) => {
-          const subs = items.filter((it) => it.rarity === r);
-          if (!subs.length) return null;
-          const allComplete = subs.every((item) => mapOwned(item.id));
-          return (
-            <div key={r}>
-              <h3 className="text-lg font-bold my-2 text-black dark:text-white">
-                Rarity {r}
-              </h3>
-              {!isViewingShared && (
-                <p
-                  className="text-sm text-blue-500 hover:underline cursor-pointer mb-2"
-                  onClick={() => markAll(subs, !allComplete)}
-                >
-                  {allComplete ? "Undo this subcategory" : "Complete this subcategory"}
-                </p>
-              )}
-              <div className="grid grid-cols-10 gap-1 mb-6">
-                {subs.map((it) => (
-                  <CECell key={it.id} item={it} />
-                ))}
-              </div>
-            </div>
-          );
-        })}
+        {rarities.map(r => renderSection(`Rarity ${r}`, items.filter((it) => it.rarity === r)))}
       </div>
     );
   };
 
-  // small list for Generate preview / viewer read-only
-  // clicking items in generate preview will remove them from lists (only in normal mode and only when it's an explicit list)
   const SmallList = ({ map, listName, expandAll }) => {
-    // map can be:
-    // - an object map { id: true }
-    // - the string "ALL"
     let ids = [];
     if (map === "ALL") {
-      // expand according to expandAll value
-      if (expandAll === "offering") {
-        ids = Object.keys(collection).filter(k => collection[k]);
-      } else if (expandAll === "looking") {
-        ids = data.map(d => String(d.id)).filter(id => !collection[id]);
-      } else {
-        ids = [];
-      }
+      if (expandAll === "offering") ids = Object.keys(collection).filter(k => collection[k]);
+      else if (expandAll === "looking") ids = data.map(d => String(d.id)).filter(id => !collection[id]);
     } else {
       ids = Object.keys(map || {}).filter(k => map[k]);
     }
@@ -537,28 +777,13 @@ export default function App() {
             const item = data.find(d => String(d.id) === String(id));
             if (!item) return null;
             return (
-              <div
-                key={id}
-                className={`flex items-center gap-2 p-1 bg-white/5 rounded ${map === "ALL" ? "" : "cursor-pointer hover:bg-white/10"}`}
-                onClick={() => {
-                  if (isViewingShared) return;
-                  // if map === "ALL", don't remove - this is a global flag; user asked to display everything
-                  if (map === "ALL") return;
-                  if (listName === "looking") {
-                    setLookingFor(prev => { const copy = { ...prev }; delete copy[id]; return copy; });
-                  } else if (listName === "offering") {
-                    setOffering(prev => { const copy = { ...prev }; delete copy[id]; return copy; });
-                  }
-                  // visual pulse on related CE
-                  const el = document.getElementById(`ce-${id}`);
-                  if (el) {
-                    el.classList.remove("pulse-border");
-                    void el.offsetWidth;
-                    el.classList.add("pulse-border");
-                  }
-                }}
-              >
-                <div className="relative w-12 h-12"> {/* 12 * 4 = 48px */}
+              <div key={id} className={`flex items-center gap-2 p-1 bg-white/5 rounded ${map === "ALL" ? "" : "cursor-pointer hover:bg-white/10"}`} onClick={() => {
+                  if (isViewingShared || map === "ALL") return;
+                  if (listName === "looking") setLookingFor(prev => { const c = { ...prev }; delete c[id]; return c; });
+                  else if (listName === "offering") setOffering(prev => { const c = { ...prev }; delete c[id]; return c; });
+                  pulse(id);
+                }}>
+                <div className="relative w-12 h-12">
                   <img src={item.face} alt={item.name} className="w-full h-full object-contain" />
                   <span className="absolute bottom-0 right-0 text-[10px] bg-black/60 text-white px-1 rounded">{item.collectionNo}</span>
                 </div>
@@ -574,55 +799,82 @@ export default function App() {
   // UI
   return (
     <div className={theme === "dark" ? "dark bg-gray-900 text-white min-h-screen" : "bg-white text-black min-h-screen"}>
-      {/* pulse CSS */}
       <style>{`
-        .pulse-border { animation: pulseBorder 1.2s ease-in-out; border-radius: 6px; }
+        .pulse-border { animation: pulseBorder 0.7s ease-in-out; border-radius: 6px; }
         @keyframes pulseBorder {
-          0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.95); }
-          50% { box-shadow: 0 0 12px 6px rgba(59, 130, 246, 0.18); }
-          100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-        }
+          0% { box-shadow: 0 0 0 0 rgba(246, 59, 59, 0.95); }
+          50% { box-shadow: 0 0 12px 6px rgba(217, 255, 0, 1); }
+          100% { box-shadow: 0 0 0 0 rgba(246, 59, 59, 1); }
+        } 
       `}</style>
 
-      {/* Header: title, search, theme + viewer banner */}
+      {/* Header */}
       <div className="p-4 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">
-          CEdex ({getProgress().owned}/{getProgress().total})
-        </h1>
-
+        <h1 className="text-2xl font-bold"> CEdex {getProgress().owned > 0 && ( <> ({getProgress().owned}/{getProgress().total})</> )} </h1>
         <div className="flex-1 max-w-xl">
-          <div className="relative">
-            <div ref={searchRef} className="relative">
-              <input
-                ref={searchInputRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by name or ID..."
-                className="w-full px-4 py-2 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
-              />
-              {results.length > 0 && (
-                <div className="absolute z-50 top-full left-0 right-0 bg-white dark:bg-gray-700 rounded-xl shadow-lg max-h-96 overflow-auto mt-2">
-                  {results.map(item => (
-                    <div key={item.id} className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer" onClick={() => onSearchSelect(item)}>
-                      <div className="relative w-12 h-12 flex-shrink-0">
-                        <img src={item.face} alt={item.name} className={`w-12 h-12 object-contain ${mapOwned(item.id) ? "opacity-100" : "opacity-50"}`} />
-                        <span className="absolute bottom-0 right-0 text-[10px] leading-none bg-black/60 text-white px-1 rounded">{item.collectionNo}</span>
-                      </div>
-                      <div className="text-sm text-black dark:text-white">{item.name}</div>
+          <div ref={searchRef} className="relative">
+            <input
+              ref={searchInputRef}
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setHighlightedIndex(-1); // reset when typing
+              }}
+              onKeyDown={(e) => {
+                if (!results.length) return;
+
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  setHighlightedIndex((prev) => (prev + 1) % results.length);
+                } else if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  setHighlightedIndex((prev) => (prev - 1 + results.length) % results.length);
+                } else if (e.key === "Enter") {
+                  e.preventDefault();
+                  if (highlightedIndex >= 0) {
+                    onSearchSelect(results[highlightedIndex]);
+                  }
+                }
+              }}
+              placeholder="Search by name or ID..."
+              className="w-full px-4 py-2 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
+            />
+            {results.length > 0 && (
+              <div className="absolute z-50 top-full left-0 right-0 bg-white dark:bg-gray-700 rounded-xl shadow-lg max-h-96 overflow-auto mt-2">
+                {results.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    ref={(el) => {
+                      if (idx === highlightedIndex && el) {
+                        el.scrollIntoView({ block: "nearest" });
+                      }
+                    }}
+                    className={`flex items-center gap-3 p-2 cursor-pointer ${
+                      highlightedIndex === idx
+                        ? "bg-gray-200 dark:bg-gray-600"
+                        : "hover:bg-gray-100 dark:hover:bg-gray-600"
+                    }`}
+                    onClick={() => onSearchSelect(item)}
+                  >
+                    <div className="relative w-12 h-12 flex-shrink-0">
+                      <img
+                        src={item.face}
+                        alt={item.name}
+                        className={`w-12 h-12 object-contain ${mapOwned(item.id) ? "opacity-100" : "opacity-50"}`}
+                      />
+                      <span className="absolute bottom-0 right-0 text-[10px] leading-none bg-black/60 text-white px-1 rounded">
+                        {item.collectionNo}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    <div className="text-sm text-black dark:text-white">{item.name}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-
         <div className="flex items-center gap-3">
-          {isViewingShared && (
-            <div className="bg-amber-300 dark:bg-amber-600 text-black dark:text-white px-3 py-1 rounded-xl text-sm font-semibold">
-              Viewing {sharedUserId} (read-only)
-            </div>
-          )}
+          {isViewingShared && <div className="bg-amber-300 dark:bg-amber-600 text-black dark:text-white px-3 py-1 rounded-xl text-sm font-semibold">Viewing {sharedUserId} (read-only)</div>}
           <button className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition" onClick={() => setTheme(t => t === "light" ? "dark" : "light")}>
             {theme === "light" ? <Moon /> : <Sun />}
           </button>
@@ -632,25 +884,10 @@ export default function App() {
       {/* Main cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 min-h-[50vh]">
         {categories.map(cat => (
-          <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" 
-              onClick={() => { setActive(cat); setSelectionMode("none"); }}>
-            
-            <img src={`/${cat.label.replace(/\s+/g,"_")}.png`} 
-                alt="" 
-                className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" 
-                onError={(e)=> e.currentTarget.style.display='none'} 
-            />
-
-            <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>
-              {cat.label}
-            </span>
-
-            {/* Category progress percentage */}
-            {cat.special !== "generate" && (
-              <span className={theme === "dark" ? "absolute bottom-2 right-2 text-2xl font-bold [text-shadow:2px_2px_3px_black]" : "absolute bottom-2 right-2 text-2xl font-bold"}>
-                {getCategoryPercentage(cat)}%
-              </span>
-            )}
+          <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" onClick={() => { setActive(cat); setSelectionMode("none"); }}>
+            <img src={`/${cat.label.replace(/\s+/g,"_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e)=> e.currentTarget.style.display='none'} />
+            <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>{cat.label}</span>
+            {cat.special !== "generate" && <span className={theme === "dark" ? "absolute bottom-2 right-2 text-2xl font-bold [text-shadow:2px_2px_3px_black]" : "absolute bottom-2 right-2 text-2xl font-bold"}>{getCategoryPercentage(cat)}%</span>}
           </div>
         ))}
       </div>
@@ -659,164 +896,92 @@ export default function App() {
       <AnimatePresence>
         {active && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); } }}>
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex">
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
               {/* Sidebar */}
-              <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3">
+              <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
                 <h2 className="text-xl font-bold">{active.label}</h2>
-
-                {/* Only show mark-all and selection buttons for non-generate and when not in view-only */}
                 {active.special !== "generate" && !isViewingShared && ( 
                   <>
                     <button className="px-4 py-2 rounded-xl bg-green-500 text-white" onClick={() => markAll(getItems(active), true)}>Mark all have</button>
                     <button className="px-4 py-2 rounded-xl bg-yellow-500 text-white" onClick={() => markAll(getItems(active), false)}>Mark all don't have</button>
-
-                    {/* new buttons below - same blue color */}
-                    <button className={`px-4 py-2 rounded-xl ${selectionMode === "looking" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "looking" ? "none" : "looking")}>
-                      Looking for
-                    </button>
-                    <button className={`px-4 py-2 rounded-xl ${selectionMode === "offering" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>
-                      Offering
-                    </button> 
+                    <button className={`px-4 py-2 rounded-xl ${selectionMode === "looking" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "looking" ? "none" : "looking")}>Looking for</button>
+                    <button className={`px-4 py-2 rounded-xl ${selectionMode === "offering" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>Offering</button> 
                   </>
                 )}
-
-                {/* Paste last ID button - visible for everyone but placed above Close */}
-                {active.special === "generate" && lastId && !isViewingShared && (
-                  <button
-                    className="px-4 py-2 rounded-xl bg-purple-500 text-white"
-                    onClick={() => setGenUserId(lastId)}
-                  >
-                    Paste in last ID {lastId}
-                  </button>
-                )}
-
-                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); }}>
-                  Close
-                </button>
-                
-                {active.special !== "generate" && (
-                  <div className="mt-1 font-semibold text-black dark:text-white">
-                    Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}
-                  </div>
-                )}
+                {active.special === "generate" && lastId && !isViewingShared && <button className="px-4 py-2 rounded-xl bg-purple-500 text-white" onClick={() => setGenUserId(lastId)}>Paste in last ID {lastId}</button>}
+                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); }}>Close</button>
+                {active.special !== "generate" && <div className={`mt-1 font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}</div>}
               </div>
 
               {/* Main content */}
-              {/* Generate special handling */}
               {active.special === "generate" ? (
                 <div className="flex-1 p-6 overflow-auto text-black dark:text-white bg-white dark:bg-gray-800">
-                  {/* If viewing shared, show their lists only */}
                   {isViewingShared ? (
                     <>
                       <h3 className="text-lg font-bold mb-2">Looking for {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} items)` : ""}</h3>
                       <SmallList map={viewLookingFor} listName="looking" expandAll="looking" />
                       <h3 className="text-lg font-bold mt-4 mb-2">Offering {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} items)` : ""}</h3>
                       <SmallList map={viewOffering} listName="offering" expandAll="offering" />
-                      <div className="mt-6 font-semibold">
-                        Overall progress: {getProgress().owned}/{getProgress().total}
-                      </div>
+                      <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
                       <p className="mt-4 text-sm text-gray-400">Viewing only — controls are hidden.</p>
                     </>
                   ) : (
                     <>
                       <h2 className="text-lg font-bold mb-2">Share Your Collection</h2>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Enter your 9 or 12 digit ID, then click <strong>Generate Hash</strong> to create a shareable link (the payload includes owned + looking/offering arrays OR the special \"ALL\" flag).</p>
-
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Enter your 9 or 12 digit ID, then click <strong>Generate Hash</strong> to create a shareable link.</p>
                       <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g,''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="123456789" />
-
                       <div className="flex gap-2 mb-3">
-                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => {
-                          if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; }
-                          // set lastId
-                          setLastId(genUserId);
-                          // generate
-                          const url = generateLink(genUserId);
-                          setGeneratedUrl(url);
-                          try { navigator.clipboard.writeText(url); } catch {}
-                        }}>
-                          Generate Hash
-                        </button>
-                        <button className="px-4 py-2 rounded-xl bg-gray-300" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>
-                          Clear
-                        </button>
+                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch {} }}>Generate Hash</button>
+                        <button className="px-4 py-2 rounded-xl bg-gray-300" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
                       </div>
-
-                      {/* Offer all / Looking all toggles */}
                       <div className="flex gap-3 mb-4">
-                        <button className={`px-3 py-2 rounded-xl ${offerAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>
-                          {offerAll ? "Undo Offer Everything" : "Offer everything I have"}
-                        </button>
-                        <button className={`px-3 py-2 rounded-xl ${lookingAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setLookingAll(v => !v); if (!lookingAll) setLookingFor({}); }}>
-                          {lookingAll ? "Undo Looking for Everything" : "Looking for everything I don't have"}
-                        </button>
+                        <button className={`px-3 py-2 rounded-xl ${offerAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>{offerAll ? "Undo Offer Everything" : "Offer everything I have"}</button>
+                        <button className={`px-3 py-2 rounded-xl ${lookingAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setLookingAll(v => !v); if (!lookingAll) setLookingFor({}); }}>{lookingAll ? "Undo Looking for Everything" : "Looking for everything I don't have"}</button>
                       </div>
-
-                      {generatedUrl && (
-                        <div
-                          className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-xl cursor-pointer hover:bg-green-200 dark:hover:bg-green-800 transition"
-                          onClick={() => {
-                            navigator.clipboard.writeText(generatedUrl);
-                            alert("Link copied to clipboard!");
-                          }}
-                        >
-                          <p className="text-sm font-semibold mb-1">Your link:</p>
-                          <p className="break-all text-sm text-green-700 dark:text-green-300">
-                            {generatedUrl}
-                          </p>
-                        </div>
-                      )}
-                      
-                      {/* hint box restored */}
-                      <div className="mt-6 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-xl text-sm">
-                        <p className="mb-1 font-semibold">Tips:</p>
-                        <ul className="list-disc pl-5 space-y-1">
-                          <li>You can click items in the preview to remove them from explicit lists.</li>
-                          <li>Paste your 9/12 digit ID or drag a text onto this window (if supported).</li>
-                          <li>Generated link contains arrays of IDs or the special \"ALL\" token for compactness.</li>
-                        </ul>
-                      </div>
-
+                      {generatedUrl && <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-xl cursor-pointer hover:bg-green-200 dark:hover:bg-green-800 transition" onClick={() => { navigator.clipboard.writeText(generatedUrl); }}><p className="text-sm font-semibold mb-1">Your link:</p><p className="break-all text-sm text-green-700 dark:text-green-300">{generatedUrl}</p></div>}
+                      <div className="mt-6 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-xl text-sm"><p className="mb-1 font-semibold">Tips:</p><ul className="list-disc pl-5 space-y-1"><li>You can click items in the preview to remove them from explicit lists.</li><li>Paste your 9/12 digit ID or drag a text onto this window.</li><li>The link contains your data compressed for sharing.</li></ul></div>
                       <div className="mt-6">
                         <h4 className="font-bold">Preview: Looking for {lookingAll ? `(${data.filter(d => !collection[d.id]).length} items)` : ""}</h4>
                         <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" />
                         <h4 className="font-bold mt-3">Preview: Offering {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} items)` : ""}</h4>
                         <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" />
-                      </div>  
-
-                      {/* Add overall progress */}
-                      <div className="mt-6 font-semibold">
-                        Overall progress: {getProgress().owned}/{getProgress().total}
                       </div>
+                      <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
                     </>
                   )}
                 </div>
               ) : (
-                // non-generate content: choose correct renderer based on category props
                 (() => {
-                  // Bond CEs: use chunk headers like other earlier design (chunk by 50)
-                  if (active.label === "Bond CEs") {
-                    const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
-                    return renderItemsWithHeaders(items);
-                  }
-
-                  // Chocolate and Commemorative: use user-defined subcategories + rest
-                  if (active.label === "Chocolate") {
-                    const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
-                    return renderWithSubcategories(items, chocolateSubcategories);
-                  }
-                  if (active.label === "Commemorative") {
-                    const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
-                    return renderWithSubcategories(items, commemorativeSubcategories);
-                  }
-
-                  // rarity-split categories
-                  if (active.raritySplit) {
-                    const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
-                    return renderByRarity(items);
-                  }
-
-                  // default grid
                   const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
+                  if (active.label === "Bond CEs") return renderItemsWithHeaders(items);
+                  if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories);
+                  if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
+                  if (active.label === "Event free") {
+                    const rarities = [5, 4, 3];
+                    const subFlags = [{ key: "svtEquipEventReward", label: "Event Reward" }, { key: "svtEquipExp", label: "CE EXP" }];
+                    return (
+                      <div className="flex-1 p-4 overflow-auto">
+                        {rarities.map(r => (
+                          <div key={r}>
+                            <h3 className={`text-lg font-bold my-4 ${theme === "dark" ? "text-white" : "text-black"}`}>Rarity {r}</h3>
+                            {subFlags.map(sf => {
+                              const subs = items.filter(it => it.rarity === r && (it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key))));
+                              if (!subs.length) return null;
+                              const allComplete = subs.every(it => mapOwned(it.id));
+                              return (
+                                <div key={sf.key} className="mb-6">
+                                  <h4 className={`text-md font-semibold mb-1 ${theme === "dark" ? "text-white" : "text-black"}`}>{sf.label}</h4>
+                                  {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
+                                  <div className={`grid ${gridColsClass} gap-1`}>{subs.map(it => <CECell key={it.id} item={it} />)}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+                  if (active.raritySplit) return renderByRarity(items);
                   return renderGrid(items);
                 })()
               )}
