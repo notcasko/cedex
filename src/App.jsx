@@ -666,7 +666,7 @@ const getItemsForSub = (catKey, subKey) => {
 
     const json = JSON.stringify(payload);
     const compressed = LZString.compressToEncodedURIComponent(json);
-    return `${window.location.origin}/#/${uid}/${compressed}`;
+    return `${window.location.origin}/cedex/${uid}/${compressed}`;
   };
 
   const exitViewerMode = () => {
@@ -777,17 +777,46 @@ const getItemsForSub = (catKey, subKey) => {
             const item = data.find(d => String(d.id) === String(id));
             if (!item) return null;
             return (
-              <div key={id} className={`flex items-center gap-2 p-1 bg-white/5 rounded ${map === "ALL" ? "" : "cursor-pointer hover:bg-white/10"}`} onClick={() => {
+              <div
+                key={id}
+                className={`flex items-center gap-2 p-1 bg-white/5 rounded ${
+                  map === "ALL" ? "" : "cursor-pointer hover:bg-white/10"
+                }`}
+                onClick={() => {
                   if (isViewingShared || map === "ALL") return;
-                  if (listName === "looking") setLookingFor(prev => { const c = { ...prev }; delete c[id]; return c; });
-                  else if (listName === "offering") setOffering(prev => { const c = { ...prev }; delete c[id]; return c; });
+                  if (listName === "looking")
+                    setLookingFor(prev => {
+                      const c = { ...prev };
+                      delete c[id];
+                      return c;
+                    });
+                  else if (listName === "offering")
+                    setOffering(prev => {
+                      const c = { ...prev };
+                      delete c[id];
+                      return c;
+                    });
                   pulse(id);
-                }}>
-                <div className="relative w-12 h-12">
-                  <img src={item.face} alt={item.name} className="w-full h-full object-contain" />
-                  <span className="absolute bottom-0 right-0 text-[10px] bg-black/60 text-white px-1 rounded">{item.collectionNo}</span>
+                }}
+              >
+                {/* Fixed-size image */}
+                <div className="relative w-12 h-12 flex-shrink-0">
+                  <img
+                    src={item.face}
+                    alt={item.name}
+                    className="w-full h-full object-contain"
+                  />
+                  <span className="absolute bottom-0 right-0 text-[10px] bg-black/60 text-white px-1 rounded">
+                    {item.collectionNo}
+                  </span>
                 </div>
-                <div className="text-sm">{item.name}</div>
+
+                {/* Truncated text */}
+                <div className="flex-1 min-w-0">
+                  <span className="block text-sm text-black dark:text-white truncate">
+                    {item.name}
+                  </span>
+                </div>
               </div>
             );
           })}
