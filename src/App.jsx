@@ -14,6 +14,20 @@ const categories = [
   { id: 8, label: "Export data", special: "generate" },
 ];
 
+const bondSubcategories = [
+  { label: "2015", range: [0, 281] },
+  { label: "2016", range: [282, 415] },
+  { label: "2017", range: [416, 708] },
+  { label: "2018", range: [709, 934] },
+  { label: "2019", range: [935, 1144] },
+  { label: "2020", range: [1145, 1337] },
+  { label: "2021", range: [1338, 1522] },
+  { label: "2022", range: [1523, 1739] },
+  { label: "2023", range: [1740, 1962] },
+  { label: "2024", range: [1963, 2159] },
+  { label: "2025", range: [2160, 2899] },
+];
+
 const commemorativeSubcategories = [
   { label: "5M Downloads Heroic Portrait", range: [99, 108] },
   { label: "Fate/EXTELLA Release", range: [361, 366] },
@@ -57,7 +71,7 @@ const usePersistedState = (key, initial) => {
   useEffect(() => {
     try {
       localStorage.setItem(key, JSON.stringify(state));
-    } catch {}
+    } catch { }
   }, [key, state]);
   return [state, setState];
 };
@@ -93,7 +107,7 @@ export default function App() {
   const [data, setCollectionData] = useState([]);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  
+
   // State and refs for range-based drag selection
   const [isDragging, setIsDragging] = useState(false);
   const [dragToggleMode, setDragToggleMode] = useState(null); // 'check' or 'uncheck'
@@ -136,7 +150,7 @@ export default function App() {
       if (element) {
         const cell = element.closest('[id^="ce-"]');
         const cellId = cell?.id;
-        
+
         if (cellId && cellId !== lastDraggedOverId.current) {
           const itemId = cellId.split('-')[1];
           const item = data.find(d => String(d.id) === itemId);
@@ -147,11 +161,11 @@ export default function App() {
         }
       }
     };
-    
+
     window.addEventListener('mouseup', handleDragEnd);
     window.addEventListener('touchend', handleDragEnd);
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    
+
     return () => {
       window.removeEventListener('mouseup', handleDragEnd);
       window.removeEventListener('touchend', handleDragEnd);
@@ -167,7 +181,7 @@ export default function App() {
     noToId[it.collectionNo] = it.id;
   });
 
- // Debug helper
+  // Debug helper
   const debugLink = (url) => {
     try {
       const parts = url.split("/#/view/");
@@ -216,138 +230,209 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
 
-// --- Expansion helpers ---
-const expandSection = (items, section) => {
-  const ids = items.map(it => it.collectionNo);
-  const map = {};
+  // --- Expansion helpers ---
+  const expandSection = (items, section) => {
+    const ids = items.map(it => it.collectionNo);
+    const map = {};
 
-  if (!section) return map;
+    if (!section) return map;
 
-  switch (section.mode) {
-    case "F": // full
-      ids.forEach(no => { map[noToId[no]] = true; });
-      break;
-    case "AF": // almost full
-      ids.forEach(no => { map[noToId[no]] = true; });
-      (section.missing || []).forEach(no => { map[noToId[no]] = false; });
-      break;
-    case "S": // sparse
-      (section.owned || []).forEach(no => { map[noToId[no]] = true; });
-      break;
-    case "LIST": // explicit list
-      (section.owned || []).forEach(no => { map[noToId[no]] = true; });
-      break;
-    default:
-      break;
-  }
-
-  return map;
-};
-
-const expandCollection = (compressed, categories, data) => {
-  const result = {};
-
-  categories.forEach(cat => {
-    const items = getItems(cat);
-    if (!items.length) return;
-
-    const section = compressed[cat.id];
-    if (!section) return;
-
-    // If it’s a direct section (F/AF/S/LIST)
-    if (section.mode) {
-      Object.assign(result, expandSection(items, section));
-      return;
+    switch (section.mode) {
+      case "F": // full
+        ids.forEach(no => { map[noToId[no]] = true; });
+        break;
+      case "AF": // almost full
+        ids.forEach(no => { map[noToId[no]] = true; });
+        (section.missing || []).forEach(no => { map[noToId[no]] = false; });
+        break;
+      case "S": // sparse
+        (section.owned || []).forEach(no => { map[noToId[no]] = true; });
+        break;
+      case "LIST": // explicit list
+        (section.owned || []).forEach(no => { map[noToId[no]] = true; });
+        break;
+      default:
+        break;
     }
 
-    // Otherwise it’s subcategories
-    Object.entries(section).forEach(([subKey, subSection]) => {
-      let subItems = [];
+    return map;
+  };
 
-      if (cat.label === "Event free") {
-        const [rarity, flag] = subKey.split("-");
-        subItems = items.filter(it =>
-          it.rarity === parseInt(rarity) &&
-          (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
-        );
-      } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
-        const [min, max] = subKey.split("-").map(Number);
-        subItems = items.filter(it =>
-          it.collectionNo >= min && it.collectionNo <= max
-        );
-      } else if (cat.raritySplit && subKey.startsWith("rarity-")) {
-        const r = parseInt(subKey.replace("rarity-", ""));
-        subItems = items.filter(it => it.rarity === r);
+  // expandCollection takes compressed categories and rebuilds full item map
+  const expandCollection = (compressed, categories, data) => {
+    const result = {};
+
+    const expandSection = (section, items) => {
+      if (!section) return;
+      const ids = items.map(it => it.collectionNo);
+
+      switch (section.mode) {
+        case "F":
+          ids.forEach(no => { result[noToId[no]] = true; });
+          break;
+        case "AF":
+          ids.forEach(no => { result[noToId[no]] = true; });
+          (section.missing || []).forEach(no => { result[noToId[no]] = false; });
+          break;
+        case "S":
+          (section.owned || []).forEach(no => { result[noToId[no]] = true; });
+          break;
+        case "LIST":
+          (section.owned || []).forEach(no => { result[noToId[no]] = true; });
+          break;
+      }
+    };
+
+    categories.forEach(cat => {
+      const items = data.filter(it => {
+        if (cat.flag === "normal") {
+          return it.flag === "normal" || !Array.isArray(it.flags) || it.flags.length === 0;
+        }
+        if (cat.flag) {
+          return it.flag === cat.flag || (Array.isArray(it.flags) && it.flags.includes(cat.flag));
+        }
+        if (cat.flags) {
+          return cat.flags.some(f => it.flag === f || (Array.isArray(it.flags) && it.flags.includes(f)));
+        }
+        if (cat.range) {
+          return it.collectionNo >= cat.range[0] && it.collectionNo <= cat.range[1];
+        }
+        return false;
+      });
+
+      const compressedCat = compressed[cat.id];
+      if (!compressedCat) return;
+
+      if (compressedCat.mode) {
+        // simple category compression (F/AF/S/LIST)
+        expandSection(compressedCat, items);
       } else {
-        subItems = items;
+        // subcategories
+        if (cat.label === "Bond CEs") {
+          bondSubcategories.forEach(sub => {
+            const subsItems = items.filter(it =>
+              it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+            );
+            const section = compressedCat[`${sub.range[0]}-${sub.range[1]}`];
+            if (section) expandSection(section, subsItems);
+          });
+        } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
+          const subs = (cat.label === "Chocolate"
+            ? chocolateSubcategories
+            : commemorativeSubcategories);
+          subs.forEach(sub => {
+            const subsItems = items.filter(it =>
+              it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+            );
+            const section = compressedCat[`${sub.range[0]}-${sub.range[1]}`];
+            if (section) expandSection(section, subsItems);
+          });
+        } else if (cat.raritySplit) {
+          [5, 4, 3].forEach(r => {
+            const subs = items.filter(it => it.rarity === r);
+            const section = compressedCat[`rarity-${r}`];
+            if (section) expandSection(section, subs);
+          });
+        } else {
+          const section = compressedCat["all"];
+          if (section) expandSection(section, items);
+        }
+      }
+    });
+
+    return result;
+  };
+
+  // --- Decoder ---    
+  const tryDecodeLink = (url, categories, data) => {
+    try {
+      if (!url.includes("#/view/")) return null;
+
+      // strip baseUrl if present
+      const baseUrl = import.meta.env.BASE_URL || "/";
+      const cleanUrl = url.replace(`${window.location.origin}${baseUrl}`, "");
+
+      const [uid, compressed] = cleanUrl.split("#/view/")[1].split("/");
+      const json = LZString.decompressFromEncodedURIComponent(compressed);
+      if (!json) throw new Error("Decompression failed");
+
+      const parsed = JSON.parse(json);
+      if (!parsed || typeof parsed !== "object") throw new Error("Invalid payload");
+
+      const cm = expandCollection(parsed.collection, categories, data);
+
+      return {
+        uid,
+        collection: cm,
+        lookingFor: parsed.lookingFor,
+        offering: parsed.offering,
+      };
+    } catch (err) {
+      console.error("❌ Failed to decode link:", err);
+      return null;
+    }
+  };
+
+  // --- Hook into component ---
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const baseUrl = import.meta.env.BASE_URL || "/";
+      const decoded = tryDecodeLink(window.location.href, categories, data);
+
+      if (!decoded) {
+        // if we were in view mode but link is no longer valid, exit
+        if (isViewingShared) {
+          setIsViewingShared(false);
+          setSharedUserId("");
+          setViewCollection({});
+          setViewLookingFor({});
+          setViewOffering({});
+          setActive(null);
+          window.history.replaceState({}, "", baseUrl);
+        }
+        return;
       }
 
-      Object.assign(result, expandSection(subItems, subSection));
-    });
-  });
-
-  return result;
-};
-
-// --- Decoder ---
-const tryDecodeLink = (url, categories, data) => {
-  try {
-    if (!url.includes("/#/view/")) return null;
-
-    const [uid, compressed] = url.split("/#/view/")[1].split("/");
-    const json = LZString.decompressFromEncodedURIComponent(compressed);
-    if (!json) throw new Error("Decompression failed");
-
-    const parsed = JSON.parse(json);
-    if (!parsed || typeof parsed !== "object") throw new Error("Invalid payload");
-
-    const cm = expandCollection(parsed.collection, categories, data);
-
-    return {
-      uid,
-      collection: cm,
-      lookingFor: parsed.lookingFor,
-      offering: parsed.offering,
-    };
-  } catch (err) {
-    console.error("❌ Failed to decode link:", err);
-    return null;
-  }
-};
-
-// --- Hook into component ---
-useEffect(() => {
-  const hash = window.location.hash;
-  if (hash.startsWith("#/view/")) {
-    const fullUrl = window.location.href;
-    const decoded = tryDecodeLink(fullUrl, categories, data);
-
-    if (decoded) {
+      // valid decoded payload → apply read-only state
       setIsViewingShared(true);
       setSharedUserId(decoded.uid);
       setViewCollection(decoded.collection);
 
-      if (decoded.lookingFor === "ALL") setViewLookingFor("ALL");
-      else {
-        const lfm = {};
-        (decoded.lookingFor || []).forEach(id => { lfm[String(id)] = true; });
-        setViewLookingFor(lfm);
+      if (decoded.lookingFor === "ALL") {
+        setViewLookingFor("ALL");
+      } else {
+        const lfMap = {};
+        (Array.isArray(decoded.lookingFor) ? decoded.lookingFor : []).forEach(
+          id => (lfMap[String(id)] = true)
+        );
+        setViewLookingFor(lfMap);
       }
 
-      if (decoded.offering === "ALL") setViewOffering("ALL");
-      else {
-        const ofm = {};
-        (decoded.offering || []).forEach(id => { ofm[String(id)] = true; });
-        setViewOffering(ofm);
+      if (decoded.offering === "ALL") {
+        setViewOffering("ALL");
+      } else {
+        const ofMap = {};
+        (Array.isArray(decoded.offering) ? decoded.offering : []).forEach(
+          id => (ofMap[String(id)] = true)
+        );
+        setViewOffering(ofMap);
       }
 
       setActive(null);
-    }
-  }
-}, [categories, data]);
+    };
 
+    // run once on mount
+    handleLocationChange();
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
 
-const searchRef = useRef(null);
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+    };
+  }, [categories, data, isViewingShared]);
+
+  const searchRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -396,7 +481,7 @@ const searchRef = useRef(null);
   // Handlers for range-based drag selection
   const handleDragStart = (item) => {
     if (isViewingShared || selectionMode !== 'none') return;
-    
+
     setIsDragging(true);
     dragStartItem.current = item;
     collectionSnapshot.current = collection; // Take snapshot of state at drag start
@@ -404,10 +489,10 @@ const searchRef = useRef(null);
     const currentlyOwned = !!collection[item.id];
     const newMode = currentlyOwned ? 'uncheck' : 'check';
     setDragToggleMode(newMode);
-    
+
     setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
   };
-  
+
   const handleDragOver = (item) => {
     if (!isDragging || !dragStartItem.current || selectionMode !== 'none') return;
 
@@ -417,7 +502,6 @@ const searchRef = useRef(null);
     // 🔹 Restrict drag selection to only the subcategory currently being hovered
     const visibleItems = getItems(active);
 
-    // Find which "section" the drag started in (rarity or subheader group)
     // Find which "section" the drag started in (rarity or subheader group)
     const sectionItems = (() => {
       // Case: Event free (rarity + subgroup flag)
@@ -460,8 +544,8 @@ const searchRef = useRef(null);
         );
         return sub
           ? visibleItems.filter(
-              (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
-            )
+            (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+          )
           : visibleItems;
       }
       if (active.label === "Commemorative") {
@@ -470,8 +554,8 @@ const searchRef = useRef(null);
         );
         return sub
           ? visibleItems.filter(
-              (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
-            )
+            (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+          )
           : visibleItems;
       }
 
@@ -534,7 +618,7 @@ const searchRef = useRef(null);
   const CECell = ({ item }) => {
     const owned = mapOwned(item.id);
     const isPulse = highlightId === item.id;
-    
+
     const handleInteractionStart = (e) => {
       if (e.button !== 0) return; // ignore middle/right clicks
       e.preventDefault();
@@ -547,11 +631,11 @@ const searchRef = useRef(null);
         handleDragStart(item);
       }
     };
-    
+
     return (
-      <div 
-        id={`ce-${item.id}`} 
-        key={item.id} 
+      <div
+        id={`ce-${item.id}`}
+        key={item.id}
         className={`relative w-[72px] h-[72px] ${isPulse ? "pulse-border" : ""}`}
         style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
         onMouseDown={handleInteractionStart}
@@ -561,7 +645,7 @@ const searchRef = useRef(null);
         <img
           src={item.face}
           alt={item.name}
-          title={item.name} 
+          title={item.name}
           className={`w-full h-full object-contain transition ${owned ? "opacity-100" : "opacity-50"}`}
           draggable="false"
           style={{ pointerEvents: "none" }}
@@ -633,110 +717,121 @@ const searchRef = useRef(null);
     setResults([]);
   };
 
-const generateLink = (uid) => {
-  // helper: compress a group of items into F/AF/S/LIST, skip E
-  const compressSection = (items, map) => {
-    if (!items.length) return null;
+  const generateLink = (uid) => {
+    // helper: compress a group of items into F/AF/S/LIST, skip E
+    const compressSection = (items, map) => {
+      if (!items.length) return null;
 
-    const ids = items.map(it => it.collectionNo);
-    const owned = ids.filter(no => map[noToId[no]]);
-    const total = ids.length;
-    const count = owned.length;
+      const ids = items.map(it => it.collectionNo);
+      const owned = ids.filter(no => map[noToId[no]]);
+      const total = ids.length;
+      const count = owned.length;
 
-    if (count === 0) return null; // skip empty completely
-    if (count === total) return { mode: "F" }; // full
-    if (count / total >= 0.95) {
-      const missing = ids.filter(no => !map[noToId[no]]);
-      return { mode: "AF", missing }; // almost full
-    }
-    if (count / total <= 0.05) {
-      return { mode: "S", owned }; // sparse
-    }
-    return { mode: "LIST", owned }; // partial list
-  };
+      if (count === 0) return null; // skip empty completely
+      if (count === total) return { mode: "F" }; // full
+      if (count / total >= 0.95) {
+        const missing = ids.filter(no => !map[noToId[no]]);
+        return { mode: "AF", missing }; // almost full
+      }
+      if (count / total <= 0.05) {
+        return { mode: "S", owned }; // sparse
+      }
+      return { mode: "LIST", owned }; // partial list
+    };
 
-  const compressedCategories = {};
+    const compressedCategories = {};
 
-  categories.forEach(cat => {
-    const items = getItems(cat);
-    if (!items.length) return;
+    categories.forEach(cat => {
+      const items = getItems(cat);
+      if (!items.length) return;
 
-    // compress entire category first
-    const catCompression = compressSection(items, collection);
+      // compress entire category first
+      const catCompression = compressSection(items, collection);
 
-    // if category is null (empty), skip entirely
-    if (!catCompression) return;
+      // if category is null (empty), skip entirely
+      if (!catCompression) return;
 
-    // if category is fully compressible (F/AF/S/LIST), store directly
-    if (catCompression.mode !== "LIST") {
-      compressedCategories[cat.id] = catCompression;
-      return;
-    }
+      // if category is fully compressible (F/AF/S/LIST), store directly
+      if (catCompression.mode !== "LIST") {
+        compressedCategories[cat.id] = catCompression;
+        return;
+      }
 
-    // otherwise split into subcategories
-    const subsResult = {};
+      // otherwise split into subcategories
+      const subsResult = {};
 
-    if (cat.label === "Event free") {
-      const rarities = [5, 4, 3];
-      const subFlags = ["svtEquipEventReward", "svtEquipExp"];
-      rarities.forEach(r => {
-        subFlags.forEach(flag => {
-          const subs = items.filter(it =>
-            it.rarity === r &&
-            (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
+      if (cat.label === "Event free") {
+        const rarities = [5, 4, 3];
+        const subFlags = ["svtEquipEventReward", "svtEquipExp"];
+        rarities.forEach(r => {
+          subFlags.forEach(flag => {
+            const subs = items.filter(it =>
+              it.rarity === r &&
+              (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
+            );
+            if (subs.length) {
+              const section = compressSection(subs, collection);
+              if (section) subsResult[`${r}-${flag}`] = section;
+            }
+          });
+        });
+
+      } else if (cat.label === "Bond CEs") {
+        bondSubcategories.forEach(sub => {
+          const subsItems = items.filter(it =>
+            it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
           );
-          if (subs.length) {
-            const section = compressSection(subs, collection);
-            if (section) subsResult[`${r}-${flag}`] = section;
+          if (subsItems.length) {
+            const section = compressSection(subsItems, collection);
+            if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
           }
         });
-      });
 
-    } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
-      const subs = (cat.label === "Chocolate"
-        ? chocolateSubcategories
-        : commemorativeSubcategories);
-      subs.forEach(sub => {
-        const subsItems = items.filter(it =>
-          it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
-        );
-        if (subsItems.length) {
-          const section = compressSection(subsItems, collection);
-          if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
-        }
-      });
+      } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
+        const subs = (cat.label === "Chocolate"
+          ? chocolateSubcategories
+          : commemorativeSubcategories);
+        subs.forEach(sub => {
+          const subsItems = items.filter(it =>
+            it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+          );
+          if (subsItems.length) {
+            const section = compressSection(subsItems, collection);
+            if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
+          }
+        });
 
-    } else if (cat.raritySplit) {
-      [5, 4, 3].forEach(r => {
-        const subs = items.filter(it => it.rarity === r);
-        if (subs.length) {
-          const section = compressSection(subs, collection);
-          if (section) subsResult[`rarity-${r}`] = section;
-        }
-      });
+      } else if (cat.raritySplit) {
+        [5, 4, 3].forEach(r => {
+          const subs = items.filter(it => it.rarity === r);
+          if (subs.length) {
+            const section = compressSection(subs, collection);
+            if (section) subsResult[`rarity-${r}`] = section;
+          }
+        });
 
-    } else {
-      const section = compressSection(items, collection);
-      if (section) subsResult["all"] = section;
-    }
+      } else {
+        const section = compressSection(items, collection);
+        if (section) subsResult["all"] = section;
+      }
 
-    if (Object.keys(subsResult).length) {
-      compressedCategories[cat.id] = subsResult;
-    }
-  });
+      if (Object.keys(subsResult).length) {
+        compressedCategories[cat.id] = subsResult;
+      }
+    });
 
-  const payload = {
-    collection: compressedCategories,
-    lookingFor: lookingAll ? "ALL" : Object.keys(lookingFor).filter(k => lookingFor[k]),
-    offering: offerAll ? "ALL" : Object.keys(offering).filter(k => offering[k]),
+    const payload = {
+      collection: compressedCategories,
+      lookingFor: lookingAll ? "ALL" : Object.keys(lookingFor).filter(k => lookingFor[k]),
+      offering: offerAll ? "ALL" : Object.keys(offering).filter(k => offering[k]),
+    };
+
+    const json = JSON.stringify(payload);
+    const compressed = LZString.compressToEncodedURIComponent(json);
+
+    const baseUrl = import.meta.env.BASE_URL || "/";
+    return `${window.location.origin}${baseUrl}#/view/${uid}/${compressed}`;
   };
-
-  const json = JSON.stringify(payload);
-  const compressed = LZString.compressToEncodedURIComponent(json);
-
-  return `${window.location.origin}/#/view/${uid}/${compressed}`;
-};
-
 
   const exitViewerMode = () => {
     setIsViewingShared(false);
@@ -791,17 +886,6 @@ const generateLink = (uid) => {
     </div>
   );
 
-  const renderItemsWithHeaders = (items, chunkSize = 50) => {
-    const chunks = [];
-    for (let i = 0; i < items.length; i += chunkSize) {
-      chunks.push({
-        header: `CEs ${i + 1}-${Math.min(i + chunkSize, items.length)}`,
-        cards: items.slice(i, i + chunkSize),
-      });
-    }
-    return <div className="flex-1 p-4 overflow-auto">{chunks.map(c => renderSection(c.header, c.cards))}</div>;
-  };
-
   const renderWithSubcategories = (items, subs) => {
     const used = new Set();
     return (
@@ -848,9 +932,8 @@ const generateLink = (uid) => {
             return (
               <div
                 key={id}
-                className={`flex items-center gap-2 p-1 bg-white/5 rounded ${
-                  map === "ALL" ? "" : "cursor-pointer hover:bg-white/10"
-                }`}
+                className={`flex items-center gap-2 p-1 bg-white/5 rounded ${map === "ALL" ? "" : "cursor-pointer hover:bg-white/10"
+                  }`}
                 onClick={() => {
                   if (isViewingShared || map === "ALL") return;
                   if (listName === "looking")
@@ -908,7 +991,7 @@ const generateLink = (uid) => {
 
       {/* Header */}
       <div className="p-4 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold"> CEdex {getProgress().owned > 0 && ( <> ({getProgress().owned}/{getProgress().total})</> )} </h1>
+        <h1 className="text-2xl font-bold"> CEdex {getProgress().owned > 0 && (<> ({getProgress().owned}/{getProgress().total})</>)} </h1>
         <div className="flex-1 max-w-xl">
           <div ref={searchRef} className="relative">
             <input
@@ -947,11 +1030,10 @@ const generateLink = (uid) => {
                         el.scrollIntoView({ block: "nearest" });
                       }
                     }}
-                    className={`flex items-center gap-3 p-2 cursor-pointer ${
-                      highlightedIndex === idx
+                    className={`flex items-center gap-3 p-2 cursor-pointer ${highlightedIndex === idx
                         ? "bg-gray-200 dark:bg-gray-600"
                         : "hover:bg-gray-100 dark:hover:bg-gray-600"
-                    }`}
+                      }`}
                     onClick={() => onSearchSelect(item)}
                   >
                     <div className="relative w-12 h-12 flex-shrink-0">
@@ -983,10 +1065,10 @@ const generateLink = (uid) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 min-h-[50vh]">
         {categories.map(cat => (
           <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" onClick={() => { setActive(cat); setSelectionMode("none"); }}>
-             <img src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e)=> e.currentTarget.style.display='none'} />
+            <img src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e) => e.currentTarget.style.display = 'none'} />
             <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>{cat.label}</span>
             {cat.special !== "generate" && <span className={theme === "dark" ? "absolute bottom-2 right-2 text-2xl font-bold [text-shadow:2px_2px_3px_black]" : "absolute bottom-2 right-2 text-2xl font-bold"}>{getCategoryPercentage(cat)}%</span>}
-          </div>  
+          </div>
         ))}
       </div>
 
@@ -998,12 +1080,12 @@ const generateLink = (uid) => {
               {/* Sidebar */}
               <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
                 <h2 className="text-xl font-bold">{active.label}</h2>
-                {active.special !== "generate" && !isViewingShared && ( 
+                {active.special !== "generate" && !isViewingShared && (
                   <>
                     <button className="px-4 py-2 rounded-xl bg-green-500 text-white" onClick={() => markAll(getItems(active), true)}>Mark all have</button>
                     <button className="px-4 py-2 rounded-xl bg-yellow-500 text-white" onClick={() => markAll(getItems(active), false)}>Mark all don't have</button>
                     <button className={`px-4 py-2 rounded-xl ${selectionMode === "looking" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "looking" ? "none" : "looking")}>Looking for</button>
-                    <button className={`px-4 py-2 rounded-xl ${selectionMode === "offering" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>Offering</button> 
+                    <button className={`px-4 py-2 rounded-xl ${selectionMode === "offering" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>Offering</button>
                   </>
                 )}
                 {active.special === "generate" && lastId && !isViewingShared && <button className="px-4 py-2 rounded-xl bg-purple-500 text-white" onClick={() => setGenUserId(lastId)}>Paste in last ID {lastId}</button>}
@@ -1027,9 +1109,9 @@ const generateLink = (uid) => {
                     <>
                       <h2 className="text-lg font-bold mb-2">Share Your Collection</h2>
                       <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Enter your 9 or 12 digit ID, then click <strong>Generate Hash</strong> to create a shareable link.</p>
-                      <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g,''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="012345678" />
+                      <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g, ''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="012345678" />
                       <div className="flex gap-2 mb-3">
-                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); debugLink(url); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch {} }}>Generate Hash</button>
+                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); debugLink(url); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch { } }}>Generate Hash</button>
                         <button className="px-4 py-2 rounded-xl bg-gray-300" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
                       </div>
                       <div className="flex gap-3 mb-4">
@@ -1050,8 +1132,8 @@ const generateLink = (uid) => {
                 </div>
               ) : (
                 (() => {
-                  const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
-                  if (active.label === "Bond CEs") return renderItemsWithHeaders(items);
+                  const items = getItems(active).sort((a, b) => a.collectionNo - b.collectionNo);
+                  if (active.label === "Bond CEs") return renderWithSubcategories(items, bondSubcategories);
                   if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories);
                   if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
                   if (active.label === "Event free") {
