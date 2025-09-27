@@ -114,73 +114,7 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => setCollectionData(data));
   }, []);
-  // Expand compressed collection payload into flat { id: true }
-const expandCollection = (encoded) => {
-  const result = {};
-  // Iterate top-level categories
-  for (const [catKey, catVal] of Object.entries(encoded)) {
-    // Case: simple mode (EMPTY / FULL / LIST / ALMOST_FULL)
-    if (catVal.mode) {
-      expandSection(catVal, getItemsForCategory(catKey), result);
-      continue;
-    }
 
-    // Case: subgroups (rarity groups, ranges, etc.)
-    for (const [subKey, subVal] of Object.entries(catVal)) {
-      const items = getItemsForSub(catKey, subKey);
-      expandSection(subVal, items, result);
-    }
-  }
-  return result;
-};
-
-// Helper: expand one compressed section
-function expandSection(section, items, result) {
-  if (!section || !section.mode) return;
-
-  if (section.mode === "F") {
-    items.forEach(it => { result[it.id] = true; });
-  } else if (section.mode === "E") {
-    // nothing
-  } else if (section.mode === "L") {
-    section.owned.forEach(id => { result[String(id)] = true; });
-  } else if (section.mode === "AF") {
-    const missing = new Set(section.missing || []);
-    items.forEach(it => {
-      if (!missing.has(it.id)) result[it.id] = true;
-    });
-  }
-}
-const getItemsForCategory = (catKey) => {
-  // catKey = "1", "2", "3", etc.
-  // Return all CE objects in that category
-  return allItems.filter(it => it.categoryId === Number(catKey));
-};
-
-const getItemsForSub = (catKey, subKey) => {
-  const items = getItemsForCategory(catKey);
-
-  if (subKey.startsWith("rarity-")) {
-    const rarity = Number(subKey.split("-")[1]);
-    return items.filter(it => it.rarity === rarity);
-  }
-
-  if (subKey.includes("-svtEquipEventReward") || subKey.includes("-svtEquipExp")) {
-    const [rarity, flag] = subKey.split("-");
-    return items.filter(it =>
-      it.rarity === Number(rarity) &&
-      (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
-    );
-  }
-
-  if (subKey.includes("-")) {
-    const [start, end] = subKey.split("-").map(Number);
-    return items.filter(it => it.collectionNo >= start && it.collectionNo <= end);
-  }
-
-  return items; // fallback
-};
-  
   // Effect to handle ending a drag selection globally
   useEffect(() => {
     const handleDragEnd = () => {
@@ -225,8 +159,33 @@ const getItemsForSub = (catKey, subKey) => {
     };
   }, [isDragging, data]); // Rerun if dragging state or data changes
 
-  const modalRef = useRef(null);
+  // Build lookup tables once (outside generate/expand)
+  const idToNo = {};
+  const noToId = {};
+  data.forEach(it => {
+    idToNo[it.id] = it.collectionNo;
+    noToId[it.collectionNo] = it.id;
+  });
 
+ // Debug helper
+  const debugLink = (url) => {
+    try {
+      const parts = url.split("/#/view/");
+      if (parts.length < 2) {
+        console.warn("Not a valid debug URL:", url);
+        return;
+      }
+      const [uid, compressed] = parts[1].split("/");
+      const json = LZString.decompressFromEncodedURIComponent(compressed);
+      const decoded = JSON.parse(json);
+      console.log("📦 Debug Link:");
+      console.log("User ID:", uid);
+      console.log("Decoded payload:", decoded);
+      return decoded;
+    } catch (err) {
+      console.error("Failed to debug link:", err);
+    }
+  };
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -257,49 +216,138 @@ const getItemsForSub = (catKey, subKey) => {
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
 
-  useEffect(() => {
-    const tryDecode = () => {
-      const hash = window.location.hash || "";
-      if (!hash.startsWith("#/view/")) return;
-      const parts = hash.split("/");
-      if (parts.length < 4) return;
-      const uid = parts[2];
-      const compressed = parts.slice(3).join("/");
+// --- Expansion helpers ---
+const expandSection = (items, section) => {
+  const ids = items.map(it => it.collectionNo);
+  const map = {};
 
-      try {
-        const json = LZString.decompressFromEncodedURIComponent(compressed);
-        const decoded = JSON.parse(json);
-        const cm = expandCollection(decoded.collection || {});
-        const lf = decoded.lookingFor;
-        const of = decoded.offering;
-        setViewCollection(cm);
-        cArr.forEach(id => cm[String(id)] = true);
-        if (lf === "ALL") {
-          setViewLookingFor("ALL");
-        } else {
-          (Array.isArray(lf) ? lf : []).forEach(id => lfm[String(id)] = true);
-          setViewLookingFor(lfm);
-        }
-        if (of === "ALL") {
-          setViewOffering("ALL");
-        } else {
-          (Array.isArray(of) ? of : []).forEach(id => ofm[String(id)] = true);
-          setViewOffering(ofm);
-        }
-        setIsViewingShared(true);
-        setSharedUserId(uid);
-        setViewCollection(cm);
-        setActive(null);
-      } catch (err) {
-        console.warn("Failed to decode shared link:", err);
+  if (!section) return map;
+
+  switch (section.mode) {
+    case "F": // full
+      ids.forEach(no => { map[noToId[no]] = true; });
+      break;
+    case "AF": // almost full
+      ids.forEach(no => { map[noToId[no]] = true; });
+      (section.missing || []).forEach(no => { map[noToId[no]] = false; });
+      break;
+    case "S": // sparse
+      (section.owned || []).forEach(no => { map[noToId[no]] = true; });
+      break;
+    case "LIST": // explicit list
+      (section.owned || []).forEach(no => { map[noToId[no]] = true; });
+      break;
+    default:
+      break;
+  }
+
+  return map;
+};
+
+const expandCollection = (compressed, categories, data) => {
+  const result = {};
+
+  categories.forEach(cat => {
+    const items = getItems(cat);
+    if (!items.length) return;
+
+    const section = compressed[cat.id];
+    if (!section) return;
+
+    // If it’s a direct section (F/AF/S/LIST)
+    if (section.mode) {
+      Object.assign(result, expandSection(items, section));
+      return;
+    }
+
+    // Otherwise it’s subcategories
+    Object.entries(section).forEach(([subKey, subSection]) => {
+      let subItems = [];
+
+      if (cat.label === "Event free") {
+        const [rarity, flag] = subKey.split("-");
+        subItems = items.filter(it =>
+          it.rarity === parseInt(rarity) &&
+          (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
+        );
+      } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
+        const [min, max] = subKey.split("-").map(Number);
+        subItems = items.filter(it =>
+          it.collectionNo >= min && it.collectionNo <= max
+        );
+      } else if (cat.raritySplit && subKey.startsWith("rarity-")) {
+        const r = parseInt(subKey.replace("rarity-", ""));
+        subItems = items.filter(it => it.rarity === r);
+      } else {
+        subItems = items;
       }
-    };
-    tryDecode();
-    window.addEventListener("hashchange", tryDecode);
-    return () => window.removeEventListener("hashchange", tryDecode);
-  }, []);
 
-  const searchRef = useRef(null);
+      Object.assign(result, expandSection(subItems, subSection));
+    });
+  });
+
+  return result;
+};
+
+// --- Decoder ---
+const tryDecodeLink = (url, categories, data) => {
+  try {
+    if (!url.includes("/#/view/")) return null;
+
+    const [uid, compressed] = url.split("/#/view/")[1].split("/");
+    const json = LZString.decompressFromEncodedURIComponent(compressed);
+    if (!json) throw new Error("Decompression failed");
+
+    const parsed = JSON.parse(json);
+    if (!parsed || typeof parsed !== "object") throw new Error("Invalid payload");
+
+    const cm = expandCollection(parsed.collection, categories, data);
+
+    return {
+      uid,
+      collection: cm,
+      lookingFor: parsed.lookingFor,
+      offering: parsed.offering,
+    };
+  } catch (err) {
+    console.error("❌ Failed to decode link:", err);
+    return null;
+  }
+};
+
+// --- Hook into component ---
+useEffect(() => {
+  const hash = window.location.hash;
+  if (hash.startsWith("#/view/")) {
+    const fullUrl = window.location.href;
+    const decoded = tryDecodeLink(fullUrl, categories, data);
+
+    if (decoded) {
+      setIsViewingShared(true);
+      setSharedUserId(decoded.uid);
+      setViewCollection(decoded.collection);
+
+      if (decoded.lookingFor === "ALL") setViewLookingFor("ALL");
+      else {
+        const lfm = {};
+        (decoded.lookingFor || []).forEach(id => { lfm[String(id)] = true; });
+        setViewLookingFor(lfm);
+      }
+
+      if (decoded.offering === "ALL") setViewOffering("ALL");
+      else {
+        const ofm = {};
+        (decoded.offering || []).forEach(id => { ofm[String(id)] = true; });
+        setViewOffering(ofm);
+      }
+
+      setActive(null);
+    }
+  }
+}, [categories, data]);
+
+
+const searchRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -369,6 +417,7 @@ const getItemsForSub = (catKey, subKey) => {
     // 🔹 Restrict drag selection to only the subcategory currently being hovered
     const visibleItems = getItems(active);
 
+    // Find which "section" the drag started in (rarity or subheader group)
     // Find which "section" the drag started in (rarity or subheader group)
     const sectionItems = (() => {
       // Case: Event free (rarity + subgroup flag)
@@ -504,7 +553,7 @@ const getItemsForSub = (catKey, subKey) => {
         id={`ce-${item.id}`} 
         key={item.id} 
         className={`relative w-[72px] h-[72px] ${isPulse ? "pulse-border" : ""}`}
-        style={{ cursor: isViewingShared ? "default" : "pointer", touchAction: "pan-y" }}
+        style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
         onMouseDown={handleInteractionStart}
         onTouchStart={handleInteractionStart}
         onMouseEnter={() => handleDragOver(item)}
@@ -557,11 +606,8 @@ const getItemsForSub = (catKey, subKey) => {
   }, [query, data]);
 
   const onSearchSelect = (item) => {
-    const matched = categories.find(cat => {
-      if (cat.flag === "normal") return item.flag === "normal" || (!Array.isArray(item.flags) || item.flags.length === 0);
-      if (cat.flag) return item.flag === cat.flag || (Array.isArray(item.flags) && item.flags.includes(cat.flag));
-      return false;
-    }) || categories[0];
+    const catId = item.categoryId;
+    const matched = categories.find(c => c.id === catId) || categories[0];
 
     setActive(matched);
     setSelectionMode("none");
@@ -577,97 +623,120 @@ const getItemsForSub = (catKey, subKey) => {
             setCollection(prev => ({ ...prev, [item.id]: !prev[item.id] }));
             setTimeout(() => {
               setCollection(prev => ({ ...prev, [item.id]: !prev[item.id] }));
-            }, 500);
-          }, 550);
+            }, 700);
+          }, 750);
         }
       }
-    }, 50);
+    }, 90);
 
     setQuery("");
     setResults([]);
   };
 
-  const generateLink = (uid) => {
-    const compressSection = (items, map) => {
-      const ids = items.map(it => it.collectionNo);
-      const owned = ids.filter(id => map[id]);
-      const total = ids.length;
-      const count = owned.length;
+const generateLink = (uid) => {
+  // helper: compress a group of items into F/AF/S/LIST, skip E
+  const compressSection = (items, map) => {
+    if (!items.length) return null;
 
-      if (count === 0) return { mode: "E" }; // empty
-      if (count === total) return { mode: "F" }; // full
-      if (count / total >= 0.95) {
-        const missing = ids.filter(id => !map[id]);
-        return { mode: "AF", missing }; // almost full
-      }
-      if (count / total <= 0.05) return { mode: "S", owned }; // sparse
-      return { mode: "LIST", owned }; // partial
-    };
+    const ids = items.map(it => it.collectionNo);
+    const owned = ids.filter(no => map[noToId[no]]);
+    const total = ids.length;
+    const count = owned.length;
 
-    const compressedCategories = {};
-
-    categories.forEach(cat => {
-      const items = getItems(cat);
-      // compress entire category first
-      const catCompression = compressSection(items, collection);
-      // if category is fully empty/full/almost full/sparse, skip subcategories
-      if (["E", "F"].includes(catCompression.mode)) {
-        compressedCategories[cat.id] = catCompression;
-        return;
-      }
-
-      // otherwise, split into subcategories as needed
-      compressedCategories[cat.id] = {};
-
-      if (cat.label === "Event free") {
-        const rarities = [5, 4, 3];
-        const subFlags = ["svtEquipEventReward", "svtEquipExp"];
-        rarities.forEach(r => {
-          subFlags.forEach(flag => {
-            const subs = items.filter(it =>
-              it.rarity === r &&
-              (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
-            );
-            if (subs.length) {
-              compressedCategories[cat.id][`${r}-${flag}`] = compressSection(subs, collection);
-            }
-          });
-        });
-
-      } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
-        const subs = (cat.label === "Chocolate" ? chocolateSubcategories : commemorativeSubcategories);
-        subs.forEach(sub => {
-          const subsItems = items.filter(it =>
-            it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
-          );
-          if (subsItems.length) {
-            compressedCategories[cat.id][`${sub.range[0]}-${sub.range[1]}`] = compressSection(subsItems, collection);
-          }
-        });
-
-      } else if (cat.raritySplit) {
-        [5, 4, 3].forEach(r => {
-          const subs = items.filter(it => it.rarity === r);
-          if (subs.length) {
-            compressedCategories[cat.id][`rarity-${r}`] = compressSection(subs, collection);
-          }
-        });
-
-      } else {
-        compressedCategories[cat.id] = compressSection(items, collection);
-      }
-    });
-
-    const payload = {
-      collection: compressedCategories,
-      lookingFor: lookingAll ? "ALL" : Object.keys(lookingFor).filter(k => lookingFor[k]),
-      offering: offerAll ? "ALL" : Object.keys(offering).filter(k => offering[k])
-    };
-
-    const json = JSON.stringify(payload);
-    const compressed = LZString.compressToEncodedURIComponent(json);
-    return `${window.location.origin}/cedex/${uid}/${compressed}`;
+    if (count === 0) return null; // skip empty completely
+    if (count === total) return { mode: "F" }; // full
+    if (count / total >= 0.95) {
+      const missing = ids.filter(no => !map[noToId[no]]);
+      return { mode: "AF", missing }; // almost full
+    }
+    if (count / total <= 0.05) {
+      return { mode: "S", owned }; // sparse
+    }
+    return { mode: "LIST", owned }; // partial list
   };
+
+  const compressedCategories = {};
+
+  categories.forEach(cat => {
+    const items = getItems(cat);
+    if (!items.length) return;
+
+    // compress entire category first
+    const catCompression = compressSection(items, collection);
+
+    // if category is null (empty), skip entirely
+    if (!catCompression) return;
+
+    // if category is fully compressible (F/AF/S/LIST), store directly
+    if (catCompression.mode !== "LIST") {
+      compressedCategories[cat.id] = catCompression;
+      return;
+    }
+
+    // otherwise split into subcategories
+    const subsResult = {};
+
+    if (cat.label === "Event free") {
+      const rarities = [5, 4, 3];
+      const subFlags = ["svtEquipEventReward", "svtEquipExp"];
+      rarities.forEach(r => {
+        subFlags.forEach(flag => {
+          const subs = items.filter(it =>
+            it.rarity === r &&
+            (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
+          );
+          if (subs.length) {
+            const section = compressSection(subs, collection);
+            if (section) subsResult[`${r}-${flag}`] = section;
+          }
+        });
+      });
+
+    } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
+      const subs = (cat.label === "Chocolate"
+        ? chocolateSubcategories
+        : commemorativeSubcategories);
+      subs.forEach(sub => {
+        const subsItems = items.filter(it =>
+          it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+        );
+        if (subsItems.length) {
+          const section = compressSection(subsItems, collection);
+          if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
+        }
+      });
+
+    } else if (cat.raritySplit) {
+      [5, 4, 3].forEach(r => {
+        const subs = items.filter(it => it.rarity === r);
+        if (subs.length) {
+          const section = compressSection(subs, collection);
+          if (section) subsResult[`rarity-${r}`] = section;
+        }
+      });
+
+    } else {
+      const section = compressSection(items, collection);
+      if (section) subsResult["all"] = section;
+    }
+
+    if (Object.keys(subsResult).length) {
+      compressedCategories[cat.id] = subsResult;
+    }
+  });
+
+  const payload = {
+    collection: compressedCategories,
+    lookingFor: lookingAll ? "ALL" : Object.keys(lookingFor).filter(k => lookingFor[k]),
+    offering: offerAll ? "ALL" : Object.keys(offering).filter(k => offering[k]),
+  };
+
+  const json = JSON.stringify(payload);
+  const compressed = LZString.compressToEncodedURIComponent(json);
+
+  return `${window.location.origin}/#/view/${uid}/${compressed}`;
+};
+
 
   const exitViewerMode = () => {
     setIsViewingShared(false);
@@ -829,12 +898,12 @@ const getItemsForSub = (catKey, subKey) => {
   return (
     <div className={theme === "dark" ? "dark bg-gray-900 text-white min-h-screen" : "bg-white text-black min-h-screen"}>
       <style>{`
-        .pulse-border { animation: pulseBorder 0.7s ease-in-out; border-radius: 6px; }
+        .pulse-border { animation: pulseBorder 1.2s ease-in-out; border-radius: 6px; }
         @keyframes pulseBorder {
           0% { box-shadow: 0 0 0 0 rgba(246, 59, 59, 0.95); }
-          50% { box-shadow: 0 0 12px 6px rgba(217, 255, 0, 1); }
+          50% { box-shadow: 0 0 12px 6px rgba(221, 246, 59, 1); }
           100% { box-shadow: 0 0 0 0 rgba(246, 59, 59, 1); }
-        } 
+        }
       `}</style>
 
       {/* Header */}
@@ -914,10 +983,10 @@ const getItemsForSub = (catKey, subKey) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 min-h-[50vh]">
         {categories.map(cat => (
           <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" onClick={() => { setActive(cat); setSelectionMode("none"); }}>
-            <img src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e)=> e.currentTarget.style.display='none'} />
+             <img src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e)=> e.currentTarget.style.display='none'} />
             <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>{cat.label}</span>
             {cat.special !== "generate" && <span className={theme === "dark" ? "absolute bottom-2 right-2 text-2xl font-bold [text-shadow:2px_2px_3px_black]" : "absolute bottom-2 right-2 text-2xl font-bold"}>{getCategoryPercentage(cat)}%</span>}
-          </div>
+          </div>  
         ))}
       </div>
 
@@ -942,79 +1011,79 @@ const getItemsForSub = (catKey, subKey) => {
                 {active.special !== "generate" && <div className={`mt-1 font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}</div>}
               </div>
 
-                {/* Main content */}
-                {active.special === "generate" ? (
-                  <div className="flex-1 p-6 overflow-auto text-black dark:text-white bg-white dark:bg-gray-800">
-                    {isViewingShared ? (
-                      <>
-                        <h3 className="text-lg font-bold mb-2">Looking for {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} items)` : ""}</h3>
-                        <SmallList map={viewLookingFor} listName="looking" expandAll="looking" />
-                        <h3 className="text-lg font-bold mt-4 mb-2">Offering {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} items)` : ""}</h3>
-                        <SmallList map={viewOffering} listName="offering" expandAll="offering" />
-                        <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
-                        <p className="mt-4 text-sm text-gray-400">Viewing only — controls are hidden.</p>
-                      </>
-                    ) : (
-                      <>
-                        <h2 className="text-lg font-bold mb-2">Share Your Collection</h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Enter your 9 or 12 digit ID, then click <strong>Generate Hash</strong> to create a shareable link.</p>
-                        <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g,''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="123456789" />
-                        <div className="flex gap-2 mb-3">
-                          <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch {} }}>Generate Hash</button>
-                          <button className="px-4 py-2 rounded-xl bg-gray-300" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
-                        </div>
-                        <div className="flex gap-3 mb-4">
-                          <button className={`px-3 py-2 rounded-xl ${offerAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>{offerAll ? "Undo Offer Everything" : "Offer everything I have"}</button>
-                          <button className={`px-3 py-2 rounded-xl ${lookingAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setLookingAll(v => !v); if (!lookingAll) setLookingFor({}); }}>{lookingAll ? "Undo Looking for Everything" : "Looking for everything I don't have"}</button>
-                        </div>
-                        {generatedUrl && <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-xl cursor-pointer hover:bg-green-200 dark:hover:bg-green-800 transition" onClick={() => { navigator.clipboard.writeText(generatedUrl); }}><p className="text-sm font-semibold mb-1">Your link:</p><p className="break-all text-sm text-green-700 dark:text-green-300">{generatedUrl}</p></div>}
-                        <div className="mt-6 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-xl text-sm"><p className="mb-1 font-semibold">Tips:</p><ul className="list-disc pl-5 space-y-1"><li>You can click items in the preview to remove them from explicit lists.</li><li>Paste your 9/12 digit ID or drag a text onto this window.</li><li>The link contains your data compressed for sharing.</li></ul></div>
-                        <div className="mt-6">
-                          <h4 className="font-bold">Preview: Looking for {lookingAll ? `(${data.filter(d => !collection[d.id]).length} items)` : ""}</h4>
-                          <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" />
-                          <h4 className="font-bold mt-3">Preview: Offering {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} items)` : ""}</h4>
-                          <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" />
-                        </div>
-                        <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
-                      </>
-                    )}
-                  </div>
-                ) : (
-                  (() => {
-                    const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
-                    if (active.label === "Bond CEs") return renderItemsWithHeaders(items);
-                    if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories);
-                    if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
-                    if (active.label === "Event free") {
-                      const rarities = [5, 4, 3];
-                      const subFlags = [{ key: "svtEquipEventReward", label: "Event Reward" }, { key: "svtEquipExp", label: "CE EXP" }];
-                      return (
-                        <div className="flex-1 p-4 overflow-auto">
-                          {rarities.map(r => (
-                            <div key={r}>
-                              <h3 className={`text-lg font-bold my-4 ${theme === "dark" ? "text-white" : "text-black"}`}>Rarity {r}</h3>
-                              {subFlags.map(sf => {
-                                const subs = items.filter(it => it.rarity === r && (it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key))));
-                                if (!subs.length) return null;
-                                const allComplete = subs.every(it => mapOwned(it.id));
-                                return (
-                                  <div key={sf.key} className="mb-6">
-                                    <h4 className={`text-md font-semibold mb-1 ${theme === "dark" ? "text-white" : "text-black"}`}>{sf.label}</h4>
-                                    {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
-                                    <div className={`grid ${gridColsClass} gap-1`}>{subs.map(it => <CECell key={it.id} item={it} />)}</div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          ))}
-                        </div>
-                      );
-                    }
-                    if (active.raritySplit) return renderByRarity(items);
-                    return renderGrid(items);
-                  })()
-                )}
-              </motion.div>
+              {/* Main content */}
+              {active.special === "generate" ? (
+                <div className="flex-1 p-6 overflow-auto text-black dark:text-white bg-white dark:bg-gray-800">
+                  {isViewingShared ? (
+                    <>
+                      <h3 className="text-lg font-bold mb-2">Looking for {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} items)` : ""}</h3>
+                      <SmallList map={viewLookingFor} listName="looking" expandAll="looking" />
+                      <h3 className="text-lg font-bold mt-4 mb-2">Offering {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} items)` : ""}</h3>
+                      <SmallList map={viewOffering} listName="offering" expandAll="offering" />
+                      <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
+                      <p className="mt-4 text-sm text-gray-400">Viewing only — controls are hidden.</p>
+                    </>
+                  ) : (
+                    <>
+                      <h2 className="text-lg font-bold mb-2">Share Your Collection</h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Enter your 9 or 12 digit ID, then click <strong>Generate Hash</strong> to create a shareable link.</p>
+                      <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g,''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="012345678" />
+                      <div className="flex gap-2 mb-3">
+                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); debugLink(url); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch {} }}>Generate Hash</button>
+                        <button className="px-4 py-2 rounded-xl bg-gray-300" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
+                      </div>
+                      <div className="flex gap-3 mb-4">
+                        <button className={`px-3 py-2 rounded-xl ${offerAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>{offerAll ? "Undo Offer Everything" : "Offer everything I have"}</button>
+                        <button className={`px-3 py-2 rounded-xl ${lookingAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setLookingAll(v => !v); if (!lookingAll) setLookingFor({}); }}>{lookingAll ? "Undo Looking for Everything" : "Looking for everything I don't have"}</button>
+                      </div>
+                      {generatedUrl && <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-xl cursor-pointer hover:bg-green-200 dark:hover:bg-green-800 transition" onClick={() => { navigator.clipboard.writeText(generatedUrl); }}><p className="text-sm font-semibold mb-1">Your link:</p><p className="break-all text-sm text-green-700 dark:text-green-300">{generatedUrl}</p></div>}
+                      <div className="mt-6 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-xl text-sm"><p className="mb-1 font-semibold">Tips:</p><ul className="list-disc pl-5 space-y-1"><li>You can click items in the preview to remove them from explicit lists.</li><li>Paste your 9/12 digit ID or drag a text onto this window.</li><li>The link contains your data compressed for sharing.</li></ul></div>
+                      <div className="mt-6">
+                        <h4 className="font-bold">Preview: Looking for {lookingAll ? `(${data.filter(d => !collection[d.id]).length} items)` : ""}</h4>
+                        <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" />
+                        <h4 className="font-bold mt-3">Preview: Offering {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} items)` : ""}</h4>
+                        <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" />
+                      </div>
+                      <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                (() => {
+                  const items = getItems(active).sort((a,b)=>a.collectionNo-b.collectionNo);
+                  if (active.label === "Bond CEs") return renderItemsWithHeaders(items);
+                  if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories);
+                  if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
+                  if (active.label === "Event free") {
+                    const rarities = [5, 4, 3];
+                    const subFlags = [{ key: "svtEquipEventReward", label: "Event Reward" }, { key: "svtEquipExp", label: "CE EXP" }];
+                    return (
+                      <div className="flex-1 p-4 overflow-auto">
+                        {rarities.map(r => (
+                          <div key={r}>
+                            <h3 className={`text-lg font-bold my-4 ${theme === "dark" ? "text-white" : "text-black"}`}>Rarity {r}</h3>
+                            {subFlags.map(sf => {
+                              const subs = items.filter(it => it.rarity === r && (it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key))));
+                              if (!subs.length) return null;
+                              const allComplete = subs.every(it => mapOwned(it.id));
+                              return (
+                                <div key={sf.key} className="mb-6">
+                                  <h4 className={`text-md font-semibold mb-1 ${theme === "dark" ? "text-white" : "text-black"}`}>{sf.label}</h4>
+                                  {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
+                                  <div className={`grid ${gridColsClass} gap-1`}>{subs.map(it => <CECell key={it.id} item={it} />)}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+                  if (active.raritySplit) return renderByRarity(items);
+                  return renderGrid(items);
+                })()
+              )}
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
