@@ -91,6 +91,9 @@ export default function App() {
   const [selectionMode, setSelectionMode] = useState("none");
   const [sortAsc, setSortAsc] = useState(true);
 
+  const [undoState, setUndoState] = useState(null);
+  const [showUndo, setShowUndo] = useState(false);
+
   const [isViewingShared, setIsViewingShared] = useState(false);
   const [sharedUserId, setSharedUserId] = useState("");
   const [viewCollection, setViewCollection] = useState({});
@@ -255,6 +258,8 @@ export default function App() {
         } else {
           setActive(null);
           setSelectionMode("none");
+          setShowUndo(false);
+          setUndoState(null); 
         }
       }
     };
@@ -629,14 +634,34 @@ export default function App() {
     return Math.round((ownedCount / items.length) * 100);
   };
 
-  const markAll = (items, value) => {
-    if (isViewingShared) return;
-    setCollection(prev => {
-      const copy = { ...prev };
-      items.forEach(it => copy[it.id] = value);
-      return copy;
+   const markAll = (items, value) => {
+     if (isViewingShared) return;
+
+    const ownedCount = items.filter(it => collection[it.id]).length;
+    if (ownedCount > 2) {
+      const confirmed = window.confirm(
+        "This will overwrite your current progress for this category. Are you sure?"
+      );
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    // Save the current state for undo
+    const currentCategoryState = {};
+    items.forEach(it => {
+      currentCategoryState[it.id] = !!collection[it.id];
     });
-  };
+    setUndoState(currentCategoryState);
+    setShowUndo(true);
+
+     setCollection(prev => {
+       const copy = { ...prev };
+-      items.forEach(it => copy[it.id] = value);
+      items.forEach(it => (copy[it.id] = value));
+       return copy;
+     });
+   };
 
   const getItems = (cat) => {
     if (!data || !data.length || !cat) return [];
@@ -1132,7 +1157,7 @@ export default function App() {
       {/* Main cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 min-h-[50vh]">
         {categories.map(cat => (
-          <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" onClick={() => { setActive(cat); setSelectionMode("none"); }}>
+          <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" onClick={() => { setActive(cat); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}>
             <img src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e) => e.currentTarget.style.display = 'none'} />
             <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>{cat.label}</span>
             {cat.special !== "generate" && <span className={theme === "dark" ? "absolute bottom-2 right-2 text-2xl font-bold [text-shadow:2px_2px_3px_black]" : "absolute bottom-2 right-2 text-2xl font-bold"}>{getCategoryPercentage(cat)}%</span>}
@@ -1143,7 +1168,7 @@ export default function App() {
       {/* Expanded modal */}
       <AnimatePresence>
         {active && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); } }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setSortAsc(true); setShowUndo(false); setUndoState(null); } }}>
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
               {/* Sidebar */}
               <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
@@ -1167,8 +1192,22 @@ export default function App() {
                     <button className={`px-4 py-2 rounded-xl ${selectionMode === "offering" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>Offering</button>
                   </>
                 )}
+                {active.special !== "generate" && showUndo && (
+                  <button
+                    className="px-4 py-2 rounded-xl bg-pink-500 text-white hover:bg-pink-600 transition"
+                    onClick={() => {
+                      if (undoState) {
+                        setCollection(prev => ({ ...prev, ...undoState }));
+                        setUndoState(null);
+                        setShowUndo(false);
+                      }
+                    }}
+                  >
+                    Undo Change
+                  </button>
+                )}
                 {active.special === "generate" && lastId && !isViewingShared && <button className="px-4 py-2 rounded-xl bg-purple-500 text-white" onClick={() => setGenUserId(lastId)}>Paste in last ID {lastId}</button>}
-                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); }}>Close</button>
+                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); setSortAsc(true); setShowUndo(false); setUndoState(null); }}>Close</button>
                 {active.special !== "generate" && <div className={`mt-1 font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}</div>}
               </div>
 
