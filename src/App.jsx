@@ -128,6 +128,47 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => setCollectionData(data));
   }, []);
+  // helper: compute category object for an item (same rules as getItems)
+  const getCategoryForItem = (item) => {
+    return categories.find(cat => {
+      if (cat.flag === "normal") return item.flag === "normal" || !Array.isArray(item.flags) || item.flags.length === 0;
+      if (cat.flag) return item.flag === cat.flag || (Array.isArray(item.flags) && item.flags.includes(cat.flag));
+      if (cat.flags) return cat.flags.some(f => item.flag === f || (Array.isArray(item.flags) && item.flags.includes(f)));
+      return false;
+    }) || categories[0];
+  };
+
+  // helper: find nearest vertical scrollable ancestor
+  const findScrollableAncestor = (el) => {
+    let parent = el.parentElement;
+    while (parent && parent !== document.body) {
+      const style = window.getComputedStyle(parent);
+      if (/(auto|scroll)/.test(style.overflowY)) return parent;
+      parent = parent.parentElement;
+    }
+    return document.scrollingElement || document.documentElement;
+  };
+
+  // helper: scroll an element into view inside a specific container and center it
+  const scrollElementIntoViewInContainer = (el, container) => {
+    if (!el || !container) return;
+    const isDocument = container === document.scrollingElement || container === document.documentElement;
+    if (isDocument) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const elRect = el.getBoundingClientRect();
+    const contRect = container.getBoundingClientRect();
+    const offsetTop = elRect.top - contRect.top + container.scrollTop;
+    const targetScroll = Math.max(0, offsetTop - (container.clientHeight / 2) + (elRect.height / 2));
+
+    try {
+      container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    } catch {
+      container.scrollTop = targetScroll;
+    }
+  };
 
   // Effect to handle ending a drag selection globally
   useEffect(() => {
@@ -689,32 +730,58 @@ export default function App() {
     setResults(filtered.slice(0, 50));
   }, [query, data]);
 
-  const onSearchSelect = (item) => {
-    const catId = item.categoryId;
-    const matched = categories.find(c => c.id === catId) || categories[0];
 
+  // replace your previous onSearchSelect with this:
+  const onSearchSelect = (item) => {
+    const matched = getCategoryForItem(item); // robust — doesn't rely on precomputed categoryId
     setActive(matched);
     setSelectionMode("none");
 
-    setTimeout(() => {
+    // clear search UI immediately
+    setQuery("");
+    setResults([]);
+
+    // Poll for the DOM element to exist and then scroll it into the modal's inner scroll container.
+    let attempts = 0;
+    const maxAttempts = 60; // ~1s worth of frames; tweak if needed
+
+    const tryScroll = () => {
+      attempts++;
       const el = document.getElementById(`ce-${item.id}`);
       if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        const container = findScrollableAncestor(el);
+        scrollElementIntoViewInContainer(el, container);
         pulse(item.id);
 
         if (!isViewingShared) {
+          // optional flash toggle behavior:
           setTimeout(() => {
             setCollection(prev => ({ ...prev, [item.id]: !prev[item.id] }));
             setTimeout(() => {
               setCollection(prev => ({ ...prev, [item.id]: !prev[item.id] }));
             }, 700);
-          }, 750);
+          }, 250);
         }
+        return;
       }
-    }, 90);
 
-    setQuery("");
-    setResults([]);
+      if (attempts < maxAttempts) {
+        requestAnimationFrame(tryScroll);
+      } else {
+        // final fallback
+        setTimeout(() => {
+          const el2 = document.getElementById(`ce-${item.id}`);
+          if (el2) {
+            const container = findScrollableAncestor(el2);
+            scrollElementIntoViewInContainer(el2, container);
+            pulse(item.id);
+          }
+        }, 150);
+      }
+    };
+
+    // start next frame so React can mount modal + content
+    requestAnimationFrame(tryScroll);
   };
 
   const generateLink = (uid) => {
@@ -1031,8 +1098,8 @@ export default function App() {
                       }
                     }}
                     className={`flex items-center gap-3 p-2 cursor-pointer ${highlightedIndex === idx
-                        ? "bg-gray-200 dark:bg-gray-600"
-                        : "hover:bg-gray-100 dark:hover:bg-gray-600"
+                      ? "bg-gray-200 dark:bg-gray-600"
+                      : "hover:bg-gray-100 dark:hover:bg-gray-600"
                       }`}
                     onClick={() => onSearchSelect(item)}
                   >
