@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide } from "lucide-react";
 import LZString from "lz-string";
 
 const categories = [
@@ -89,6 +89,7 @@ export default function App() {
   const [lookingAll, setLookingAll] = usePersistedState("lookingAll", false);
 
   const [selectionMode, setSelectionMode] = useState("none");
+  const [sortAsc, setSortAsc] = useState(true);
 
   const [isViewingShared, setIsViewingShared] = useState(false);
   const [sharedUserId, setSharedUserId] = useState("");
@@ -1146,7 +1147,18 @@ export default function App() {
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
               {/* Sidebar */}
               <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
-                <h2 className="text-xl font-bold">{active.label}</h2>
+                <div className="flex justify-between items-center">
+                  <h2 className="text-xl font-bold">{active.label}</h2>
+                  {(active.label === "Bond CEs" ||
+                    active.label === "Chocolate" ||
+                    active.label === "Commemorative" ||
+                    active.label === "Event free" ||
+                    (active.raritySplit && active.special !== "generate")) && (
+                      <button onClick={() => setSortAsc((prev) => !prev)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition" title={sortAsc ? "Sort Descending" : "Sort Ascending"}>
+                        {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
+                      </button>
+                    )}
+                </div>
                 {active.special !== "generate" && !isViewingShared && (
                   <>
                     <button className="px-4 py-2 rounded-xl bg-green-500 text-white" onClick={() => markAll(getItems(active), true)}>Mark all have</button>
@@ -1200,11 +1212,23 @@ export default function App() {
               ) : (
                 (() => {
                   const items = getItems(active).sort((a, b) => a.collectionNo - b.collectionNo);
-                  if (active.label === "Bond CEs") return renderWithSubcategories(items, bondSubcategories);
-                  if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories);
-                  if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
+                  const renderWithSubcategories = (items, subs) => {
+                    const sortedSubs = sortAsc ? subs : [...subs].reverse();
+                    const used = new Set();
+                    return (
+                      <div className="flex-1 p-4 overflow-auto">
+                        {sortedSubs.map((sub) => {
+                          const subItems = items.filter((it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]);
+                          subItems.forEach((si) => used.add(si.id));
+                          return renderSection(sub.label, subItems);
+                        })}
+                        {(() => { const rest = items.filter((it) => !used.has(it.id)); return renderSection("The rest", rest); })()}
+                      </div>
+                    );
+                  };
+                  const renderByRarity = (items) => { const rarities = sortAsc ? [5, 4, 3, 2, 1] : [1, 2, 3, 4, 5]; return (<div className="flex-1 p-4 overflow-auto"> {rarities.map((r) => renderSection(`Rarity ${r}`, items.filter((it) => it.rarity === r)))} </div>); }; if (active.label === "Bond CEs") return renderWithSubcategories(items, bondSubcategories); if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories); if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
                   if (active.label === "Event free") {
-                    const rarities = [5, 4, 3];
+                    const rarities = sortAsc ? [5, 4, 3] : [3, 4, 5];
                     const subFlags = [{ key: "svtEquipEventReward", label: "Event Reward" }, { key: "svtEquipExp", label: "CE EXP" }];
                     return (
                       <div className="flex-1 p-4 overflow-auto">
