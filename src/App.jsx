@@ -259,7 +259,7 @@ export default function App() {
           setActive(null);
           setSelectionMode("none");
           setShowUndo(false);
-          setUndoState(null); 
+          setUndoState(null);
         }
       }
     };
@@ -634,8 +634,8 @@ export default function App() {
     return Math.round((ownedCount / items.length) * 100);
   };
 
-   const markAll = (items, value) => {
-     if (isViewingShared) return;
+  const markAll = (items, value) => {
+    if (isViewingShared) return;
 
     const ownedCount = items.filter(it => collection[it.id]).length;
     if (ownedCount > 2) {
@@ -655,13 +655,13 @@ export default function App() {
     setUndoState(currentCategoryState);
     setShowUndo(true);
 
-     setCollection(prev => {
-       const copy = { ...prev };
--      items.forEach(it => copy[it.id] = value);
+    setCollection(prev => {
+      const copy = { ...prev };
+      -      items.forEach(it => copy[it.id] = value);
       items.forEach(it => (copy[it.id] = value));
-       return copy;
-     });
-   };
+      return copy;
+    });
+  };
 
   const getItems = (cat) => {
     if (!data || !data.length || !cat) return [];
@@ -1147,7 +1147,34 @@ export default function App() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {isViewingShared && <div className="bg-amber-300 dark:bg-amber-600 text-black dark:text-white px-3 py-1 rounded-xl text-sm font-semibold">Viewing {sharedUserId} (read-only)</div>}
+          {isViewingShared && (
+            <div
+              className="bg-amber-300 dark:bg-amber-600 text-black dark:text-white px-3 py-1 rounded-xl text-sm font-semibold cursor-pointer hover:bg-amber-400 dark:hover:bg-amber-500 transition"
+              title="Click to import this collection as your own (this will overwrite your local data)"
+              onClick={() => {
+                if (window.confirm(`This will overwrite your current collection with the data from '${sharedUserId}'.\n\nThis action cannot be undone. Are you sure you want to import it?`)) {
+                  setCollection(viewCollection);
+                  if (viewLookingFor === "ALL") {
+                    setLookingAll(true);
+                    setLookingFor({});
+                  } else {
+                    setLookingAll(false);
+                    setLookingFor(viewLookingFor);
+                  }
+                  if (viewOffering === "ALL") {
+                    setOfferAll(true);
+                    setOffering({});
+                  } else {
+                    setOfferAll(false);
+                    setOffering(viewOffering);
+                  }
+                  exitViewerMode();
+                }
+              }}
+            >
+              Viewing {sharedUserId} (read-only)
+            </div>
+          )}
           <button className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition" onClick={() => setTheme(t => t === "light" ? "dark" : "light")}>
             {theme === "light" ? <Moon /> : <Sun />}
           </button>
