@@ -1027,11 +1027,11 @@ export default function App() {
     );
   };
 
-  const SmallList = ({ map, listName, expandAll }) => {
+  const SmallList = ({ map, listName, expandAll, dataCollection }) => {
     let ids = [];
     if (map === "ALL") {
-      if (expandAll === "offering") ids = Object.keys(collection).filter(k => collection[k]);
-      else if (expandAll === "looking") ids = data.map(d => String(d.id)).filter(id => !collection[id]);
+      if (expandAll === "offering") ids = Object.keys(dataCollection).filter(k => dataCollection[k]);
+      else if (expandAll === "looking") ids = data.map(d => String(d.id)).filter(id => !dataCollection[id]);
     } else {
       ids = Object.keys(map || {}).filter(k => map[k]);
     }
@@ -1066,7 +1066,6 @@ export default function App() {
                   pulse(id);
                 }}
               >
-                {/* Fixed-size image */}
                 <div className="relative w-12 h-12 flex-shrink-0">
                   <img
                     src={item.face}
@@ -1077,8 +1076,6 @@ export default function App() {
                     {item.collectionNo}
                   </span>
                 </div>
-
-                {/* Truncated text */}
                 <div className="flex-1 min-w-0">
                   <span className="block text-sm text-black dark:text-white truncate">
                     {item.name}
@@ -1276,9 +1273,9 @@ export default function App() {
                   {isViewingShared ? (
                     <>
                       <h3 className="text-lg font-bold mb-2">Looking for {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} items)` : ""}</h3>
-                      <SmallList map={viewLookingFor} listName="looking" expandAll="looking" />
+                      <SmallList map={viewLookingFor} listName="looking" expandAll="looking" dataCollection={viewCollection} />
                       <h3 className="text-lg font-bold mt-4 mb-2">Offering {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} items)` : ""}</h3>
-                      <SmallList map={viewOffering} listName="offering" expandAll="offering" />
+                      <SmallList map={viewOffering} listName="offering" expandAll="offering" dataCollection={viewCollection} />
                       <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
                       <p className="mt-4 text-sm text-gray-400">Viewing only — controls are hidden.</p>
                     </>
@@ -1299,9 +1296,9 @@ export default function App() {
                       <div className="mt-6 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-xl text-sm"><p className="mb-1 font-semibold">Tips:</p><ul className="list-disc pl-5 space-y-1"><li>You can click items in the preview to remove them from explicit lists.</li><li>Paste your 9/12 digit ID or drag a text onto this window.</li><li>The link contains your data compressed for sharing.</li></ul></div>
                       <div className="mt-6">
                         <h4 className="font-bold">Preview: Looking for {lookingAll ? `(${data.filter(d => !collection[d.id]).length} items)` : ""}</h4>
-                        <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" />
+                        <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" dataCollection={collection} />
                         <h4 className="font-bold mt-3">Preview: Offering {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} items)` : ""}</h4>
-                        <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" />
+                        <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" dataCollection={collection} />
                       </div>
                       <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
                     </>
