@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn } from "lucide-react";
 import LZString from "lz-string";
 
 const categories = [
@@ -89,7 +89,8 @@ export default function App() {
   const [lookingAll, setLookingAll] = usePersistedState("lookingAll", false);
 
   const [selectionMode, setSelectionMode] = useState("none");
-  const [sortAsc, setSortAsc] = useState(true);
+  const [sortAsc, setSortAsc] = usePersistedState("sortAsc", true);
+  const [itemSize, setItemSize] = usePersistedState("itemSize", 72);
 
   const [undoState, setUndoState] = useState(null);
   const [showUndo, setShowUndo] = useState(false);
@@ -711,7 +712,7 @@ export default function App() {
       <div
         id={`ce-${item.id}`}
         key={item.id}
-        className={`relative w-[72px] h-[72px] ${isPulse ? "pulse-border" : ""}`}
+        className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""}`}
         style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
         onMouseDown={handleInteractionStart}
         onTouchStart={handleInteractionStart}
@@ -729,7 +730,7 @@ export default function App() {
           href={`https://apps.atlasacademy.io/db/JP/craft-essence/${item.collectionNo}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute bottom-0 right-0 text-[14px] leading-none bg-black/60 text-white px-1 rounded cursor-pointer hover:underline"
+          className={`absolute bottom-0 right-0 ${fontClasses[itemSize]} leading-none bg-black/60 text-white px-1 rounded cursor-pointer hover:underline`}
           onClick={(e) => e.stopPropagation()}
         >
           {item.collectionNo}
@@ -989,6 +990,9 @@ export default function App() {
     );
   };
 
+  const sizeClasses = { 48: 'w-12 h-12', 72: 'w-[72px] h-[72px]', 100: 'w-[100px] h-[100px]', };
+  const fontClasses = { 48: 'text-[10px]', 72: 'text-[14px]', 100: 'text-base', };
+
   const renderGrid = (items) => (
     <div className="flex-1 p-4 overflow-auto">
       <div className={`grid ${gridColsClass} gap-1`}>
@@ -1213,7 +1217,7 @@ export default function App() {
       {/* Expanded modal */}
       <AnimatePresence>
         {active && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setSortAsc(true); setShowUndo(false); setUndoState(null); } }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); } }}>
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
               {/* Sidebar */}
               <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
@@ -1224,10 +1228,20 @@ export default function App() {
                     active.label === "Commemorative" ||
                     active.label === "Event free" ||
                     (active.raritySplit && active.special !== "generate")) && (
-                      <button onClick={() => setSortAsc((prev) => !prev)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition" title={sortAsc ? "Sort Descending" : "Sort Ascending"}>
-                        {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
-                      </button>
-                    )}
+                      <div className="flex items-center">
+                        <button onClick={() => setSortAsc((prev) => !prev)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition" title={sortAsc ? "Sort Descending" : "Sort Ascending"}>
+                          {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
+                        </button>
+                        <button
+                          onClick={() => setItemSize(s => s === 72 ? 100 : s === 100 ? 48 : 72)}
+                          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                          title={`Change item size (current: ${itemSize}px)`}
+                        >
+                          <ZoomIn size={20} />
+                        </button>
+                      </div>
+                    )
+                  }
                 </div>
                 {active.special !== "generate" && !isViewingShared && (
                   <>
@@ -1252,7 +1266,7 @@ export default function App() {
                   </button>
                 )}
                 {active.special === "generate" && lastId && !isViewingShared && <button className="px-4 py-2 rounded-xl bg-purple-500 text-white" onClick={() => setGenUserId(lastId)}>Paste in last ID {lastId}</button>}
-                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); setSortAsc(true); setShowUndo(false); setUndoState(null); }}>Close</button>
+                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}>Close</button>
                 {active.special !== "generate" && <div className={`mt-1 font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}</div>}
               </div>
 
@@ -1296,13 +1310,13 @@ export default function App() {
               ) : (
                 (() => {
                   const items = getItems(active).sort((a, b) => a.collectionNo - b.collectionNo);
-                  const renderWithSubcategories = (items, subs) => {
+                  const renderWithSubcategories = (items, subs, gridColsClass) => {
                     const sortedSubs = sortAsc ? subs : [...subs].reverse();
                     const used = new Set();
                     return (
                       <div className="flex-1 p-4 overflow-auto">
                         {sortedSubs.map((sub) => {
-                          const subItems = items.filter((it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]);
+                          const subItems = items.filter(it => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]);
                           subItems.forEach((si) => used.add(si.id));
                           return renderSection(sub.label, subItems);
                         })}
@@ -1310,7 +1324,7 @@ export default function App() {
                       </div>
                     );
                   };
-                  const renderByRarity = (items) => { const rarities = sortAsc ? [5, 4, 3, 2, 1] : [1, 2, 3, 4, 5]; return (<div className="flex-1 p-4 overflow-auto"> {rarities.map((r) => renderSection(`Rarity ${r}`, items.filter((it) => it.rarity === r)))} </div>); }; if (active.label === "Bond CEs") return renderWithSubcategories(items, bondSubcategories); if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories); if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
+                  const renderByRarity = (items, gridColsClass) => { const rarities = sortAsc ? [5, 4, 3, 2, 1] : [1, 2, 3, 4, 5]; return (<div className="flex-1 p-4 overflow-auto"> {rarities.map((r) => renderSection(`Rarity ${r}`, items.filter((it) => it.rarity === r)))} </div>); }; if (active.label === "Bond CEs") return renderWithSubcategories(items, bondSubcategories, gridColsClass); if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories, gridColsClass); if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories, gridColsClass);
                   if (active.label === "Event free") {
                     const rarities = sortAsc ? [5, 4, 3] : [3, 4, 5];
                     const subFlags = [{ key: "svtEquipEventReward", label: "Event Reward" }, { key: "svtEquipExp", label: "CE EXP" }];
@@ -1336,8 +1350,8 @@ export default function App() {
                       </div>
                     );
                   }
-                  if (active.raritySplit) return renderByRarity(items);
-                  return renderGrid(items);
+                  if (active.raritySplit) return renderByRarity(items, gridColsClass);
+                  return renderGrid(items, gridColsClass);
                 })()
               )}
             </motion.div>
