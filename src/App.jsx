@@ -364,6 +364,7 @@ export default function App() {
             if (section) expandSection(section, subsItems);
           });
         } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
+          const processedNos = new Set();
           const subs = (cat.label === "Chocolate"
             ? chocolateSubcategories
             : commemorativeSubcategories);
@@ -371,9 +372,16 @@ export default function App() {
             const subsItems = items.filter(it =>
               it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
             );
+            subsItems.forEach(it => processedNos.add(it.collectionNo));
             const section = compressedCat[`${sub.range[0]}-${sub.range[1]}`];
             if (section) expandSection(section, subsItems);
           });
+          // Handle "rest" for these categories
+          const restSection = compressedCat["rest"];
+          if (restSection) {
+            const restItems = items.filter(it => !processedNos.has(it.collectionNo));
+            expandSection(restSection, restItems);
+          }
         } else if (cat.raritySplit) {
           [5, 4, 3].forEach(r => {
             const subs = items.filter(it => it.rarity === r);
@@ -852,6 +860,7 @@ export default function App() {
 
       // otherwise split into subcategories
       const subsResult = {};
+      const processedIds = new Set();
 
       if (cat.label === "Event free") {
         const rarities = [5, 4, 3];
@@ -874,6 +883,7 @@ export default function App() {
           const subsItems = items.filter(it =>
             it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
           );
+          subsItems.forEach(it => processedIds.add(it.id));
           if (subsItems.length) {
             const section = compressSection(subsItems, collection);
             if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
@@ -888,12 +898,20 @@ export default function App() {
           const subsItems = items.filter(it =>
             it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
           );
+          subsItems.forEach(it => processedIds.add(it.id));
           if (subsItems.length) {
             const section = compressSection(subsItems, collection);
             if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
           }
         });
-
+      }
+      // Common logic for categories with sub-ranges to handle "The rest"
+      if (cat.label === "Bond CEs" || cat.label === "Chocolate" || cat.label === "Commemorative") {
+        const restItems = items.filter(it => !processedIds.has(it.id));
+        if (restItems.length > 0) {
+          const restSection = compressSection(restItems, collection);
+          if (restSection) subsResult["rest"] = restSection;
+        }
       } else if (cat.raritySplit) {
         [5, 4, 3].forEach(r => {
           const subs = items.filter(it => it.rarity === r);
