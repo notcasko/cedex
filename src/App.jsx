@@ -1036,11 +1036,24 @@ export default function App() {
       ids = Object.keys(map || {}).filter(k => map[k]);
     }
 
+    // Reactive grid calculation for SmallList
+    const previewGridColsClass = (() => {
+      const modalWidth = windowWidth * (11 / 12);
+      const contentAreaWidth = modalWidth * (3 / 4);
+      const availableGridWidth = contentAreaWidth - 32; // ~ p-4 padding
+
+      if (availableGridWidth > 720) return 'grid-cols-6';
+      if (availableGridWidth > 600) return 'grid-cols-5';
+      if (availableGridWidth > 480) return 'grid-cols-4';
+      if (availableGridWidth > 360) return 'grid-cols-3';
+      return 'grid-cols-2';
+    })();
+
     if (!ids.length) return <div className="text-sm text-gray-500">none</div>;
     return (
       <>
         <p className="text-xs text-gray-500 mb-1">{ids.length} items</p>
-        <div className="grid grid-cols-6 gap-2">
+        <div className={`grid ${previewGridColsClass} gap-2`}>
           {ids.map(id => {
             const item = data.find(d => String(d.id) === String(id));
             if (!item) return null;
@@ -1066,7 +1079,8 @@ export default function App() {
                   pulse(id);
                 }}
               >
-                <div className="relative w-12 h-12 flex-shrink-0">
+                {/* Fixed-size image, now 25% bigger */}
+                <div className="relative w-16 h-16 flex-shrink-0">
                   <img
                     src={item.face}
                     alt={item.name}
@@ -1076,8 +1090,10 @@ export default function App() {
                     {item.collectionNo}
                   </span>
                 </div>
+
+                {/* Multi-line text with truncation */}
                 <div className="flex-1 min-w-0">
-                  <span className="block text-sm text-black dark:text-white truncate">
+                  <span className="block text-sm text-black dark:text-white line-clamp-3">
                     {item.name}
                   </span>
                 </div>
