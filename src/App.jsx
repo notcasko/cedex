@@ -1248,14 +1248,14 @@ export default function App() {
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
               {/* Sidebar */}
               <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
-                <div className="flex justify-between items-center">
+                <div className="flex items-center flex-wrap">
                   <h2 className="text-xl font-bold">{active.label}</h2>
                   {(active.label === "Bond CEs" ||
                     active.label === "Chocolate" ||
                     active.label === "Commemorative" ||
                     active.label === "Event free" ||
                     (active.raritySplit && active.special !== "generate")) && (
-                      <div className="flex items-center">
+                      <div className="flex items-center ml-auto">
                         <button onClick={() => setSortAsc((prev) => !prev)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition" title={sortAsc ? "Sort Descending" : "Sort Ascending"}>
                           {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
                         </button>
