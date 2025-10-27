@@ -956,22 +956,32 @@ export default function App() {
   };
 
   const gridColsClass = (() => {
-    if (!active) return 'grid-cols-10';
-    const modalWidth = windowWidth * (11 / 12);
-    const contentAreaWidth = modalWidth * (3 / 4);
-    const padding = 32;
-    const availableGridWidth = contentAreaWidth - padding;
+      if (!active) return 'grid-cols-10';
 
-    if (availableGridWidth > 756) return 'grid-cols-10';
-    if (availableGridWidth > 680) return 'grid-cols-9';
-    if (availableGridWidth > 604) return 'grid-cols-8';
-    if (availableGridWidth > 528) return 'grid-cols-7';
-    if (availableGridWidth > 452) return 'grid-cols-6';
-    if (availableGridWidth > 376) return 'grid-cols-5';
-    if (availableGridWidth > 300) return 'grid-cols-4';
-    if (availableGridWidth > 224) return 'grid-cols-3';
-    return 'grid-cols-2';
-  })();
+      const modalWidth = windowWidth * (11 / 12);
+      const contentAreaWidth = modalWidth * (3 / 4);
+      const padding = 32; // p-4 (1rem = 16px) on left and right
+      const availableGridWidth = contentAreaWidth - padding;
+
+      const size = Number(itemSize) || 72;
+      const gap = 4; // from gap-1 (0.25rem = 4px)
+
+      // Calculate width needed for N columns: (N * size) + ((N - 1) * gap)
+      const getWidth = (n) => (n * size) + ((n - 1) * gap);
+
+      if (availableGridWidth >= getWidth(10)) return 'grid-cols-10';
+      if (availableGridWidth >= getWidth(9)) return 'grid-cols-9';
+      if (availableGridWidth >= getWidth(8)) return 'grid-cols-8';
+      if (availableGridWidth >= getWidth(7)) return 'grid-cols-7';
+      if (availableGridWidth >= getWidth(6)) return 'grid-cols-6';
+      if (availableGridWidth >= getWidth(5)) return 'grid-cols-5';
+      if (availableGridWidth >= getWidth(4)) return 'grid-cols-4';
+      if (availableGridWidth >= getWidth(3)) return 'grid-cols-3';
+      if (availableGridWidth >= getWidth(2)) return 'grid-cols-2';
+      
+      // Fallback to 1 column if grid is extremely narrow
+      return 'grid-cols-1';
+    })();
 
   const renderSection = (title, sectionItems) => {
     if (!sectionItems || !sectionItems.length) return null;
@@ -1217,6 +1227,9 @@ export default function App() {
         </div>
       </div>
 
+      {/* Tailwind JIT Safelist: ensures grid-cols-1 through 10 are generated */}
+      <div className="hidden grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10"></div>
+      
       {/* Main cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 min-h-[50vh]">
         {categories.map(cat => (
