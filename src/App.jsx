@@ -154,6 +154,36 @@ export default function App() {
     }
     return document.scrollingElement || document.documentElement;
   };
+  
+  /**
+   * Compresses a sorted list of numbers into a delta-encoded array.
+   * e.g., [100, 102, 103, 107] -> [100, 2, 1, 4]
+   */
+  const compressList = (list) => {
+    if (!list || list.length === 0) return [];
+    // Ensure list is sorted numbers
+    const sorted = list.map(Number).sort((a, b) => a - b);
+    if (sorted.length === 0) return [];
+
+    const deltas = [sorted[0]];
+    for (let i = 1; i < sorted.length; i++) {
+      deltas.push(sorted[i] - sorted[i - 1]);
+    }
+    return deltas;
+  };
+
+  /**
+   * Expands a delta-encoded array back into a full list of numbers.
+   * e.g., [100, 2, 1, 4] -> [100, 102, 103, 107]
+   */
+  const expandList = (deltas) => {
+    if (!deltas || deltas.length === 0) return [];
+    const list = [deltas[0]];
+    for (let i = 1; i < deltas.length; i++) {
+      list.push(list[i - 1] + deltas[i]);
+    }
+    return list;
+  };
 
   // helper: scroll an element into view inside a specific container and center it
   const scrollElementIntoViewInContainer = (el, container) => {
@@ -279,58 +309,33 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
 
-  // --- Expansion helpers ---
-  const expandSection = (items, section) => {
-    const ids = items.map(it => it.collectionNo);
-    const map = {};
-
-    if (!section) return map;
-
-    switch (section.mode) {
-      case "F": // full
-        ids.forEach(no => { map[noToId[no]] = true; });
-        break;
-      case "AF": // almost full
-        ids.forEach(no => { map[noToId[no]] = true; });
-        (section.missing || []).forEach(no => { map[noToId[no]] = false; });
-        break;
-      case "S": // sparse
-        (section.owned || []).forEach(no => { map[noToId[no]] = true; });
-        break;
-      case "LIST": // explicit list
-        (section.owned || []).forEach(no => { map[noToId[no]] = true; });
-        break;
-      default:
-        break;
-    }
-
-    return map;
-  };
-
   // expandCollection takes compressed categories and rebuilds full item map
   const expandCollection = (compressed, categories, data) => {
     const result = {};
 
     const expandSection = (section, items) => {
-      if (!section) return;
-      const ids = items.map(it => it.collectionNo);
+        if (!section) return;
+        const ids = items.map(it => it.collectionNo);
 
-      switch (section.mode) {
-        case "F":
-          ids.forEach(no => { result[noToId[no]] = true; });
-          break;
-        case "AF":
-          ids.forEach(no => { result[noToId[no]] = true; });
-          (section.missing || []).forEach(no => { result[noToId[no]] = false; });
-          break;
-        case "S":
-          (section.owned || []).forEach(no => { result[noToId[no]] = true; });
-          break;
-        case "LIST":
-          (section.owned || []).forEach(no => { result[noToId[no]] = true; });
-          break;
-      }
-    };
+        switch (section.m) { // 'm' for mode
+          case 0: // Full
+            ids.forEach(no => { result[noToId[no]] = true; });
+            break;
+          case 1: // Almost Full
+            ids.forEach(no => { result[noToId[no]] = true; });
+            // 'x' for missing, expand the delta list
+            (expandList(section.x || [])).forEach(no => { result[noToId[no]] = false; });
+            break;
+          case 2: // Sparse
+            // 'd' for data, expand the delta list
+            (expandList(section.d || [])).forEach(no => { result[noToId[no]] = true; });
+            break;
+          case 3: // List
+            // 'd' for data, expand the delta list
+            (expandList(section.d || [])).forEach(no => { result[noToId[no]] = true; });
+            break;
+        }
+      };
 
     categories.forEach(cat => {
       const items = data.filter(it => {
@@ -349,11 +354,11 @@ export default function App() {
         return false;
       });
 
-      const compressedCat = compressed[cat.id];
+    const compressedCat = compressed[cat.id];
       if (!compressedCat) return;
 
-      if (compressedCat.mode) {
-        // simple category compression (F/AF/S/LIST)
+      if (compressedCat.m !== undefined) { // Check for 'm' instead of 'mode'
+        // simple category compression (0/1/2/3)
         expandSection(compressedCat, items);
       } else {
         // subcategories
@@ -416,16 +421,18 @@ export default function App() {
       const parsed = JSON.parse(json);
       if (!parsed || typeof parsed !== "object") throw new Error("Invalid payload");
 
-      const cm = expandCollection(parsed.collection, categories, data);
+      const cm = expandCollection(parsed.c, categories, data); 
+      const lookingData = parsed.l; // 'l' for lookingFor
+      const offeringData = parsed.o; // 'o' for offering
 
       return {
         uid,
         collection: cm,
-        lookingFor: parsed.lookingFor,
-        offering: parsed.offering,
+        lookingFor: lookingData, // Pass the raw data on
+        offering: offeringData,   // Pass the raw data on
       };
     } catch (err) {
-      console.error("❌ Failed to decode link:", err);
+      console.error("Failed to decode link:", err);
       return null;
     }
   };
@@ -454,24 +461,29 @@ export default function App() {
       setIsViewingShared(true);
       setSharedUserId(decoded.uid);
       setViewCollection(decoded.collection);
-
       if (decoded.lookingFor === "ALL") {
         setViewLookingFor("ALL");
       } else {
+        // Expand the delta list, then convert Collection No -> Item ID
+        const expandedNos = expandList(decoded.lookingFor || []);
         const lfMap = {};
-        (Array.isArray(decoded.lookingFor) ? decoded.lookingFor : []).forEach(
-          id => (lfMap[String(id)] = true)
-        );
+        expandedNos.forEach(no => {
+          const id = noToId[no];
+          if (id) lfMap[String(id)] = true;
+        });
         setViewLookingFor(lfMap);
       }
 
       if (decoded.offering === "ALL") {
         setViewOffering("ALL");
       } else {
+        // Expand the delta list, then convert Collection No -> Item ID
+        const expandedNos = expandList(decoded.offering || []);
         const ofMap = {};
-        (Array.isArray(decoded.offering) ? decoded.offering : []).forEach(
-          id => (ofMap[String(id)] = true)
-        );
+        expandedNos.forEach(no => {
+          const id = noToId[no];
+          if (id) ofMap[String(id)] = true;
+        });
         setViewOffering(ofMap);
       }
 
@@ -823,24 +835,31 @@ export default function App() {
   const generateLink = (uid) => {
     // helper: compress a group of items into F/AF/S/LIST, skip E
     const compressSection = (items, map) => {
-      if (!items.length) return null;
+        if (!items.length) return undefined; // Use undefined so JSON.stringify omits it
 
-      const ids = items.map(it => it.collectionNo);
-      const owned = ids.filter(no => map[noToId[no]]);
-      const total = ids.length;
-      const count = owned.length;
+        const ids = items.map(it => it.collectionNo);
+        const owned = ids.filter(no => map[noToId[no]]);
+        const total = ids.length;
+        const count = owned.length;
 
-      if (count === 0) return null; // skip empty completely
-      if (count === total) return { mode: "F" }; // full
-      if (count / total >= 0.95) {
-        const missing = ids.filter(no => !map[noToId[no]]);
-        return { mode: "AF", missing }; // almost full
-      }
-      if (count / total <= 0.05) {
-        return { mode: "S", owned }; // sparse
-      }
-      return { mode: "LIST", owned }; // partial list
-    };
+        if (count === 0) return undefined; // skip empty completely
+        if (count === total) return { m: 0 }; // 0 = Full
+        
+        const missingNos = ids.filter(no => !map[noToId[no]]);
+        if (count / total >= 0.85) {
+          // 1 = Almost Full
+          return { m: 1, x: compressList(missingNos) }; 
+        }
+        
+        const ownedNos = ids.filter(no => map[noToId[no]]);
+        if (count / total <= 0.15) {
+          // 2 = Sparse
+          return { m: 2, d: compressList(ownedNos) }; 
+        }
+        
+        // 3 = List
+        return { m: 3, d: compressList(ownedNos) }; 
+      };
 
     const compressedCategories = {};
 
@@ -934,10 +953,17 @@ export default function App() {
     });
 
     const payload = {
-      collection: compressedCategories,
-      lookingFor: lookingAll ? "ALL" : Object.keys(lookingFor).filter(k => lookingFor[k]),
-      offering: offerAll ? "ALL" : Object.keys(offering).filter(k => offering[k]),
-    };
+        // 'c' for collection
+        c: compressedCategories, 
+        // 'l' for lookingFor
+        l: lookingAll ? "ALL" : compressList(
+          Object.keys(lookingFor).filter(k => lookingFor[k]).map(id => idToNo[id])
+        ),
+        // 'o' for offering
+        o: offerAll ? "ALL" : compressList(
+          Object.keys(offering).filter(k => offering[k]).map(id => idToNo[id])
+        ),
+      };
 
     const json = JSON.stringify(payload);
     const compressed = LZString.compressToEncodedURIComponent(json);
@@ -1011,32 +1037,6 @@ export default function App() {
       </div>
     </div>
   );
-
-  const renderWithSubcategories = (items, subs) => {
-    const used = new Set();
-    return (
-      <div className="flex-1 p-4 overflow-auto">
-        {subs.map((sub) => {
-          const subItems = items.filter(it => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]);
-          subItems.forEach(si => used.add(si.id));
-          return renderSection(sub.label, subItems);
-        })}
-        {(() => {
-          const rest = items.filter(it => !used.has(it.id));
-          return renderSection("The rest", rest);
-        })()}
-      </div>
-    );
-  };
-
-  const renderByRarity = (items) => {
-    const rarities = [5, 4, 3, 2, 1];
-    return (
-      <div className="flex-1 p-4 overflow-auto">
-        {rarities.map(r => renderSection(`Rarity ${r}`, items.filter((it) => it.rarity === r)))}
-      </div>
-    );
-  };
 
   const SmallList = ({ map, listName, expandAll, dataCollection }) => {
     let ids = [];
