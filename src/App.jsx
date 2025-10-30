@@ -120,6 +120,10 @@ export default function App() {
   const dragStartItem = useRef(null);
   const collectionSnapshot = useRef({});
   const lastDraggedOverId = useRef(null);
+  const dragTimer = useRef(null); // Timer for long-press
+  const dragStartPos = useRef(null); // {x, y} to check for scroll
+  const scrollContainerRef = useRef(null); // Ref for the main scrollable area
+  const panningState = useRef(null); // State for PC pan-to-scroll
 
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
@@ -209,6 +213,14 @@ export default function App() {
   // Effect to handle ending a drag selection globally
   useEffect(() => {
     const handleDragEnd = () => {
+      // 1. Always clear the long-press timer
+      if (dragTimer.current) {
+        clearTimeout(dragTimer.current);
+        dragTimer.current = null;
+      }
+      dragStartPos.current = null;
+      
+      // 2. Your existing drag-end logic
       if (isDragging) {
         setIsDragging(false);
         setDragToggleMode(null);
@@ -218,8 +230,35 @@ export default function App() {
       }
     };
 
+    // This new function checks for "scroll-to-cancel"
+    const handleMoveToCancel = (e) => {
+      // If we don't have a pending timer, exit
+      if (!dragStartPos.current || !dragTimer.current) {
+        return;
+      }
+
+      const isTouch = e.type === 'touchmove';
+      const point = isTouch ? e.touches[0] : e;
+      const dx = Math.abs(point.clientX - dragStartPos.current.x);
+      const dy = Math.abs(point.clientY - dragStartPos.current.y);
+
+      // Threshold: if user moves > 10px, it's a scroll, not a drag.
+      if (dx > 10 || dy > 10) {
+        clearTimeout(dragTimer.current);
+        dragTimer.current = null;
+        dragStartPos.current = null;
+      }
+    };
+
     const handleTouchMove = (e) => {
-      if (!isDragging) return;
+      if (!isDragging) {
+        // If not dragging, check if it's a scroll-to-cancel
+        handleMoveToCancel(e);
+        return;
+      }
+
+      // If we ARE dragging, we MUST prevent native scrolling.
+      e.preventDefault();
 
       const touch = e.touches[0];
       const element = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -241,14 +280,21 @@ export default function App() {
 
     window.addEventListener('mouseup', handleDragEnd);
     window.addEventListener('touchend', handleDragEnd);
+    // We listen for mousemove to cancel a pending (0ms) drag
+    window.addEventListener('mousemove', handleMoveToCancel, { passive: true });
+    
+    // We split touchmove:
+    // 1. The main listener checks for drag *and* cancel
+    //    It MUST be { passive: false } to allow preventDefault.
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
       window.removeEventListener('mouseup', handleDragEnd);
       window.removeEventListener('touchend', handleDragEnd);
+      window.removeEventListener('mousemove', handleMoveToCancel);
       window.removeEventListener('touchmove', handleTouchMove);
     };
-  }, [isDragging, data]); // Rerun if dragging state or data changes
+  }, [isDragging, data, selectionMode]); // Rerun if dragging state or data changes
 
   // Build lookup tables once (outside generate/expand)
   const idToNo = {};
@@ -707,28 +753,22 @@ export default function App() {
   const CECell = ({ item }) => {
     const owned = mapOwned(item.id);
     const isPulse = highlightId === item.id;
-
-    const handleInteractionStart = (e) => {
-      if (e.button !== 0) return; // ignore middle/right clicks
-      e.preventDefault();
-
-      if (isViewingShared) return;
-
-      if (selectionMode !== "none") {
-        onItemClick(item);
-      } else {
-        handleDragStart(item);
-      }
+    // This logic checks if the item's current 'owned' state
+    // is different from what it was when the drag began.
+    const isAffected = isDragging && (owned !== !!collectionSnapshot.current[item.id]);
+    // We pass the event AND the item
+    const onInteractionStart = (e) => {
+      handleInteractionStart(e, item);
     };
 
     return (
       <div
         id={`ce-${item.id}`}
         key={item.id}
-        className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""}`}
+        className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select`}
         style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
-        onMouseDown={handleInteractionStart}
-        onTouchStart={handleInteractionStart}
+        onMouseDown={onInteractionStart}
+        onTouchStart={onInteractionStart}
         onMouseEnter={() => handleDragOver(item)}
       >
         <img
@@ -750,6 +790,50 @@ export default function App() {
         </a>
       </div>
     );
+  };
+
+  const handleInteractionStart = (e, item) => {
+    // 1. Clear any pending drag timer
+    if (dragTimer.current) {
+      clearTimeout(dragTimer.current);
+      dragTimer.current = null;
+    }
+    dragStartPos.current = null;
+
+    // 2. Handle non-drag modes (looking, offering) immediately
+    if (isViewingShared) return;
+    if (selectionMode !== "none") {
+      e.preventDefault(); // This is just a click, prevent default
+      onItemClick(item);
+      return;
+    }
+
+    // 3. Start logic for drag-select mode ('none')
+    const isTouch = e.type === 'touchstart';
+    const point = isTouch ? e.touches[0] : e;
+    dragStartPos.current = { x: point.clientX, y: point.clientY };
+
+    // 4. Set a timer to "activate" the drag
+    // On PC (mousedown), it's instant.
+    // On Touch, we wait ~250ms.
+    const delay = isTouch ? 250 : 0; 
+
+    dragTimer.current = setTimeout(() => {
+      // Timer fired! This is now officially a drag.
+      // We can no longer scroll.
+      dragTimer.current = null;
+      dragStartPos.current = null; // Don't check for scrolling anymore
+      
+      // Call your original drag-start logic
+      handleDragStart(item); 
+    }, delay);
+
+    // 5. CRITICAL: Only preventDefault on MOUSE.
+    // For TOUCH, we allow the default (scrolling)
+    // until the timer fires or movement is detected.
+    if (!isTouch) {
+      e.preventDefault();
+    }
   };
 
   const pulse = (id) => {
@@ -1031,7 +1115,10 @@ export default function App() {
   const fontClasses = { 48: 'text-[10px]', 72: 'text-[14px]', 100: 'text-base', };
 
   const renderGrid = (items) => (
-    <div className="flex-1 p-4 overflow-auto">
+    <div 
+      ref={scrollContainerRef} 
+      className="flex-1 p-4 overflow-auto"
+    >
       <div className={`grid ${gridColsClass} gap-1`}>
         {items.map(it => <CECell key={it.id} item={it} />)}
       </div>
@@ -1125,6 +1212,21 @@ export default function App() {
           0% { box-shadow: 0 0 0 0 rgba(246, 59, 59, 0.95); }
           50% { box-shadow: 0 0 12px 6px rgba(221, 246, 59, 1); }
           100% { box-shadow: 0 0 0 0 rgba(246, 59, 59, 1); }
+        }
+
+        .no-select {
+          -webkit-user-select: none; /* Safari */
+          -moz-user-select: none;    /* Firefox */
+          -ms-user-select: none;     /* IE/Edge */
+          user-select: none;         /* Standard */
+        }
+
+        .drag-selected {
+          /* 5px outside (red-500 @ 90% opacity) */
+          box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.9),
+          /* 5px inside (red-500 @ 90% opacity) */
+                      inset 0 0 0 5px rgba(239, 68, 68, 0.9);
+          border-radius: 6px; /* Matches your pulse-border */
         }
       `}</style>
 
