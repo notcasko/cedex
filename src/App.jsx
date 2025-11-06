@@ -720,7 +720,15 @@ export default function App() {
       if (selectionMode !== "none") {
         onItemClick(item);
       } else {
-        handleDragStart(item);
+        if (filterMode !== 'all') {
+          // If a filter is active, just toggle the single item. DO NOT start a drag.
+          const currentlyOwned = !!collection[item.id];
+          const newMode = currentlyOwned ? 'uncheck' : 'check';
+          setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
+        } else {
+          // No filter active, start drag-selection as normal.
+          handleDragStart(item);
+        }
       }
     };
 
