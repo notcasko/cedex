@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus } from "lucide-react";
 import LZString from "lz-string";
 
 const categories = [
@@ -92,6 +92,7 @@ export default function App() {
   const [selectionMode, setSelectionMode] = useState("none");
   const [sortAsc, setSortAsc] = usePersistedState("sortAsc", true);
   const [itemSize, setItemSize] = usePersistedState("itemSize", 72);
+  const [filterMode, setFilterMode] = useState("all"); // 'all', 'missing', 'completed'
 
   const [undoState, setUndoState] = useState(null);
   const [showUndo, setShowUndo] = useState(false);
@@ -154,7 +155,7 @@ export default function App() {
     }
     return document.scrollingElement || document.documentElement;
   };
-  
+
   /**
    * Compresses a sorted list of numbers into a delta-encoded array.
    * e.g., [100, 102, 103, 107] -> [100, 2, 1, 4]
@@ -291,6 +292,7 @@ export default function App() {
           setActive(null);
           setSelectionMode("none");
           setShowUndo(false);
+          setFilterMode("all");
           setUndoState(null);
         }
       }
@@ -314,28 +316,28 @@ export default function App() {
     const result = {};
 
     const expandSection = (section, items) => {
-        if (!section) return;
-        const ids = items.map(it => it.collectionNo);
+      if (!section) return;
+      const ids = items.map(it => it.collectionNo);
 
-        switch (section.m) { // 'm' for mode
-          case 0: // Full
-            ids.forEach(no => { result[noToId[no]] = true; });
-            break;
-          case 1: // Almost Full
-            ids.forEach(no => { result[noToId[no]] = true; });
-            // 'x' for missing, expand the delta list
-            (expandList(section.x || [])).forEach(no => { result[noToId[no]] = false; });
-            break;
-          case 2: // Sparse
-            // 'd' for data, expand the delta list
-            (expandList(section.d || [])).forEach(no => { result[noToId[no]] = true; });
-            break;
-          case 3: // List
-            // 'd' for data, expand the delta list
-            (expandList(section.d || [])).forEach(no => { result[noToId[no]] = true; });
-            break;
-        }
-      };
+      switch (section.m) { // 'm' for mode
+        case 0: // Full
+          ids.forEach(no => { result[noToId[no]] = true; });
+          break;
+        case 1: // Almost Full
+          ids.forEach(no => { result[noToId[no]] = true; });
+          // 'x' for missing, expand the delta list
+          (expandList(section.x || [])).forEach(no => { result[noToId[no]] = false; });
+          break;
+        case 2: // Sparse
+          // 'd' for data, expand the delta list
+          (expandList(section.d || [])).forEach(no => { result[noToId[no]] = true; });
+          break;
+        case 3: // List
+          // 'd' for data, expand the delta list
+          (expandList(section.d || [])).forEach(no => { result[noToId[no]] = true; });
+          break;
+      }
+    };
 
     categories.forEach(cat => {
       const items = data.filter(it => {
@@ -354,7 +356,7 @@ export default function App() {
         return false;
       });
 
-    const compressedCat = compressed[cat.id];
+      const compressedCat = compressed[cat.id];
       if (!compressedCat) return;
 
       if (compressedCat.m !== undefined) { // Check for 'm' instead of 'mode'
@@ -421,7 +423,7 @@ export default function App() {
       const parsed = JSON.parse(json);
       if (!parsed || typeof parsed !== "object") throw new Error("Invalid payload");
 
-      const cm = expandCollection(parsed.c, categories, data); 
+      const cm = expandCollection(parsed.c, categories, data);
       const lookingData = parsed.l; // 'l' for lookingFor
       const offeringData = parsed.o; // 'o' for offering
 
@@ -707,7 +709,7 @@ export default function App() {
   const CECell = ({ item }) => {
     const owned = mapOwned(item.id);
     const isPulse = highlightId === item.id;
-    const isAffected = isDragging && (owned !== !!collectionSnapshot.current[item.id]);   
+    const isAffected = isDragging && (owned !== !!collectionSnapshot.current[item.id]);
 
     const handleInteractionStart = (e) => {
       if (e.button !== 0) return; // ignore middle/right clicks
@@ -836,31 +838,31 @@ export default function App() {
   const generateLink = (uid) => {
     // helper: compress a group of items into F/AF/S/LIST, skip E
     const compressSection = (items, map) => {
-        if (!items.length) return undefined; // Use undefined so JSON.stringify omits it
+      if (!items.length) return undefined; // Use undefined so JSON.stringify omits it
 
-        const ids = items.map(it => it.collectionNo);
-        const owned = ids.filter(no => map[noToId[no]]);
-        const total = ids.length;
-        const count = owned.length;
+      const ids = items.map(it => it.collectionNo);
+      const owned = ids.filter(no => map[noToId[no]]);
+      const total = ids.length;
+      const count = owned.length;
 
-        if (count === 0) return undefined; // skip empty completely
-        if (count === total) return { m: 0 }; // 0 = Full
-        
-        const missingNos = ids.filter(no => !map[noToId[no]]);
-        if (count / total >= 0.85) {
-          // 1 = Almost Full
-          return { m: 1, x: compressList(missingNos) }; 
-        }
-        
-        const ownedNos = ids.filter(no => map[noToId[no]]);
-        if (count / total <= 0.15) {
-          // 2 = Sparse
-          return { m: 2, d: compressList(ownedNos) }; 
-        }
-        
-        // 3 = List
-        return { m: 3, d: compressList(ownedNos) }; 
-      };
+      if (count === 0) return undefined; // skip empty completely
+      if (count === total) return { m: 0 }; // 0 = Full
+
+      const missingNos = ids.filter(no => !map[noToId[no]]);
+      if (count / total >= 0.85) {
+        // 1 = Almost Full
+        return { m: 1, x: compressList(missingNos) };
+      }
+
+      const ownedNos = ids.filter(no => map[noToId[no]]);
+      if (count / total <= 0.15) {
+        // 2 = Sparse
+        return { m: 2, d: compressList(ownedNos) };
+      }
+
+      // 3 = List
+      return { m: 3, d: compressList(ownedNos) };
+    };
 
     const compressedCategories = {};
 
@@ -954,17 +956,17 @@ export default function App() {
     });
 
     const payload = {
-        // 'c' for collection
-        c: compressedCategories, 
-        // 'l' for lookingFor
-        l: lookingAll ? "ALL" : compressList(
-          Object.keys(lookingFor).filter(k => lookingFor[k]).map(id => idToNo[id])
-        ),
-        // 'o' for offering
-        o: offerAll ? "ALL" : compressList(
-          Object.keys(offering).filter(k => offering[k]).map(id => idToNo[id])
-        ),
-      };
+      // 'c' for collection
+      c: compressedCategories,
+      // 'l' for lookingFor
+      l: lookingAll ? "ALL" : compressList(
+        Object.keys(lookingFor).filter(k => lookingFor[k]).map(id => idToNo[id])
+      ),
+      // 'o' for offering
+      o: offerAll ? "ALL" : compressList(
+        Object.keys(offering).filter(k => offering[k]).map(id => idToNo[id])
+      ),
+    };
 
     const json = JSON.stringify(payload);
     const compressed = LZString.compressToEncodedURIComponent(json);
@@ -983,46 +985,68 @@ export default function App() {
   };
 
   const gridColsClass = (() => {
-      if (!active) return 'grid-cols-10';
+    if (!active) return 'grid-cols-10';
 
-      const modalWidth = windowWidth * (11 / 12);
-      const contentAreaWidth = modalWidth * (3 / 4);
-      const padding = 32; // p-4 (1rem = 16px) on left and right
-      const availableGridWidth = contentAreaWidth - padding;
+    const modalWidth = windowWidth * (11 / 12);
+    const contentAreaWidth = modalWidth * (3 / 4);
+    const padding = 32; // p-4 (1rem = 16px) on left and right
+    const availableGridWidth = contentAreaWidth - padding;
 
-      const size = Number(itemSize) || 72;
-      const gap = 4; // from gap-1 (0.25rem = 4px)
+    const size = Number(itemSize) || 72;
+    const gap = 4; // from gap-1 (0.25rem = 4px)
 
-      // Calculate width needed for N columns: (N * size) + ((N - 1) * gap)
-      const getWidth = (n) => (n * size) + ((n - 1) * gap);
+    // Calculate width needed for N columns: (N * size) + ((N - 1) * gap)
+    const getWidth = (n) => (n * size) + ((n - 1) * gap);
 
-      if (availableGridWidth >= getWidth(10)) return 'grid-cols-10';
-      if (availableGridWidth >= getWidth(9)) return 'grid-cols-9';
-      if (availableGridWidth >= getWidth(8)) return 'grid-cols-8';
-      if (availableGridWidth >= getWidth(7)) return 'grid-cols-7';
-      if (availableGridWidth >= getWidth(6)) return 'grid-cols-6';
-      if (availableGridWidth >= getWidth(5)) return 'grid-cols-5';
-      if (availableGridWidth >= getWidth(4)) return 'grid-cols-4';
-      if (availableGridWidth >= getWidth(3)) return 'grid-cols-3';
-      if (availableGridWidth >= getWidth(2)) return 'grid-cols-2';
-      
-      // Fallback to 1 column if grid is extremely narrow
-      return 'grid-cols-1';
-    })();
+    if (availableGridWidth >= getWidth(10)) return 'grid-cols-10';
+    if (availableGridWidth >= getWidth(9)) return 'grid-cols-9';
+    if (availableGridWidth >= getWidth(8)) return 'grid-cols-8';
+    if (availableGridWidth >= getWidth(7)) return 'grid-cols-7';
+    if (availableGridWidth >= getWidth(6)) return 'grid-cols-6';
+    if (availableGridWidth >= getWidth(5)) return 'grid-cols-5';
+    if (availableGridWidth >= getWidth(4)) return 'grid-cols-4';
+    if (availableGridWidth >= getWidth(3)) return 'grid-cols-3';
+    if (availableGridWidth >= getWidth(2)) return 'grid-cols-2';
+
+    // Fallback to 1 column if grid is extremely narrow
+    return 'grid-cols-1';
+  })();
 
   const renderSection = (title, sectionItems) => {
     if (!sectionItems || !sectionItems.length) return null;
+    // Get progress based on the *full* list of items for this section
+    const progress = {
+      owned: sectionItems.filter(it => mapOwned(it.id)).length,
+      total: sectionItems.length
+    };
+
+    // Filter items *for rendering* based on the filterMode state
+    const visibleItems = sectionItems.filter(it => {
+      if (filterMode === 'missing') return !mapOwned(it.id);
+      if (filterMode === 'completed') return mapOwned(it.id);
+      return true; // 'all'
+    });
+
+    // Don't render the section if the filter hides all items
     const allComplete = sectionItems.every(it => mapOwned(it.id));
     return (
       <div key={title}>
-        <h3 className={`text-lg font-bold my-2 ${theme === "dark" ? "text-white" : "text-black"}`}>{title}</h3>
+        <div className="flex justify-between items-center my-2">
+          <h3 className={`text-lg font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>{title}</h3>
+          <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">{progress.owned} / {progress.total}</span>
+        </div>
         {!isViewingShared && (
           <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(sectionItems, !allComplete)}>
             {allComplete ? "Undo this subcategory" : "Complete this subcategory"}
           </p>
         )}
         <div className={`grid ${gridColsClass} gap-1 mb-6`}>
-          {sectionItems.map((it) => <CECell key={it.id} item={it} />)}
+          {visibleItems.length > 0
+            ? visibleItems.map((it) => <CECell key={it.id} item={it} />)
+            : <div className="text-sm text-gray-500 col-span-full">
+              {filterMode === 'missing' ? 'Full. ' : 'Empty. '}No items match the current filter.
+            </div>
+          }
         </div>
       </div>
     );
@@ -1032,11 +1056,25 @@ export default function App() {
   const fontClasses = { 48: 'text-[10px]', 72: 'text-[14px]', 100: 'text-base', };
 
   const renderGrid = (items) => (
-    <div className="flex-1 p-4 overflow-auto">
-      <div className={`grid ${gridColsClass} gap-1`}>
-        {items.map(it => <CECell key={it.id} item={it} />)}
-      </div>
-    </div>
+    (() => {
+      // Filter items *for rendering* based on the filterMode state
+      const visibleItems = items.filter(it => {
+        if (filterMode === 'missing') return !mapOwned(it.id);
+        if (filterMode === 'completed') return mapOwned(it.id);
+        return true; // 'all'
+      });
+
+      return (
+        <div className="flex-1 p-4 overflow-auto">
+          <div className={`grid ${gridColsClass} gap-1`}>
+            {visibleItems.length > 0
+              ? visibleItems.map(it => <CECell key={it.id} item={it} />)
+              : <div className="text-sm text-gray-500 col-span-full p-4">No items match the current filter.</div>
+            }
+          </div>
+        </div>
+      );
+    })()
   );
 
   const SmallList = ({ map, listName, expandAll, dataCollection }) => {
@@ -1245,7 +1283,7 @@ export default function App() {
 
       {/* Tailwind JIT Safelist: ensures grid-cols-1 through 10 are generated */}
       <div className="hidden grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10"></div>
-      
+
       {/* Main cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 min-h-[50vh]">
         {categories.map(cat => (
@@ -1260,7 +1298,7 @@ export default function App() {
       {/* Expanded modal */}
       <AnimatePresence>
         {active && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); } }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); } }}>
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
               {/* Sidebar */}
               <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
@@ -1274,6 +1312,13 @@ export default function App() {
                       <div className="flex items-center ml-auto">
                         <button onClick={() => setSortAsc((prev) => !prev)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition" title={sortAsc ? "Sort Descending" : "Sort Ascending"}>
                           {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
+                        </button>
+                        <button
+                          onClick={() => setFilterMode(f => f === 'all' ? 'missing' : f === 'missing' ? 'completed' : 'all')}
+                          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                          title={`Filter items (Current: ${filterMode === 'all' ? 'All' : filterMode === 'missing' ? 'Missing' : 'Completed'})`}
+                        >
+                          {filterMode === 'all' ? <Folder size={20} /> : filterMode === 'missing' ? <FolderMinus size={20} /> : <FolderPlus size={20} />}
                         </button>
                         <button
                           onClick={() => setItemSize(s => s === 72 ? 100 : s === 100 ? 48 : 72)}
@@ -1309,7 +1354,7 @@ export default function App() {
                   </button>
                 )}
                 {active.special === "generate" && lastId && !isViewingShared && <button className="px-4 py-2 rounded-xl bg-purple-500 text-white" onClick={() => setGenUserId(lastId)}>Paste in last ID {lastId}</button>}
-                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}>Close</button>
+                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); }}>Close</button>
                 {active.special !== "generate" && <div className={`mt-1 font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}</div>}
               </div>
 
@@ -1374,21 +1419,58 @@ export default function App() {
                     return (
                       <div className="flex-1 p-4 overflow-auto">
                         {rarities.map(r => (
-                          <div key={r}>
-                            <h3 className={`text-lg font-bold my-4 ${theme === "dark" ? "text-white" : "text-black"}`}>Rarity {r}</h3>
-                            {subFlags.map(sf => {
-                              const subs = items.filter(it => it.rarity === r && (it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key))));
-                              if (!subs.length) return null;
-                              const allComplete = subs.every(it => mapOwned(it.id));
-                              return (
-                                <div key={sf.key} className="mb-6">
-                                  <h4 className={`text-md font-semibold mb-1 ${theme === "dark" ? "text-white" : "text-black"}`}>{sf.label}</h4>
-                                  {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
-                                  <div className={`grid ${gridColsClass} gap-1`}>{subs.map(it => <CECell key={it.id} item={it} />)}</div>
+                          (() => {
+                            // Get *all* items for this rarity for progress calculation
+                            const rarityItems = items.filter(it => it.rarity === r);
+                            if (rarityItems.length === 0) return null;
+
+                            const rarityProgress = {
+                              owned: rarityItems.filter(it => mapOwned(it.id)).length,
+                              total: rarityItems.length
+                            };
+
+                            if (visibleRarityItems.length === 0) return null;
+
+                            return (
+                              <div key={r}>
+                                <div className="flex justify-between items-center my-4">
+                                  <h3 className={`text-lg font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>Rarity {r}</h3>
+                                  <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">{rarityProgress.owned} / {rarityProgress.total}</span>
                                 </div>
-                              );
-                            })}
-                          </div>
+                                {subFlags.map(sf => {
+                                  // Get *all* items for this sub-flag for progress
+                                  const subs = rarityItems.filter(it => it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key)));
+                                  if (!subs.length) return null;
+
+                                  const subProgress = {
+                                    owned: subs.filter(it => mapOwned(it.id)).length,
+                                    total: subs.length
+                                  };
+
+                                  // Filter items for *rendering*
+                                  const visibleSubs = subs.filter(it => {
+                                    if (filterMode === 'missing') return !mapOwned(it.id);
+                                    if (filterMode === 'completed') return mapOwned(it.id);
+                                    return true; // 'all'
+                                  });
+
+                                  if (visibleSubs.length === 0) return null;
+
+                                  const allComplete = subs.every(it => mapOwned(it.id));
+                                  return (
+                                    <div key={sf.key} className="mb-6">
+                                      <div className="flex justify-between items-center mb-1">
+                                        <h4 className={`text-md font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>{sf.label}</h4>
+                                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{subProgress.owned} / {subProgress.total}</span>
+                                      </div>
+                                      {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
+                                      <div className={`grid ${gridColsClass} gap-1`}>{visibleSubs.map(it => <CECell key={it.id} item={it} />)}</div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })()
                         ))}
                       </div>
                     );
