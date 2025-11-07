@@ -1035,12 +1035,14 @@ export default function App() {
       return true; // 'all'
     });
 
+    const displayTitle = filterMode === 'missing' ? `${title}: Missing` : filterMode === 'completed' ? `${title}: Have` : title;
+
     // Don't render the section if the filter hides all items
     const allComplete = sectionItems.every(it => mapOwned(it.id));
     return (
-      <div key={title}>
+      <div key={displayTitle}>
         <div className="flex justify-between items-center my-2">
-          <h3 className={`text-lg font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>{title}</h3>
+          <h3 className={`text-lg font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>{displayTitle}</h3>
           <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">{progress.owned} / {progress.total}</span>
         </div>
         {!isViewingShared && (
@@ -1437,12 +1439,14 @@ export default function App() {
                               total: rarityItems.length
                             };
 
-                            if (visibleRarityItems.length === 0) return null;
+                            //if (visibleRarityItems.length === 0) return null;
+
+                            const displayRarityTitle = filterMode === 'missing' ? `Rarity ${r}: Missing` : filterMode === 'completed' ? `Rarity ${r}: Have` : `Rarity ${r}`;
 
                             return (
                               <div key={r}>
                                 <div className="flex justify-between items-center my-4">
-                                  <h3 className={`text-lg font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>Rarity {r}</h3>
+                                  <h3 className={`text-lg font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>{displayRarityTitle}</h3>
                                   <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">{rarityProgress.owned} / {rarityProgress.total}</span>
                                 </div>
                                 {subFlags.map(sf => {
@@ -1462,17 +1466,26 @@ export default function App() {
                                     return true; // 'all'
                                   });
 
-                                  if (visibleSubs.length === 0) return null;
+                                  //if (visibleSubs.length === 0) return null;
+
+                                  const displaySubFlagTitle = filterMode === 'missing' ? `${sf.label}: Missing` : filterMode === 'completed' ? `${sf.label}: Have` : sf.label;
 
                                   const allComplete = subs.every(it => mapOwned(it.id));
                                   return (
                                     <div key={sf.key} className="mb-6">
                                       <div className="flex justify-between items-center mb-1">
-                                        <h4 className={`text-md font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>{sf.label}</h4>
+                                        <h4 className={`text-md font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>{displaySubFlagTitle}</h4>
                                         <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{subProgress.owned} / {subProgress.total}</span>
                                       </div>
                                       {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
-                                      <div className={`grid ${gridColsClass} gap-1`}>{visibleSubs.map(it => <CECell key={it.id} item={it} />)}</div>
+                                      <div className={`grid ${gridColsClass} gap-1`}>
+                                        {visibleSubs.length > 0
+                                          ? visibleSubs.map(it => <CECell key={it.id} item={it} />)
+                                          : <div className="text-sm text-gray-500 col-span-full">
+                                            {filterMode === 'missing' ? 'Full. ' : 'Empty. '}No items match the current filter.
+                                          </div>
+                                        }
+                                      </div>
                                     </div>
                                   );
                                 })}
