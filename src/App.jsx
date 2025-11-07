@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus } from "lucide-react";
 import LZString from "lz-string";
+import bondCeJson from "./data/bond_ces.json";
 
 const categories = [
   { id: 1, label: "Bond CEs", flag: "svtEquipFriendShip" },
@@ -121,6 +122,15 @@ export default function App() {
   const dragStartItem = useRef(null);
   const collectionSnapshot = useRef({});
   const lastDraggedOverId = useRef(null);
+
+  // Map of Bond CE IDs to lowercase owner names for searching
+  const bondCeOwnerMap = useMemo(() => {
+    const map = {};
+    for (const item of bondCeJson) {
+      map[item.id] = item.owner.toLowerCase();
+    }
+    return map;
+  }, []); // This map is static and will not change
 
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
@@ -784,13 +794,13 @@ export default function App() {
     const filtered = data.filter(it =>
       (it.name && it.name.toLowerCase().includes(q)) ||
       (it.originalName && it.originalName.toLowerCase().includes(q)) ||
-      (!isNaN(qNum) && it.collectionNo === qNum)
+      (!isNaN(qNum) && it.collectionNo === qNum) ||
+      // Check against the new owner map
+      (bondCeOwnerMap[it.collectionNo] && bondCeOwnerMap[it.collectionNo].includes(q))
     );
     setResults(filtered.slice(0, 50));
-  }, [query, data]);
+  }, [query, data, bondCeOwnerMap]);
 
-
-  // replace your previous onSearchSelect with this:
   const onSearchSelect = (item) => {
     const matched = getCategoryForItem(item); // robust — doesn't rely on precomputed categoryId
     setActive(matched);
