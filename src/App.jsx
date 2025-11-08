@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router } from "lucide-react";
 import LZString from "lz-string";
 import bondCeJson from "./data/bond_ces.json";
+import localforage from "localforage";
 
 const categories = [
   { id: 1, label: "Bond CEs", flag: "svtEquipFriendShip" },
@@ -93,6 +94,7 @@ export default function App() {
   const [selectionMode, setSelectionMode] = useState("none");
   const [sortAsc, setSortAsc] = usePersistedState("sortAsc", true);
   const [itemSize, setItemSize] = usePersistedState("itemSize", 72);
+  const [cachingMode, setCachingMode] = usePersistedState("cachingMode", true);
   const [filterMode, setFilterMode] = useState("all"); // 'all', 'missing', 'completed'
 
   const [undoState, setUndoState] = useState(null);
@@ -716,10 +718,58 @@ export default function App() {
   };
 
   // UPDATED: CECell handles new range-drag events
-  const CECell = ({ item }) => {
+  const CECell = ({ item, cachingMode }) => {
+    const [imageUrl, setImageUrl] = useState(null);
     const owned = mapOwned(item.id);
     const isPulse = highlightId === item.id;
     const isAffected = isDragging && (owned !== !!collectionSnapshot.current[item.id]);
+
+    useEffect(() => {
+      if (!item.face) return;
+
+      let objectUrl = null;
+
+      const loadCachedImage = async () => {
+        try {
+          // 1. Check if blob is in IndexedDB
+          const cachedBlob = await localforage.getItem(item.face);
+
+          if (cachedBlob) {
+            // 2a. Use cached blob
+            objectUrl = URL.createObjectURL(cachedBlob);
+            setImageUrl(objectUrl);
+          } else {
+            // 2b. Fetch, store in DB, and then use
+            const response = await fetch(item.face);
+            if (!response.ok) throw new Error('Failed to fetch image');
+            const blob = await response.blob();
+            await localforage.setItem(item.face, blob); // Store blob in IndexedDB
+            objectUrl = URL.createObjectURL(blob);
+            setImageUrl(objectUrl);
+          }
+        } catch (error) {
+          console.error("Failed to load or cache image:", item.face, error);
+          setImageUrl(item.face); // Fallback to direct URL on error
+        }
+      };
+
+      if (cachingMode) {
+        loadCachedImage();
+      } else {
+        // Caching is off, just use the direct URL
+        setImageUrl(item.face);
+      }
+
+      // Cleanup function to revoke the object URL and prevent memory leaks
+      return () => {
+        if (objectUrl) {
+          URL.revokeObjectURL(objectUrl);
+        }
+        if (!cachingMode && imageUrl) {
+          // No-op if we're just using direct URL
+        }
+      };
+    }, [item.face, cachingMode]); // Rerun if item or caching mode changes
 
     const handleInteractionStart = (e) => {
       if (e.button !== 0) return; // ignore middle/right clicks
@@ -753,10 +803,10 @@ export default function App() {
         onMouseEnter={() => handleDragOver(item)}
       >
         <img
-          src={item.face}
+          src={imageUrl || ''} // Use the state-backed URL
           alt={item.name}
           title={item.name}
-          className={`w-full h-full object-contain transition ${owned ? "opacity-100" : "opacity-50"}`}
+          className={`w-full h-full object-contain transition ${imageUrl ? (owned ? "opacity-100" : "opacity-50") : "opacity-0 bg-gray-500/20"}`} // Show a bg placeholder while loading
           draggable="false"
           style={{ pointerEvents: "none" }}
         />
@@ -1062,7 +1112,7 @@ export default function App() {
         )}
         <div className={`grid ${gridColsClass} gap-1 mb-6`}>
           {visibleItems.length > 0
-            ? visibleItems.map((it) => <CECell key={it.id} item={it} />)
+            ? visibleItems.map((it) => <CECell key={it.id} item={it} cachingMode={cachingMode} />)
             : <div className="text-sm text-gray-500 col-span-full">
               {filterMode === 'missing' ? 'Full. ' : 'Empty. '}No items match the current filter.
             </div>
@@ -1088,7 +1138,7 @@ export default function App() {
         <div className="flex-1 p-4 overflow-auto">
           <div className={`grid ${gridColsClass} gap-1`}>
             {visibleItems.length > 0
-              ? visibleItems.map(it => <CECell key={it.id} item={it} />)
+              ? visibleItems.map(it => <CECell key={it.id} item={it} cachingMode={cachingMode} />)
               : <div className="text-sm text-gray-500 col-span-full p-4">No items match the current filter.</div>
             }
           </div>
@@ -1204,8 +1254,8 @@ export default function App() {
 
       {/* Header */}
       <div className="p-4 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold"> CEdex {getProgress().owned > 0 && (<> ({getProgress().owned}/{getProgress().total})</>)} </h1>
-        <div className="flex-1 max-w-xl">
+        <h1 className="text-2xl font-bold md:order-1 order-1"> CEdex {getProgress().owned > 0 && (<> ({getProgress().owned}/{getProgress().total})</>)} </h1>
+        <div className="w-full md:flex-1 md:max-w-xl md:order-2 order-3">
           <div ref={searchRef} className="relative">
             <input
               ref={searchInputRef}
@@ -1231,7 +1281,7 @@ export default function App() {
                 }
               }}
               placeholder="Search by name or ID..."
-              className="w-full px-4 py-2 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
+              className="w-full px-4 py-2 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white text-base"
             />
             {results.length > 0 && (
               <div className="absolute z-50 top-full left-0 right-0 bg-white dark:bg-gray-700 rounded-xl shadow-lg max-h-96 overflow-auto mt-2">
@@ -1249,24 +1299,24 @@ export default function App() {
                       }`}
                     onClick={() => onSearchSelect(item)}
                   >
-                    <div className="relative w-12 h-12 flex-shrink-0">
+                    <div className="relative w-20 h-20 flex-shrink-0">
                       <img
                         src={item.face}
                         alt={item.name}
-                        className={`w-12 h-12 object-contain ${mapOwned(item.id) ? "opacity-100" : "opacity-50"}`}
+                        className={`w-20 h-20 object-contain ${mapOwned(item.id) ? "opacity-100" : "opacity-50"}`}
                       />
-                      <span className="absolute bottom-0 right-0 text-[10px] leading-none bg-black/60 text-white px-1 rounded">
+                      <span className="absolute bottom-0 right-0 text-[14px] leading-none bg-black/60 text-white px-1 rounded">
                         {item.collectionNo}
                       </span>
                     </div>
-                    <div className="text-sm text-black dark:text-white">{item.name}</div>
+                    <div className="text-base text-black dark:text-white">{item.name}</div>
                   </div>
                 ))}
               </div>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 md:order-3 order-2">
           {isViewingShared && (
             <div
               className="bg-amber-300 dark:bg-amber-600 text-black dark:text-white px-3 py-1 rounded-xl text-sm font-semibold cursor-pointer hover:bg-amber-400 dark:hover:bg-amber-500 transition"
@@ -1295,6 +1345,13 @@ export default function App() {
               Viewing {sharedUserId} (read-only)
             </div>
           )}
+          <button
+            className={`px-4 py-2 rounded-xl transition ${cachingMode ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-green-500 text-white hover:bg-green-600'}`}
+            onClick={() => setCachingMode(c => !c)}
+            title={cachingMode ? "Image Caching Enabled" : "Image Caching Disabled"}
+          >
+            <Router />
+          </button>
           <button className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition" onClick={() => setTheme(t => t === "light" ? "dark" : "light")}>
             {theme === "light" ? <Moon /> : <Sun />}
           </button>
