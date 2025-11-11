@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router } from "lucide-react";
 import LZString from "lz-string";
@@ -79,6 +79,125 @@ const usePersistedState = (key, initial) => {
   return [state, setState];
 };
 
+// --- Constants moved outside App ---
+const sizeClasses = { 48: 'w-12 h-12', 72: 'w-[72px] h-[72px]', 100: 'w-[100px] h-[100px]', };
+const fontClasses = { 48: 'text-[10px]', 72: 'text-[14px]', 100: 'text-base', };
+
+// --- CECell moved outside App and wrapped in React.memo ---
+const CECell = React.memo(({
+  item,
+  cachingMode,
+  owned,
+  isPulse,
+  isAffected,
+  itemSize,
+  isViewingShared,
+  selectionMode,
+  filterMode,
+  onItemClick,
+  onDragStart,
+  onDragOver,
+  onToggle
+}) => {
+  const [imageUrl, setImageUrl] = useState(null);
+
+  useEffect(() => {
+    if (!item.face) return;
+
+    let objectUrl = null;
+
+    const loadCachedImage = async () => {
+      try {
+        // 1. Check if blob is in IndexedDB
+        const cachedBlob = await localforage.getItem(item.face);
+
+        if (cachedBlob) {
+          // 2a. Use cached blob
+          objectUrl = URL.createObjectURL(cachedBlob);
+          setImageUrl(objectUrl);
+        } else {
+          // 2b. Fetch, store in DB, and then use
+          const response = await fetch(item.face);
+          if (!response.ok) throw new Error('Failed to fetch image');
+          const blob = await response.blob();
+          await localforage.setItem(item.face, blob); // Store blob in IndexedDB
+          objectUrl = URL.createObjectURL(blob);
+          setImageUrl(objectUrl);
+        }
+      } catch (error) {
+        console.error("Failed to load or cache image:", item.face, error);
+        setImageUrl(item.face); // Fallback to direct URL on error
+      }
+    };
+
+    if (cachingMode) {
+      loadCachedImage();
+    } else {
+      // Caching is off, just use the direct URL
+      setImageUrl(item.face);
+    }
+
+    // Cleanup function to revoke the object URL and prevent memory leaks
+    return () => {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+      if (!cachingMode && imageUrl) {
+        // No-op if we're just using direct URL
+      }
+    };
+  }, [item.face, cachingMode]); // Rerun if item or caching mode changes
+
+  const handleInteractionStart = (e) => {
+    if (e.button !== 0) return; // ignore middle/right clicks
+    e.preventDefault();
+
+    if (isViewingShared) return;
+
+    if (selectionMode !== "none") {
+      onItemClick(item);
+    } else {
+      if (filterMode !== 'all') {
+        // If a filter is active, just toggle the single item. DO NOT start a drag.
+        onToggle(item);
+      } else {
+        // No filter active, start drag-selection as normal.
+        onDragStart(item);
+      }
+    }
+  };
+
+  return (
+    <div
+      id={`ce-${item.id}`}
+      className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select`}
+      style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
+      onMouseDown={handleInteractionStart}
+      onTouchStart={handleInteractionStart}
+      onMouseEnter={() => onDragOver(item)}
+    >
+      <img
+        src={imageUrl || ''} // Use the state-backed URL
+        alt={item.name}
+        title={item.name}
+        className={`w-full h-full object-contain transition ${imageUrl ? (owned ? "opacity-100" : "opacity-50") : "opacity-0 bg-gray-500/20"}`} // Show a bg placeholder while loading
+        draggable="false"
+        style={{ pointerEvents: "none" }}
+      />
+      <a
+        href={`https://apps.atlasacademy.io/db/JP/craft-essence/${item.collectionNo}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`absolute bottom-0 right-0 ${fontClasses[itemSize]} leading-none bg-black/60 text-white px-1 rounded cursor-pointer hover:underline`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {item.collectionNo}
+      </a>
+    </div>
+  );
+});
+CECell.displayName = 'CECell'; // Add display name for easier debugging
+
 export default function App() {
   const searchInputRef = useRef(null);
   const [theme, setTheme] = usePersistedState("theme", "dark");
@@ -94,7 +213,7 @@ export default function App() {
   const [selectionMode, setSelectionMode] = useState("none");
   const [sortAsc, setSortAsc] = usePersistedState("sortAsc", true);
   const [itemSize, setItemSize] = usePersistedState("itemSize", 72);
-  const [cachingMode, setCachingMode] = usePersistedState("cachingMode", true);
+  const [cachingMode, setCachingMode] = usePersistedState("cachingMode", false);
   const [filterMode, setFilterMode] = useState("all"); // 'all', 'missing', 'completed'
 
   const [undoState, setUndoState] = useState(null);
@@ -147,6 +266,26 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => setCollectionData(data));
   }, []);
+
+  // --- `getItems` wrapped in `useCallback` ---
+  const getItems = useCallback((cat) => {
+    if (!data || !data.length || !cat) return [];
+
+    if (cat.flag === "normal") {
+      return data.filter(it => it.flag === "normal" || !Array.isArray(it.flags) || it.flags.length === 0);
+    }
+    if (cat.flag) {
+      return data.filter(it => it.flag === cat.flag || (Array.isArray(it.flags) && it.flags.includes(cat.flag)));
+    }
+    if (cat.flags) {
+      return data.filter(it => cat.flags.some(f => it.flag === f || (Array.isArray(it.flags) && it.flags.includes(f))));
+    }
+    if (cat.range) {
+      return data.filter(it => it.collectionNo >= cat.range[0] && it.collectionNo <= cat.range[1]);
+    }
+    return [];
+  }, [data]); // Stable, only depends on data
+
   // helper: compute category object for an item (same rules as getItems)
   const getCategoryForItem = (item) => {
     return categories.find(cat => {
@@ -218,7 +357,130 @@ export default function App() {
       container.scrollTop = targetScroll;
     }
   };
+  // --- Handlers wrapped in `useCallback` ---
+  const onItemClick = useCallback((item) => {
+    if (isViewingShared) return;
 
+    if (selectionMode === "looking") {
+      setLookingFor(prev => ({ ...prev, [item.id]: !prev[item.id] }));
+      pulse(item.id);
+      return;
+    }
+
+    if (selectionMode === "offering") {
+      setOffering(prev => ({ ...prev, [item.id]: !prev[item.id] }));
+      pulse(item.id);
+      return;
+    }
+  }, [isViewingShared, selectionMode]);
+
+  // Handlers for range-based drag selection
+  const handleDragStart = useCallback((item) => {
+    if (isViewingShared || selectionMode !== 'none') return;
+
+    setIsDragging(true);
+    dragStartItem.current = item;
+    collectionSnapshot.current = collection; // Take snapshot of state at drag start
+
+    const currentlyOwned = !!collection[item.id];
+    const newMode = currentlyOwned ? 'uncheck' : 'check';
+    setDragToggleMode(newMode);
+
+    setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
+  }, [isViewingShared, selectionMode, collection]);
+
+  const handleDragOver = useCallback((item) => {
+    if (!isDragging || !dragStartItem.current || selectionMode !== 'none') return;
+
+    const start = dragStartItem.current;
+    const end = item;
+
+    // 🔹 Restrict drag selection to only the subcategory currently being hovered
+    const visibleItems = getItems(active);
+
+    // Find which "section" the drag started in (rarity or subheader group)
+    const sectionItems = (() => {
+      // Case: Event free (rarity + subgroup flag)
+      if (active.label === "Event free") {
+        const isEventReward =
+          start.flag === "svtEquipEventReward" ||
+          (Array.isArray(start.flags) && start.flags.includes("svtEquipEventReward"));
+
+        const isCEExp =
+          start.flag === "svtEquipExp" ||
+          (Array.isArray(start.flags) && start.flags.includes("svtEquipExp"));
+
+        if (isEventReward) {
+          return visibleItems.filter(
+            (it) =>
+              it.rarity === start.rarity &&
+              (it.flag === "svtEquipEventReward" ||
+                (Array.isArray(it.flags) && it.flags.includes("svtEquipEventReward")))
+          );
+        }
+        if (isCEExp) {
+          return visibleItems.filter(
+            (it) =>
+              it.rarity === start.rarity &&
+              (it.flag === "svtEquipExp" ||
+                (Array.isArray(it.flags) && it.flags.includes("svtEquipExp")))
+          );
+        }
+      }
+
+      // Case: generic rarity-split categories
+      if (active.raritySplit) {
+        return visibleItems.filter((it) => it.rarity === start.rarity);
+      }
+
+      // Case: Chocolate / Commemorative (subranges)
+      if (active.label === "Chocolate") {
+        const sub = chocolateSubcategories.find(
+          (s) => start.collectionNo >= s.range[0] && start.collectionNo <= s.range[1]
+        );
+        return sub
+          ? visibleItems.filter(
+            (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+          )
+          : visibleItems;
+      }
+      if (active.label === "Commemorative") {
+        const sub = commemorativeSubcategories.find(
+          (s) => start.collectionNo >= s.range[0] && start.collectionNo <= s.range[1]
+        );
+        return sub
+          ? visibleItems.filter(
+            (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
+          )
+          : visibleItems;
+      }
+
+      // Default (BondCEs, Normal, etc.)
+      return visibleItems;
+    })();
+
+    // Apply range selection inside that section only
+    const startIndex = sectionItems.findIndex(it => it.id === start.id);
+    const endIndex = sectionItems.findIndex(it => it.id === end.id);
+
+    if (startIndex === -1 || endIndex === -1) return;
+
+    const minIndex = Math.min(startIndex, endIndex);
+    const maxIndex = Math.max(startIndex, endIndex);
+
+    const changes = {};
+    for (let i = minIndex; i <= maxIndex; i++) {
+      changes[sectionItems[i].id] = dragToggleMode === 'check';
+    }
+
+    setCollection({ ...collectionSnapshot.current, ...changes });
+  }, [isDragging, selectionMode, active, dragToggleMode, getItems]);
+
+  // Handler for single-toggle click when a filter is active
+  const handleToggle = useCallback((item) => {
+    const currentlyOwned = !!collection[item.id];
+    setCollection(prev => ({ ...prev, [item.id]: !currentlyOwned }));
+  }, [collection]);
   // Effect to handle ending a drag selection globally
   useEffect(() => {
     const handleDragEnd = () => {
@@ -246,7 +508,7 @@ export default function App() {
           const item = data.find(d => String(d.id) === itemId);
           if (item) {
             lastDraggedOverId.current = cellId;
-            handleDragOver(item);
+            handleDragOver(item); // handleDragOver is now memoized, safe to call
           }
         }
       }
@@ -261,7 +523,7 @@ export default function App() {
       window.removeEventListener('touchend', handleDragEnd);
       window.removeEventListener('touchmove', handleTouchMove);
     };
-  }, [isDragging, data]); // Rerun if dragging state or data changes
+  }, [isDragging, data, handleDragOver]); // Added handleDragOver to dependencies
 
   // Build lookup tables once (outside generate/expand)
   const idToNo = {};
@@ -544,124 +806,6 @@ export default function App() {
     return { owned, total, percentage: total ? Math.round((owned / total) * 100) : 0 };
   };
 
-  // Click handler for non-drag modes ('looking', 'offering')
-  const onItemClick = (item) => {
-    if (isViewingShared) return;
-
-    if (selectionMode === "looking") {
-      setLookingFor(prev => ({ ...prev, [item.id]: !prev[item.id] }));
-      pulse(item.id);
-      return;
-    }
-
-    if (selectionMode === "offering") {
-      setOffering(prev => ({ ...prev, [item.id]: !prev[item.id] }));
-      pulse(item.id);
-      return;
-    }
-  };
-
-  // Handlers for range-based drag selection
-  const handleDragStart = (item) => {
-    if (isViewingShared || selectionMode !== 'none') return;
-
-    setIsDragging(true);
-    dragStartItem.current = item;
-    collectionSnapshot.current = collection; // Take snapshot of state at drag start
-
-    const currentlyOwned = !!collection[item.id];
-    const newMode = currentlyOwned ? 'uncheck' : 'check';
-    setDragToggleMode(newMode);
-
-    setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
-  };
-
-  const handleDragOver = (item) => {
-    if (!isDragging || !dragStartItem.current || selectionMode !== 'none') return;
-
-    const start = dragStartItem.current;
-    const end = item;
-
-    // 🔹 Restrict drag selection to only the subcategory currently being hovered
-    const visibleItems = getItems(active);
-
-    // Find which "section" the drag started in (rarity or subheader group)
-    const sectionItems = (() => {
-      // Case: Event free (rarity + subgroup flag)
-      if (active.label === "Event free") {
-        const isEventReward =
-          start.flag === "svtEquipEventReward" ||
-          (Array.isArray(start.flags) && start.flags.includes("svtEquipEventReward"));
-
-        const isCEExp =
-          start.flag === "svtEquipExp" ||
-          (Array.isArray(start.flags) && start.flags.includes("svtEquipExp"));
-
-        if (isEventReward) {
-          return visibleItems.filter(
-            (it) =>
-              it.rarity === start.rarity &&
-              (it.flag === "svtEquipEventReward" ||
-                (Array.isArray(it.flags) && it.flags.includes("svtEquipEventReward")))
-          );
-        }
-        if (isCEExp) {
-          return visibleItems.filter(
-            (it) =>
-              it.rarity === start.rarity &&
-              (it.flag === "svtEquipExp" ||
-                (Array.isArray(it.flags) && it.flags.includes("svtEquipExp")))
-          );
-        }
-      }
-
-      // Case: generic rarity-split categories
-      if (active.raritySplit) {
-        return visibleItems.filter((it) => it.rarity === start.rarity);
-      }
-
-      // Case: Chocolate / Commemorative (subranges)
-      if (active.label === "Chocolate") {
-        const sub = chocolateSubcategories.find(
-          (s) => start.collectionNo >= s.range[0] && start.collectionNo <= s.range[1]
-        );
-        return sub
-          ? visibleItems.filter(
-            (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
-          )
-          : visibleItems;
-      }
-      if (active.label === "Commemorative") {
-        const sub = commemorativeSubcategories.find(
-          (s) => start.collectionNo >= s.range[0] && start.collectionNo <= s.range[1]
-        );
-        return sub
-          ? visibleItems.filter(
-            (it) => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
-          )
-          : visibleItems;
-      }
-
-      // Default (BondCEs, Normal, etc.)
-      return visibleItems;
-    })();
-
-    // Apply range selection inside that section only
-    const startIndex = sectionItems.findIndex(it => it.id === start.id);
-    const endIndex = sectionItems.findIndex(it => it.id === end.id);
-
-    if (startIndex === -1 || endIndex === -1) return;
-
-    const minIndex = Math.min(startIndex, endIndex);
-    const maxIndex = Math.max(startIndex, endIndex);
-
-    const changes = {};
-    for (let i = minIndex; i <= maxIndex; i++) {
-      changes[sectionItems[i].id] = dragToggleMode === 'check';
-    }
-
-    setCollection({ ...collectionSnapshot.current, ...changes });
-  };
 
   const getCategoryPercentage = (cat) => {
     const items = getItems(cat);
@@ -693,135 +837,12 @@ export default function App() {
 
     setCollection(prev => {
       const copy = { ...prev };
-      -      items.forEach(it => copy[it.id] = value);
       items.forEach(it => (copy[it.id] = value));
       return copy;
     });
   };
 
-  const getItems = (cat) => {
-    if (!data || !data.length || !cat) return [];
-
-    if (cat.flag === "normal") {
-      return data.filter(it => it.flag === "normal" || !Array.isArray(it.flags) || it.flags.length === 0);
-    }
-    if (cat.flag) {
-      return data.filter(it => it.flag === cat.flag || (Array.isArray(it.flags) && it.flags.includes(cat.flag)));
-    }
-    if (cat.flags) {
-      return data.filter(it => cat.flags.some(f => it.flag === f || (Array.isArray(it.flags) && it.flags.includes(f))));
-    }
-    if (cat.range) {
-      return data.filter(it => it.collectionNo >= cat.range[0] && it.collectionNo <= cat.range[1]);
-    }
-    return [];
-  };
-
-  // UPDATED: CECell handles new range-drag events
-  const CECell = ({ item, cachingMode }) => {
-    const [imageUrl, setImageUrl] = useState(null);
-    const owned = mapOwned(item.id);
-    const isPulse = highlightId === item.id;
-    const isAffected = isDragging && (owned !== !!collectionSnapshot.current[item.id]);
-
-    useEffect(() => {
-      if (!item.face) return;
-
-      let objectUrl = null;
-
-      const loadCachedImage = async () => {
-        try {
-          // 1. Check if blob is in IndexedDB
-          const cachedBlob = await localforage.getItem(item.face);
-
-          if (cachedBlob) {
-            // 2a. Use cached blob
-            objectUrl = URL.createObjectURL(cachedBlob);
-            setImageUrl(objectUrl);
-          } else {
-            // 2b. Fetch, store in DB, and then use
-            const response = await fetch(item.face);
-            if (!response.ok) throw new Error('Failed to fetch image');
-            const blob = await response.blob();
-            await localforage.setItem(item.face, blob); // Store blob in IndexedDB
-            objectUrl = URL.createObjectURL(blob);
-            setImageUrl(objectUrl);
-          }
-        } catch (error) {
-          console.error("Failed to load or cache image:", item.face, error);
-          setImageUrl(item.face); // Fallback to direct URL on error
-        }
-      };
-
-      if (cachingMode) {
-        loadCachedImage();
-      } else {
-        // Caching is off, just use the direct URL
-        setImageUrl(item.face);
-      }
-
-      // Cleanup function to revoke the object URL and prevent memory leaks
-      return () => {
-        if (objectUrl) {
-          URL.revokeObjectURL(objectUrl);
-        }
-        if (!cachingMode && imageUrl) {
-          // No-op if we're just using direct URL
-        }
-      };
-    }, [item.face, cachingMode]); // Rerun if item or caching mode changes
-
-    const handleInteractionStart = (e) => {
-      if (e.button !== 0) return; // ignore middle/right clicks
-      e.preventDefault();
-
-      if (isViewingShared) return;
-
-      if (selectionMode !== "none") {
-        onItemClick(item);
-      } else {
-        if (filterMode !== 'all') {
-          // If a filter is active, just toggle the single item. DO NOT start a drag.
-          const currentlyOwned = !!collection[item.id];
-          const newMode = currentlyOwned ? 'uncheck' : 'check';
-          setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
-        } else {
-          // No filter active, start drag-selection as normal.
-          handleDragStart(item);
-        }
-      }
-    };
-
-    return (
-      <div
-        id={`ce-${item.id}`}
-        key={item.id}
-        className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select`}
-        style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
-        onMouseDown={handleInteractionStart}
-        onTouchStart={handleInteractionStart}
-        onMouseEnter={() => handleDragOver(item)}
-      >
-        <img
-          src={imageUrl || ''} // Use the state-backed URL
-          alt={item.name}
-          title={item.name}
-          className={`w-full h-full object-contain transition ${imageUrl ? (owned ? "opacity-100" : "opacity-50") : "opacity-0 bg-gray-500/20"}`} // Show a bg placeholder while loading
-          draggable="false"
-          style={{ pointerEvents: "none" }}
-        />
-        <a
-          href={`https://apps.atlasacademy.io/db/JP/craft-essence/${item.collectionNo}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`absolute bottom-0 right-0 ${fontClasses[itemSize]} leading-none bg-black/60 text-white px-1 rounded cursor-pointer hover:underline`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {item.collectionNo}
-        </a>
-      </div>
-    );
-  };
+  // --- CECell component definition removed from here ---
 
   const pulse = (id) => {
     setHighlightId(id);
@@ -1112,7 +1133,24 @@ export default function App() {
         )}
         <div className={`grid ${gridColsClass} gap-1 mb-6`}>
           {visibleItems.length > 0
-            ? visibleItems.map((it) => <CECell key={it.id} item={it} cachingMode={cachingMode} />)
+            ? visibleItems.map((it) => (
+              <CECell
+                key={it.id}
+                item={it}
+                cachingMode={cachingMode}
+                owned={mapOwned(it.id)}
+                isPulse={highlightId === it.id}
+                isAffected={isDragging && (mapOwned(it.id) !== !!collectionSnapshot.current[it.id])}
+                itemSize={itemSize}
+                isViewingShared={isViewingShared}
+                selectionMode={selectionMode}
+                filterMode={filterMode}
+                onItemClick={onItemClick}
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onToggle={handleToggle}
+              />
+            ))
             : <div className="text-sm text-gray-500 col-span-full">
               {filterMode === 'missing' ? 'Full. ' : 'Empty. '}No items match the current filter.
             </div>
@@ -1122,8 +1160,7 @@ export default function App() {
     );
   };
 
-  const sizeClasses = { 48: 'w-12 h-12', 72: 'w-[72px] h-[72px]', 100: 'w-[100px] h-[100px]', };
-  const fontClasses = { 48: 'text-[10px]', 72: 'text-[14px]', 100: 'text-base', };
+  // --- Definitions for sizeClasses and fontClasses removed from here ---
 
   const renderGrid = (items) => (
     (() => {
@@ -1138,7 +1175,24 @@ export default function App() {
         <div className="flex-1 p-4 overflow-auto">
           <div className={`grid ${gridColsClass} gap-1`}>
             {visibleItems.length > 0
-              ? visibleItems.map(it => <CECell key={it.id} item={it} cachingMode={cachingMode} />)
+              ? visibleItems.map(it => (
+                <CECell
+                  key={it.id}
+                  item={it}
+                  cachingMode={cachingMode}
+                  owned={mapOwned(it.id)}
+                  isPulse={highlightId === it.id}
+                  isAffected={isDragging && (mapOwned(it.id) !== !!collectionSnapshot.current[it.id])}
+                  itemSize={itemSize}
+                  isViewingShared={isViewingShared}
+                  selectionMode={selectionMode}
+                  filterMode={filterMode}
+                  onItemClick={onItemClick}
+                  onDragStart={handleDragStart}
+                  onDragOver={handleDragOver}
+                  onToggle={handleToggle}
+                />
+              ))
               : <div className="text-sm text-gray-500 col-span-full p-4">No items match the current filter.</div>
             }
           </div>
@@ -1547,7 +1601,24 @@ export default function App() {
                                       {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
                                       <div className={`grid ${gridColsClass} gap-1`}>
                                         {visibleSubs.length > 0
-                                          ? visibleSubs.map(it => <CECell key={it.id} item={it} />)
+                                          ? visibleSubs.map(it => (
+                                            <CECell
+                                              key={it.id}
+                                              item={it}
+                                              cachingMode={cachingMode}
+                                              owned={mapOwned(it.id)}
+                                              isPulse={highlightId === it.id}
+                                              isAffected={isDragging && (mapOwned(it.id) !== !!collectionSnapshot.current[it.id])}
+                                              itemSize={itemSize}
+                                              isViewingShared={isViewingShared}
+                                              selectionMode={selectionMode}
+                                              filterMode={filterMode}
+                                              onItemClick={onItemClick}
+                                              onDragStart={handleDragStart}
+                                              onDragOver={handleDragOver}
+                                              onToggle={handleToggle}
+                                            />
+                                          ))
                                           : <div className="text-sm text-gray-500 col-span-full">
                                             {filterMode === 'missing' ? 'Full. ' : 'Empty. '}No items match the current filter.
                                           </div>
