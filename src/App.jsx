@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand } from "lucide-react";
 import LZString from "lz-string";
 import bondCeJson from "./data/bond_ces.json";
 import localforage from "localforage";
@@ -95,6 +95,7 @@ const CECell = React.memo(({
   isViewingShared,
   selectionMode,
   filterMode,
+  dragSelectEnabled,
   onItemClick,
   onDragStart,
   onDragOver,
@@ -104,84 +105,98 @@ const CECell = React.memo(({
 
   useEffect(() => {
     if (!item.face) return;
-
     let objectUrl = null;
-
     const loadCachedImage = async () => {
       try {
-        // 1. Check if blob is in IndexedDB
         const cachedBlob = await localforage.getItem(item.face);
-
         if (cachedBlob) {
-          // 2a. Use cached blob
           objectUrl = URL.createObjectURL(cachedBlob);
           setImageUrl(objectUrl);
         } else {
-          // 2b. Fetch, store in DB, and then use
           const response = await fetch(item.face);
           if (!response.ok) throw new Error('Failed to fetch image');
           const blob = await response.blob();
-          await localforage.setItem(item.face, blob); // Store blob in IndexedDB
+          await localforage.setItem(item.face, blob);
           objectUrl = URL.createObjectURL(blob);
           setImageUrl(objectUrl);
         }
       } catch (error) {
         console.error("Failed to load or cache image:", item.face, error);
-        setImageUrl(item.face); // Fallback to direct URL on error
+        setImageUrl(item.face);
       }
     };
+    if (cachingMode) loadCachedImage();
+    else setImageUrl(item.face);
+    return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
+  }, [item.face, cachingMode]);
 
-    if (cachingMode) {
-      loadCachedImage();
-    } else {
-      // Caching is off, just use the direct URL
-      setImageUrl(item.face);
-    }
-
-    // Cleanup function to revoke the object URL and prevent memory leaks
-    return () => {
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
-      if (!cachingMode && imageUrl) {
-        // No-op if we're just using direct URL
-      }
-    };
-  }, [item.face, cachingMode]); // Rerun if item or caching mode changes
-
+  // 1. Handle "Start" (Touch/Mouse Down)
+  // This is only active if Drag Select is ENABLED. 
+  // It prevents default behavior (scrolling) to allow immediate drag/interaction.
   const handleInteractionStart = (e) => {
-    if (e.button !== 0) return; // ignore middle/right clicks
-    e.preventDefault();
-
+    if (e.button !== 0 && e.type === 'mousedown') return;
     if (isViewingShared) return;
+
+    // If Drag is OFF, do nothing here. 
+    // This allows the browser to Scroll on touch. 
+    // If the user Taps instead of Scrolls, the browser will fire onClick later.
+    if (!dragSelectEnabled && selectionMode === 'none') return;
+
+    // If Drag is ON, or we are in a special mode, we capture the event immediately.
+    if (e.cancelable) e.preventDefault();
 
     if (selectionMode !== "none") {
       onItemClick(item);
     } else {
-      if (filterMode !== 'all') {
-        // If a filter is active, just toggle the single item. DO NOT start a drag.
-        onToggle(item);
-      } else {
-        // No filter active, start drag-selection as normal.
-        onDragStart(item);
-      }
+      if (filterMode !== 'all') onToggle(item);
+      else onDragStart(item);
     }
   };
+
+  // 2. Handle "Click" (Tap)
+  // This is only active if Drag Select is DISABLED.
+  // The browser only fires this if the user tapped (didn't drag/scroll).
+  const handleClick = (e) => {
+    if (isViewingShared) return;
+
+    // If Drag is ON, we handled it in handleInteractionStart (and preventedDefault), so this shouldn't fire.
+    // If it does fire (rare edge cases), we ignore it.
+    if (dragSelectEnabled && selectionMode === 'none') return;
+
+    // Handle the single selection logic here
+    if (selectionMode !== "none") {
+      onItemClick(item);
+    } else {
+      // Toggle the item (works for both normal list and filtered views)
+      onToggle(item);
+    }
+  };
+
+  // 3. CSS Touch Action
+  // 'none' = Browser ignores touch (we handle it).
+  // 'pan-y' = Browser handles vertical scrolling.
+  const activeTouchAction = (dragSelectEnabled && selectionMode === 'none' && !isViewingShared) 
+    ? 'none' 
+    : 'pan-y';
 
   return (
     <div
       id={`ce-${item.id}`}
       className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select`}
-      style={{ cursor: isViewingShared ? 'default' : 'pointer', touchAction: 'none' }}
+      style={{ 
+        cursor: isViewingShared ? 'default' : 'pointer', 
+        touchAction: activeTouchAction 
+      }}
       onMouseDown={handleInteractionStart}
       onTouchStart={handleInteractionStart}
+      onClick={handleClick}  // <--- Added Click Handler
       onMouseEnter={() => onDragOver(item)}
     >
       <img
-        src={imageUrl || ''} // Use the state-backed URL
+        src={imageUrl || ''}
         alt={item.name}
         title={item.name}
-        className={`w-full h-full object-contain transition ${imageUrl ? (owned ? "opacity-100" : "opacity-50") : "opacity-0 bg-gray-500/20"}`} // Show a bg placeholder while loading
+        className={`w-full h-full object-contain transition ${imageUrl ? (owned ? "opacity-100" : "opacity-50") : "opacity-0 bg-gray-500/20"}`}
         draggable="false"
         style={{ pointerEvents: "none" }}
       />
@@ -197,7 +212,7 @@ const CECell = React.memo(({
     </div>
   );
 });
-CECell.displayName = 'CECell'; // Add display name for easier debugging
+CECell.displayName = 'CECell';
 
 export default function App() {
   const searchInputRef = useRef(null);
@@ -244,6 +259,7 @@ export default function App() {
   const dragStartItem = useRef(null);
   const collectionSnapshot = useRef({});
   const lastDraggedOverId = useRef(null);
+  const [dragSelectEnabled, setDragSelectEnabled] = usePersistedState("dragSelectEnabled", true);
 
   // Map of Bond CE IDs to lowercase owner names for searching
   const bondCeOwnerMap = useMemo(() => {
@@ -1138,6 +1154,7 @@ export default function App() {
               <CECell
                 key={it.id}
                 item={it}
+                dragSelectEnabled={dragSelectEnabled}
                 cachingMode={cachingMode}
                 owned={mapOwned(it.id)}
                 isPulse={highlightId === it.id}
@@ -1180,6 +1197,7 @@ export default function App() {
                 <CECell
                   key={it.id}
                   item={it}
+                  dragSelectEnabled={dragSelectEnabled}
                   cachingMode={cachingMode}
                   owned={mapOwned(it.id)}
                   isPulse={highlightId === it.id}
@@ -1401,6 +1419,13 @@ export default function App() {
             </div>
           )}
           <button
+            className={`px-4 py-2 rounded-xl transition ${dragSelectEnabled ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
+            onClick={() => setDragSelectEnabled(v => !v)}
+            title={dragSelectEnabled ? "Drag Selection ON (Scrolling disabled on items)" : "Drag Selection OFF (Scrolling enabled)"}
+          >
+            <Hand />
+          </button>
+          <button
             className={`px-4 py-2 rounded-xl transition ${cachingMode ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-green-500 text-white hover:bg-green-600'}`}
             onClick={() => setCachingMode(c => !c)}
             title={cachingMode ? "Image Caching Enabled" : "Image Caching Disabled"}
@@ -1606,6 +1631,7 @@ export default function App() {
                                             <CECell
                                               key={it.id}
                                               item={it}
+                                              dragSelectEnabled={dragSelectEnabled}
                                               cachingMode={cachingMode}
                                               owned={mapOwned(it.id)}
                                               isPulse={highlightId === it.id}
