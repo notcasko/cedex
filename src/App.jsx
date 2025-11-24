@@ -48,6 +48,7 @@ const commemorativeSubcategories = [
   { label: "Over the Same Sky August", range: [2421, 2436] },
   { label: "Over the Same Sky September", range: [2443, 2458] },
   { label: "Over the Same Sky October", range: [2479, 2492] },
+  { label: "Over the Same Sky November", range: [2495, 2508] },
 ];
 const chocolateSubcategories = [
   { label: "2016 Valentine", range: [113, 153] },
