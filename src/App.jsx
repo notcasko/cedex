@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand, Link as LinkIcon, ExternalLink } from "lucide-react";
 import LZString from "lz-string";
 import bondCeJson from "./data/bond_ces.json";
 import localforage from "localforage";
@@ -80,11 +80,9 @@ const usePersistedState = (key, initial) => {
   return [state, setState];
 };
 
-// --- Constants moved outside App ---
 const sizeClasses = { 48: 'w-12 h-12', 72: 'w-[72px] h-[72px]', 100: 'w-[100px] h-[100px]', };
 const fontClasses = { 48: 'text-[10px]', 72: 'text-[14px]', 100: 'text-base', };
 
-// --- CECell moved outside App and wrapped in React.memo ---
 const CECell = React.memo(({
   item,
   cachingMode,
@@ -130,66 +128,45 @@ const CECell = React.memo(({
     return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
   }, [item.face, cachingMode]);
 
-  // 1. Handle "Start" (Touch/Mouse Down)
-  // This is only active if Drag Select is ENABLED. 
-  // It prevents default behavior (scrolling) to allow immediate drag/interaction.
   const handleInteractionStart = (e) => {
     if (e.button !== 0 && e.type === 'mousedown') return;
     if (isViewingShared) return;
-
-    // If Drag is OFF, do nothing here. 
-    // This allows the browser to Scroll on touch. 
-    // If the user Taps instead of Scrolls, the browser will fire onClick later.
     if (!dragSelectEnabled && selectionMode === 'none') return;
-
-    // If Drag is ON, or we are in a special mode, we capture the event immediately.
     if (e.cancelable) e.preventDefault();
 
-    if (selectionMode !== "none") {
-      onItemClick(item);
-    } else {
-      if (filterMode !== 'all') onToggle(item);
-      else onDragStart(item);
-    }
+    // FIX: When in selection mode, exit to prevent double-toggle with the onClick handler.
+    if (selectionMode !== "none") return;
+    
+    // Original logic for normal mode (now only executes if selectionMode is "none"):
+    if (filterMode !== 'all') onToggle(item);
+    else onDragStart(item);
   };
 
-  // 2. Handle "Click" (Tap)
-  // This is only active if Drag Select is DISABLED.
-  // The browser only fires this if the user tapped (didn't drag/scroll).
   const handleClick = (e) => {
     if (isViewingShared) return;
-
-    // If Drag is ON, we handled it in handleInteractionStart (and preventedDefault), so this shouldn't fire.
-    // If it does fire (rare edge cases), we ignore it.
     if (dragSelectEnabled && selectionMode === 'none') return;
-
-    // Handle the single selection logic here
     if (selectionMode !== "none") {
       onItemClick(item);
     } else {
-      // Toggle the item (works for both normal list and filtered views)
       onToggle(item);
     }
   };
 
-  // 3. CSS Touch Action
-  // 'none' = Browser ignores touch (we handle it).
-  // 'pan-y' = Browser handles vertical scrolling.
-  const activeTouchAction = (dragSelectEnabled && selectionMode === 'none' && !isViewingShared) 
-    ? 'none' 
+  const activeTouchAction = (dragSelectEnabled && selectionMode === 'none' && !isViewingShared)
+    ? 'none'
     : 'pan-y';
 
   return (
     <div
       id={`ce-${item.id}`}
       className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select`}
-      style={{ 
-        cursor: isViewingShared ? 'default' : 'pointer', 
-        touchAction: activeTouchAction 
+      style={{
+        cursor: isViewingShared ? 'default' : 'pointer',
+        touchAction: activeTouchAction
       }}
       onMouseDown={handleInteractionStart}
       onTouchStart={handleInteractionStart}
-      onClick={handleClick}  // <--- Added Click Handler
+      onClick={handleClick}
       onMouseEnter={() => onDragOver(item)}
     >
       <img
@@ -217,10 +194,10 @@ CECell.displayName = 'CECell';
 export default function App() {
   const searchInputRef = useRef(null);
   const [theme, setTheme] = usePersistedState("theme", "dark");
-  const [active, setActive] = useState(null); // active category object
-  const [collection, setCollection] = usePersistedState("collection", {}); // id -> true
-  const [lookingFor, setLookingFor] = usePersistedState("lookingFor", {}); // id -> true map
-  const [offering, setOffering] = usePersistedState("offering", {}); // id -> true map
+  const [active, setActive] = useState(null);
+  const [collection, setCollection] = usePersistedState("collection", {});
+  const [lookingFor, setLookingFor] = usePersistedState("lookingFor", {});
+  const [offering, setOffering] = usePersistedState("offering", {});
 
   const [lastId, setLastId] = usePersistedState("lastId", "");
   const [offerAll, setOfferAll] = usePersistedState("offerAll", false);
@@ -230,7 +207,7 @@ export default function App() {
   const [sortAsc, setSortAsc] = usePersistedState("sortAsc", true);
   const [itemSize, setItemSize] = usePersistedState("itemSize", 72);
   const [cachingMode, setCachingMode] = usePersistedState("cachingMode", false);
-  const [filterMode, setFilterMode] = useState("all"); // 'all', 'missing', 'completed'
+  const [filterMode, setFilterMode] = useState("all");
 
   const [undoState, setUndoState] = useState(null);
   const [showUndo, setShowUndo] = useState(false);
@@ -252,23 +229,20 @@ export default function App() {
   const [data, setCollectionData] = useState([]);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  // State and refs for range-based drag selection
   const [isDragging, setIsDragging] = useState(false);
-  const [dragToggleMode, setDragToggleMode] = useState(null); // 'check' or 'uncheck'
+  const [dragToggleMode, setDragToggleMode] = useState(null);
   const dragStartItem = useRef(null);
   const collectionSnapshot = useRef({});
   const lastDraggedOverId = useRef(null);
   const [dragSelectEnabled, setDragSelectEnabled] = usePersistedState("dragSelectEnabled", true);
 
-  // Map of Bond CE IDs to lowercase owner names for searching
   const bondCeOwnerMap = useMemo(() => {
     const map = {};
     for (const item of bondCeJson) {
       map[item.id] = item.owner.toLowerCase();
     }
     return map;
-  }, []); // This map is static and will not change
+  }, []);
 
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
@@ -284,10 +258,8 @@ export default function App() {
       .then((data) => setCollectionData(data));
   }, []);
 
-  // --- `getItems` wrapped in `useCallback` ---
   const getItems = useCallback((cat) => {
     if (!data || !data.length || !cat) return [];
-
     if (cat.flag === "normal") {
       return data.filter(it => it.flag === "normal" || !Array.isArray(it.flags) || it.flags.length === 0);
     }
@@ -301,9 +273,8 @@ export default function App() {
       return data.filter(it => it.collectionNo >= cat.range[0] && it.collectionNo <= cat.range[1]);
     }
     return [];
-  }, [data]); // Stable, only depends on data
+  }, [data]);
 
-  // helper: compute category object for an item (same rules as getItems)
   const getCategoryForItem = (item) => {
     return categories.find(cat => {
       if (cat.flag === "normal") return item.flag === "normal" || !Array.isArray(item.flags) || item.flags.length === 0;
@@ -313,7 +284,6 @@ export default function App() {
     }) || categories[0];
   };
 
-  // helper: find nearest vertical scrollable ancestor
   const findScrollableAncestor = (el) => {
     let parent = el.parentElement;
     while (parent && parent !== document.body) {
@@ -324,16 +294,10 @@ export default function App() {
     return document.scrollingElement || document.documentElement;
   };
 
-  /**
-   * Compresses a sorted list of numbers into a delta-encoded array.
-   * e.g., [100, 102, 103, 107] -> [100, 2, 1, 4]
-   */
   const compressList = (list) => {
     if (!list || list.length === 0) return [];
-    // Ensure list is sorted numbers
     const sorted = list.map(Number).sort((a, b) => a - b);
     if (sorted.length === 0) return [];
-
     const deltas = [sorted[0]];
     for (let i = 1; i < sorted.length; i++) {
       deltas.push(sorted[i] - sorted[i - 1]);
@@ -341,10 +305,6 @@ export default function App() {
     return deltas;
   };
 
-  /**
-   * Expands a delta-encoded array back into a full list of numbers.
-   * e.g., [100, 2, 1, 4] -> [100, 102, 103, 107]
-   */
   const expandList = (deltas) => {
     if (!deltas || deltas.length === 0) return [];
     const list = [deltas[0]];
@@ -354,7 +314,6 @@ export default function App() {
     return list;
   };
 
-  // helper: scroll an element into view inside a specific container and center it
   const scrollElementIntoViewInContainer = (el, container) => {
     if (!el || !container) return;
     const isDocument = container === document.scrollingElement || container === document.documentElement;
@@ -362,71 +321,56 @@ export default function App() {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
-
     const elRect = el.getBoundingClientRect();
     const contRect = container.getBoundingClientRect();
     const offsetTop = elRect.top - contRect.top + container.scrollTop;
     const targetScroll = Math.max(0, offsetTop - (container.clientHeight / 2) + (elRect.height / 2));
-
     try {
       container.scrollTo({ top: targetScroll, behavior: 'smooth' });
     } catch {
       container.scrollTop = targetScroll;
     }
   };
-  // --- Handlers wrapped in `useCallback` ---
+
   const onItemClick = useCallback((item) => {
     if (isViewingShared) return;
-
+    const itemId = String(item.id); // Ensure ID is treated as a string key
     if (selectionMode === "looking") {
-      setLookingFor(prev => ({ ...prev, [item.id]: !prev[item.id] }));
+      setLookingFor(prev => ({ ...prev, [itemId]: !prev[itemId] }));
       pulse(item.id);
       return;
     }
-
     if (selectionMode === "offering") {
-      setOffering(prev => ({ ...prev, [item.id]: !prev[item.id] }));
+      setOffering(prev => ({ ...prev, [itemId]: !prev[itemId] }));
       pulse(item.id);
       return;
     }
   }, [isViewingShared, selectionMode]);
 
-  // Handlers for range-based drag selection
   const handleDragStart = useCallback((item) => {
     if (isViewingShared || selectionMode !== 'none') return;
-
     setIsDragging(true);
     dragStartItem.current = item;
-    collectionSnapshot.current = collection; // Take snapshot of state at drag start
-
+    collectionSnapshot.current = collection;
     const currentlyOwned = !!collection[item.id];
     const newMode = currentlyOwned ? 'uncheck' : 'check';
     setDragToggleMode(newMode);
-
     setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
   }, [isViewingShared, selectionMode, collection]);
 
   const handleDragOver = useCallback((item) => {
     if (!isDragging || !dragStartItem.current || selectionMode !== 'none') return;
-
     const start = dragStartItem.current;
     const end = item;
-
-    // 🔹 Restrict drag selection to only the subcategory currently being hovered
     const visibleItems = getItems(active);
-
-    // Find which "section" the drag started in (rarity or subheader group)
     const sectionItems = (() => {
-      // Case: Event free (rarity + subgroup flag)
       if (active.label === "Event free") {
         const isEventReward =
           start.flag === "svtEquipEventReward" ||
           (Array.isArray(start.flags) && start.flags.includes("svtEquipEventReward"));
-
         const isCEExp =
           start.flag === "svtEquipExp" ||
           (Array.isArray(start.flags) && start.flags.includes("svtEquipExp"));
-
         if (isEventReward) {
           return visibleItems.filter(
             (it) =>
@@ -444,13 +388,9 @@ export default function App() {
           );
         }
       }
-
-      // Case: generic rarity-split categories
       if (active.raritySplit) {
         return visibleItems.filter((it) => it.rarity === start.rarity);
       }
-
-      // Case: Chocolate / Commemorative (subranges)
       if (active.label === "Chocolate") {
         const sub = chocolateSubcategories.find(
           (s) => start.collectionNo >= s.range[0] && start.collectionNo <= s.range[1]
@@ -471,34 +411,26 @@ export default function App() {
           )
           : visibleItems;
       }
-
-      // Default (BondCEs, Normal, etc.)
       return visibleItems;
     })();
 
-    // Apply range selection inside that section only
     const startIndex = sectionItems.findIndex(it => it.id === start.id);
     const endIndex = sectionItems.findIndex(it => it.id === end.id);
-
     if (startIndex === -1 || endIndex === -1) return;
-
     const minIndex = Math.min(startIndex, endIndex);
     const maxIndex = Math.max(startIndex, endIndex);
-
     const changes = {};
     for (let i = minIndex; i <= maxIndex; i++) {
       changes[sectionItems[i].id] = dragToggleMode === 'check';
     }
-
     setCollection({ ...collectionSnapshot.current, ...changes });
   }, [isDragging, selectionMode, active, dragToggleMode, getItems]);
 
-  // Handler for single-toggle click when a filter is active
   const handleToggle = useCallback((item) => {
     const currentlyOwned = !!collection[item.id];
     setCollection(prev => ({ ...prev, [item.id]: !currentlyOwned }));
   }, [collection]);
-  // Effect to handle ending a drag selection globally
+
   useEffect(() => {
     const handleDragEnd = () => {
       if (isDragging) {
@@ -509,40 +441,33 @@ export default function App() {
         lastDraggedOverId.current = null;
       }
     };
-
     const handleTouchMove = (e) => {
       if (!isDragging) return;
-
       const touch = e.touches[0];
       const element = document.elementFromPoint(touch.clientX, touch.clientY);
-
       if (element) {
         const cell = element.closest('[id^="ce-"]');
         const cellId = cell?.id;
-
         if (cellId && cellId !== lastDraggedOverId.current) {
           const itemId = cellId.split('-')[1];
           const item = data.find(d => String(d.id) === itemId);
           if (item) {
             lastDraggedOverId.current = cellId;
-            handleDragOver(item); // handleDragOver is now memoized, safe to call
+            handleDragOver(item);
           }
         }
       }
     };
-
     window.addEventListener('mouseup', handleDragEnd);
     window.addEventListener('touchend', handleDragEnd);
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
-
     return () => {
       window.removeEventListener('mouseup', handleDragEnd);
       window.removeEventListener('touchend', handleDragEnd);
       window.removeEventListener('touchmove', handleTouchMove);
     };
-  }, [isDragging, data, handleDragOver]); // Added handleDragOver to dependencies
+  }, [isDragging, data, handleDragOver]);
 
-  // Build lookup tables once (outside generate/expand)
   const idToNo = {};
   const noToId = {};
   data.forEach(it => {
@@ -550,25 +475,19 @@ export default function App() {
     noToId[it.collectionNo] = it.id;
   });
 
-  // Debug helper
   const debugLink = (url) => {
     try {
       const parts = url.split("/#/view/");
-      if (parts.length < 2) {
-        console.warn("Not a valid debug URL:", url);
-        return;
-      }
+      if (parts.length < 2) return;
       const [uid, compressed] = parts[1].split("/");
       const json = LZString.decompressFromEncodedURIComponent(compressed);
       const decoded = JSON.parse(json);
-      console.log("📦 Debug Link:");
-      console.log("User ID:", uid);
-      console.log("Decoded payload:", decoded);
       return decoded;
     } catch (err) {
       console.error("Failed to debug link:", err);
     }
   };
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -602,34 +521,27 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
 
-  // expandCollection takes compressed categories and rebuilds full item map
   const expandCollection = (compressed, categories, data) => {
     const result = {};
-
     const expandSection = (section, items) => {
       if (!section) return;
       const ids = items.map(it => it.collectionNo);
-
-      switch (section.m) { // 'm' for mode
-        case 0: // Full
+      switch (section.m) {
+        case 0:
           ids.forEach(no => { result[noToId[no]] = true; });
           break;
-        case 1: // Almost Full
+        case 1:
           ids.forEach(no => { result[noToId[no]] = true; });
-          // 'x' for missing, expand the delta list
           (expandList(section.x || [])).forEach(no => { result[noToId[no]] = false; });
           break;
-        case 2: // Sparse
-          // 'd' for data, expand the delta list
+        case 2:
           (expandList(section.d || [])).forEach(no => { result[noToId[no]] = true; });
           break;
-        case 3: // List
-          // 'd' for data, expand the delta list
+        case 3:
           (expandList(section.d || [])).forEach(no => { result[noToId[no]] = true; });
           break;
       }
     };
-
     categories.forEach(cat => {
       const items = data.filter(it => {
         if (cat.flag === "normal") {
@@ -646,15 +558,11 @@ export default function App() {
         }
         return false;
       });
-
       const compressedCat = compressed[cat.id];
       if (!compressedCat) return;
-
-      if (compressedCat.m !== undefined) { // Check for 'm' instead of 'mode'
-        // simple category compression (0/1/2/3)
+      if (compressedCat.m !== undefined) {
         expandSection(compressedCat, items);
       } else {
-        // subcategories
         if (cat.label === "Bond CEs") {
           bondSubcategories.forEach(sub => {
             const subsItems = items.filter(it =>
@@ -676,7 +584,6 @@ export default function App() {
             const section = compressedCat[`${sub.range[0]}-${sub.range[1]}`];
             if (section) expandSection(section, subsItems);
           });
-          // Handle "rest" for these categories
           const restSection = compressedCat["rest"];
           if (restSection) {
             const restItems = items.filter(it => !processedNos.has(it.collectionNo));
@@ -694,35 +601,33 @@ export default function App() {
         }
       }
     });
-
     return result;
   };
 
-  // --- Decoder ---    
   const tryDecodeLink = (url, categories, data) => {
     try {
       if (!url.includes("#/view/")) return null;
-
-      // strip baseUrl if present
       const baseUrl = import.meta.env.BASE_URL || "/";
       const cleanUrl = url.replace(`${window.location.origin}${baseUrl}`, "");
+      const parts = cleanUrl.split("#/view/")[1].split("/");
+      const uid = parts[0];
+      const compressed = parts[1];
 
-      const [uid, compressed] = cleanUrl.split("#/view/")[1].split("/");
+      const shouldOpen = parts.length > 2 && parts[2] === "open";
+
       const json = LZString.decompressFromEncodedURIComponent(compressed);
       if (!json) throw new Error("Decompression failed");
-
       const parsed = JSON.parse(json);
       if (!parsed || typeof parsed !== "object") throw new Error("Invalid payload");
-
       const cm = expandCollection(parsed.c, categories, data);
-      const lookingData = parsed.l; // 'l' for lookingFor
-      const offeringData = parsed.o; // 'o' for offering
-
+      const lookingData = parsed.l;
+      const offeringData = parsed.o;
       return {
         uid,
         collection: cm,
-        lookingFor: lookingData, // Pass the raw data on
-        offering: offeringData,   // Pass the raw data on
+        lookingFor: lookingData,
+        offering: offeringData,
+        shouldOpen
       };
     } catch (err) {
       console.error("Failed to decode link:", err);
@@ -730,14 +635,11 @@ export default function App() {
     }
   };
 
-  // --- Hook into component ---
   useEffect(() => {
     const handleLocationChange = () => {
       const baseUrl = import.meta.env.BASE_URL || "/";
       const decoded = tryDecodeLink(window.location.href, categories, data);
-
       if (!decoded) {
-        // if we were in view mode but link is no longer valid, exit
         if (isViewingShared) {
           setIsViewingShared(false);
           setSharedUserId("");
@@ -749,15 +651,12 @@ export default function App() {
         }
         return;
       }
-
-      // valid decoded payload → apply read-only state
       setIsViewingShared(true);
       setSharedUserId(decoded.uid);
       setViewCollection(decoded.collection);
       if (decoded.lookingFor === "ALL") {
         setViewLookingFor("ALL");
       } else {
-        // Expand the delta list, then convert Collection No -> Item ID
         const expandedNos = expandList(decoded.lookingFor || []);
         const lfMap = {};
         expandedNos.forEach(no => {
@@ -766,11 +665,9 @@ export default function App() {
         });
         setViewLookingFor(lfMap);
       }
-
       if (decoded.offering === "ALL") {
         setViewOffering("ALL");
       } else {
-        // Expand the delta list, then convert Collection No -> Item ID
         const expandedNos = expandList(decoded.offering || []);
         const ofMap = {};
         expandedNos.forEach(no => {
@@ -779,15 +676,15 @@ export default function App() {
         });
         setViewOffering(ofMap);
       }
-
-      setActive(null);
+      if (decoded.shouldOpen) {
+        setActive(categories.find(c => c.special === 'generate'));
+      } else {
+        setActive(null);
+      }
     };
-
-    // run once on mount
     handleLocationChange();
     window.addEventListener("popstate", handleLocationChange);
     window.addEventListener("hashchange", handleLocationChange);
-
     return () => {
       window.removeEventListener("popstate", handleLocationChange);
       window.removeEventListener("hashchange", handleLocationChange);
@@ -823,7 +720,6 @@ export default function App() {
     return { owned, total, percentage: total ? Math.round((owned / total) * 100) : 0 };
   };
 
-
   const getCategoryPercentage = (cat) => {
     const items = getItems(cat);
     if (!items.length) return 0;
@@ -833,7 +729,6 @@ export default function App() {
 
   const markAll = (items, value) => {
     if (isViewingShared) return;
-
     const ownedCount = items.filter(it => collection[it.id]).length;
     if (ownedCount > 2) {
       const confirmed = window.confirm(
@@ -843,23 +738,18 @@ export default function App() {
         return;
       }
     }
-
-    // Save the current state for undo
     const currentCategoryState = {};
     items.forEach(it => {
       currentCategoryState[it.id] = !!collection[it.id];
     });
     setUndoState(currentCategoryState);
     setShowUndo(true);
-
     setCollection(prev => {
       const copy = { ...prev };
       items.forEach(it => (copy[it.id] = value));
       return copy;
     });
   };
-
-  // --- CECell component definition removed from here ---
 
   const pulse = (id) => {
     setHighlightId(id);
@@ -883,25 +773,19 @@ export default function App() {
       (it.name && it.name.toLowerCase().includes(q)) ||
       (it.originalName && it.originalName.toLowerCase().includes(q)) ||
       (!isNaN(qNum) && it.collectionNo === qNum) ||
-      // Check against the new owner map
       (bondCeOwnerMap[it.collectionNo] && bondCeOwnerMap[it.collectionNo].includes(q))
     );
     setResults(filtered.slice(0, 50));
   }, [query, data, bondCeOwnerMap]);
 
   const onSearchSelect = (item) => {
-    const matched = getCategoryForItem(item); // robust — doesn't rely on precomputed categoryId
+    const matched = getCategoryForItem(item);
     setActive(matched);
     setSelectionMode("none");
-
-    // clear search UI immediately
     setQuery("");
     setResults([]);
-
-    // Poll for the DOM element to exist and then scroll it into the modal's inner scroll container.
     let attempts = 0;
-    const maxAttempts = 60; // ~1s worth of frames; tweak if needed
-
+    const maxAttempts = 60;
     const tryScroll = () => {
       attempts++;
       const el = document.getElementById(`ce-${item.id}`);
@@ -909,9 +793,7 @@ export default function App() {
         const container = findScrollableAncestor(el);
         scrollElementIntoViewInContainer(el, container);
         pulse(item.id);
-
         if (!isViewingShared) {
-          // optional flash toggle behavior:
           setTimeout(() => {
             setCollection(prev => ({ ...prev, [item.id]: !prev[item.id] }));
             setTimeout(() => {
@@ -921,11 +803,9 @@ export default function App() {
         }
         return;
       }
-
       if (attempts < maxAttempts) {
         requestAnimationFrame(tryScroll);
       } else {
-        // final fallback
         setTimeout(() => {
           const el2 = document.getElementById(`ce-${item.id}`);
           if (el2) {
@@ -936,62 +816,41 @@ export default function App() {
         }, 150);
       }
     };
-
-    // start next frame so React can mount modal + content
     requestAnimationFrame(tryScroll);
   };
 
-  const generateLink = (uid) => {
-    // helper: compress a group of items into F/AF/S/LIST, skip E
+  const generateLink = (uid, openMode = false) => {
     const compressSection = (items, map) => {
-      if (!items.length) return undefined; // Use undefined so JSON.stringify omits it
-
+      if (!items.length) return undefined;
       const ids = items.map(it => it.collectionNo);
       const owned = ids.filter(no => map[noToId[no]]);
       const total = ids.length;
       const count = owned.length;
-
-      if (count === 0) return undefined; // skip empty completely
-      if (count === total) return { m: 0 }; // 0 = Full
-
+      if (count === 0) return undefined;
+      if (count === total) return { m: 0 };
       const missingNos = ids.filter(no => !map[noToId[no]]);
       if (count / total >= 0.85) {
-        // 1 = Almost Full
         return { m: 1, x: compressList(missingNos) };
       }
-
       const ownedNos = ids.filter(no => map[noToId[no]]);
       if (count / total <= 0.15) {
-        // 2 = Sparse
         return { m: 2, d: compressList(ownedNos) };
       }
-
-      // 3 = List
       return { m: 3, d: compressList(ownedNos) };
     };
 
     const compressedCategories = {};
-
     categories.forEach(cat => {
       const items = getItems(cat);
       if (!items.length) return;
-
-      // compress entire category first
       const catCompression = compressSection(items, collection);
-
-      // if category is null (empty), skip entirely
       if (!catCompression) return;
-
-      // if category is fully compressible (F/AF/S/LIST), store directly
       if (catCompression.mode !== "LIST") {
         compressedCategories[cat.id] = catCompression;
         return;
       }
-
-      // otherwise split into subcategories
       const subsResult = {};
       const processedIds = new Set();
-
       if (cat.label === "Event free") {
         const rarities = [5, 4, 3];
         const subFlags = ["svtEquipEventReward", "svtEquipExp"];
@@ -1007,7 +866,6 @@ export default function App() {
             }
           });
         });
-
       } else if (cat.label === "Bond CEs") {
         bondSubcategories.forEach(sub => {
           const subsItems = items.filter(it =>
@@ -1019,7 +877,6 @@ export default function App() {
             if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
           }
         });
-
       } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
         const subs = (cat.label === "Chocolate"
           ? chocolateSubcategories
@@ -1035,7 +892,6 @@ export default function App() {
           }
         });
       }
-      // Common logic for categories with sub-ranges to handle "The rest"
       if (cat.label === "Bond CEs" || cat.label === "Chocolate" || cat.label === "Commemorative") {
         const restItems = items.filter(it => !processedIds.has(it.id));
         if (restItems.length > 0) {
@@ -1050,35 +906,30 @@ export default function App() {
             if (section) subsResult[`rarity-${r}`] = section;
           }
         });
-
       } else {
         const section = compressSection(items, collection);
         if (section) subsResult["all"] = section;
       }
-
       if (Object.keys(subsResult).length) {
         compressedCategories[cat.id] = subsResult;
       }
     });
 
     const payload = {
-      // 'c' for collection
       c: compressedCategories,
-      // 'l' for lookingFor
       l: lookingAll ? "ALL" : compressList(
         Object.keys(lookingFor).filter(k => lookingFor[k]).map(id => idToNo[id])
       ),
-      // 'o' for offering
       o: offerAll ? "ALL" : compressList(
         Object.keys(offering).filter(k => offering[k]).map(id => idToNo[id])
       ),
     };
-
     const json = JSON.stringify(payload);
     const compressed = LZString.compressToEncodedURIComponent(json);
-
     const baseUrl = import.meta.env.BASE_URL || "/";
-    return `${window.location.origin}${baseUrl}#/view/${uid}/${compressed}`;
+    let link = `${window.location.origin}${baseUrl}#/view/${uid}/${compressed}`;
+    if (openMode) link += "/open";
+    return link;
   };
 
   const exitViewerMode = () => {
@@ -1092,18 +943,13 @@ export default function App() {
 
   const gridColsClass = (() => {
     if (!active) return 'grid-cols-10';
-
     const modalWidth = windowWidth * (11 / 12);
     const contentAreaWidth = modalWidth * (3 / 4);
-    const padding = 32; // p-4 (1rem = 16px) on left and right
+    const padding = 32;
     const availableGridWidth = contentAreaWidth - padding;
-
     const size = Number(itemSize) || 72;
-    const gap = 4; // from gap-1 (0.25rem = 4px)
-
-    // Calculate width needed for N columns: (N * size) + ((N - 1) * gap)
+    const gap = 4;
     const getWidth = (n) => (n * size) + ((n - 1) * gap);
-
     if (availableGridWidth >= getWidth(10)) return 'grid-cols-10';
     if (availableGridWidth >= getWidth(9)) return 'grid-cols-9';
     if (availableGridWidth >= getWidth(8)) return 'grid-cols-8';
@@ -1113,29 +959,21 @@ export default function App() {
     if (availableGridWidth >= getWidth(4)) return 'grid-cols-4';
     if (availableGridWidth >= getWidth(3)) return 'grid-cols-3';
     if (availableGridWidth >= getWidth(2)) return 'grid-cols-2';
-
-    // Fallback to 1 column if grid is extremely narrow
     return 'grid-cols-1';
   })();
 
   const renderSection = (title, sectionItems) => {
     if (!sectionItems || !sectionItems.length) return null;
-    // Get progress based on the *full* list of items for this section
     const progress = {
       owned: sectionItems.filter(it => mapOwned(it.id)).length,
       total: sectionItems.length
     };
-
-    // Filter items *for rendering* based on the filterMode state
     const visibleItems = sectionItems.filter(it => {
       if (filterMode === 'missing') return !mapOwned(it.id);
       if (filterMode === 'completed') return mapOwned(it.id);
-      return true; // 'all'
+      return true;
     });
-
     const displayTitle = filterMode === 'missing' ? `${title}: Missing` : filterMode === 'completed' ? `${title}: Have` : title;
-
-    // Don't render the section if the filter hides all items
     const allComplete = sectionItems.every(it => mapOwned(it.id));
     return (
       <div key={displayTitle}>
@@ -1178,17 +1016,13 @@ export default function App() {
     );
   };
 
-  // --- Definitions for sizeClasses and fontClasses removed from here ---
-
   const renderGrid = (items) => (
     (() => {
-      // Filter items *for rendering* based on the filterMode state
       const visibleItems = items.filter(it => {
         if (filterMode === 'missing') return !mapOwned(it.id);
         if (filterMode === 'completed') return mapOwned(it.id);
-        return true; // 'all'
+        return true;
       });
-
       return (
         <div className="flex-1 p-4 overflow-auto">
           <div className={`grid ${gridColsClass} gap-1`}>
@@ -1228,12 +1062,10 @@ export default function App() {
     } else {
       ids = Object.keys(map || {}).filter(k => map[k]);
     }
-
-    // Reactive grid calculation for SmallList
     const previewGridColsClass = (() => {
       const modalWidth = windowWidth * (11 / 12);
       const contentAreaWidth = modalWidth * (3 / 4);
-      const availableGridWidth = contentAreaWidth - 32; // ~ p-4 padding
+      const availableGridWidth = contentAreaWidth - 32;
 
       if (availableGridWidth > 720) return 'grid-cols-6';
       if (availableGridWidth > 600) return 'grid-cols-5';
@@ -1272,7 +1104,6 @@ export default function App() {
                   pulse(id);
                 }}
               >
-                {/* Fixed-size image, now 25% bigger */}
                 <div className="relative w-16 h-16 flex-shrink-0">
                   <img
                     src={item.face}
@@ -1283,8 +1114,6 @@ export default function App() {
                     {item.collectionNo}
                   </span>
                 </div>
-
-                {/* Multi-line text with truncation */}
                 <div className="flex-1 min-w-0">
                   <span className="block text-sm text-black dark:text-white line-clamp-3">
                     {item.name}
@@ -1298,7 +1127,6 @@ export default function App() {
     );
   };
 
-  // UI
   return (
     <div className={theme === "dark" ? "dark bg-gray-900 text-white min-h-screen" : "bg-white text-black min-h-screen"}>
       <style>{`
@@ -1308,24 +1136,14 @@ export default function App() {
           50% { box-shadow: 0 0 12px 6px rgba(221, 246, 59, 1); }
           100% { box-shadow: 0 0 0 0 rgba(246, 59, 59, 1); }
         }
-
         .no-select {
-          -webkit-user-select: none; /* Safari */
-          -moz-user-select: none;    /* Firefox */
-          -ms-user-select: none;     /* IE/Edge */
-          user-select: none;         /* Standard */
+          -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         }
-
         .drag-selected {
-          /* 5px outside (red-500 @ 90% opacity) */
-          box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.9),
-          /* 5px inside (red-500 @ 90% opacity) */
-                      inset 0 0 0 5px rgba(239, 68, 68, 0.9);
-          border-radius: 6px; /* Matches your pulse-border */
+          box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.9), inset 0 0 0 5px rgba(239, 68, 68, 0.9);
+          border-radius: 6px;
         }
       `}</style>
-
-      {/* Header */}
       <div className="p-4 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold md:order-1 order-1"> CEdex {getProgress().owned > 0 && (<> ({getProgress().owned}/{getProgress().total})</>)} </h1>
         <div className="w-full md:flex-1 md:max-w-xl md:order-2 order-3">
@@ -1335,7 +1153,7 @@ export default function App() {
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
-                setHighlightedIndex(-1); // reset when typing
+                setHighlightedIndex(-1);
               }}
               onKeyDown={(e) => {
                 if (!results.length) return;
@@ -1421,7 +1239,7 @@ export default function App() {
           <button
             className={`px-4 py-2 rounded-xl transition ${dragSelectEnabled ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
             onClick={() => setDragSelectEnabled(v => !v)}
-            title={dragSelectEnabled ? "Drag Selection ON (Scrolling disabled on items)" : "Drag Selection OFF (Scrolling enabled)"}
+            title={dragSelectEnabled ? "Drag Selection ON (Not for touch screens)" : "Drag Selection OFF (Made for touch screens)"}
           >
             <Hand />
           </button>
@@ -1438,26 +1256,84 @@ export default function App() {
         </div>
       </div>
 
-      {/* Tailwind JIT Safelist: ensures grid-cols-1 through 10 are generated */}
       <div className="hidden grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10"></div>
 
-      {/* Main cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 min-h-[50vh]">
-        {categories.map(cat => (
-          <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" onClick={() => { setActive(cat); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}>
-            <img src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e) => e.currentTarget.style.display = 'none'} />
-            <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>{cat.label}</span>
-            {cat.special !== "generate" && <span className={theme === "dark" ? "absolute bottom-2 right-2 text-2xl font-bold [text-shadow:2px_2px_3px_black]" : "absolute bottom-2 right-2 text-2xl font-bold"}>{getCategoryPercentage(cat)}%</span>}
-          </div>
-        ))}
+        {categories.map(cat => {
+          if (cat.special === "generate") {
+            return (
+              <div
+                key={cat.id}
+                className="group relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow h-[250px] flex items-center justify-center overflow-hidden"
+                onClick={() => {
+                  setActive(cat);
+                  setSelectionMode("none");
+                  setShowUndo(false);
+                  setUndoState(null);
+                }}
+              >
+                <img
+                  src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40"
+                  onError={(e) => e.currentTarget.style.display = 'none'}
+                />
+                <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>
+                  {cat.label}
+                </span>
+
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4 z-10 backdrop-blur-sm">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setActive(cat); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold flex items-center gap-2 transform hover:scale-105 transition shadow-lg"
+                  >
+                    <ExternalLink size={20} />
+                    Open Trade Hub
+                  </button>
+                  {!isViewingShared && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (lastId) {
+                          const uid = lastId;
+                          setGenUserId(uid);
+                          const url = generateLink(uid);
+                          setGeneratedUrl(url);
+                          try {
+                            navigator.clipboard.writeText(url);
+                          } catch (e) {
+                            console.error("Failed to copy link:", e);
+                            alert("Link generated, but failed to copy. Open Trade Hub to manually copy.");
+                          }
+                        } else {
+                          setActive(cat);
+                          setSelectionMode("none");
+                        }
+                      }}
+                      className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold flex items-center gap-2 transform hover:scale-105 transition shadow-lg"
+                    >
+                      <LinkIcon size={20} />
+                      Copy Link
+                    </button>
+                  )}
+                </div>
+              </div>
+            )
+          }
+          return (
+            <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" onClick={() => { setActive(cat); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}>
+              <img src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e) => e.currentTarget.style.display = 'none'} />
+              <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>{cat.label}</span>
+              <span className={theme === "dark" ? "absolute bottom-2 right-2 text-2xl font-bold [text-shadow:2px_2px_3px_black]" : "absolute bottom-2 right-2 text-2xl font-bold"}>{getCategoryPercentage(cat)}%</span>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Expanded modal */}
       <AnimatePresence>
         {active && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); } }}>
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
-              {/* Sidebar */}
               <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
                 <div className="flex items-center flex-wrap">
                   <h2 className="text-xl font-bold">{active.label}</h2>
@@ -1515,7 +1391,6 @@ export default function App() {
                 {active.special !== "generate" && <div className={`mt-1 font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}</div>}
               </div>
 
-              {/* Main content */}
               {active.special === "generate" ? (
                 <div className="flex-1 p-6 overflow-auto text-black dark:text-white bg-white dark:bg-gray-800">
                   {isViewingShared ? (
@@ -1534,7 +1409,33 @@ export default function App() {
                       <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g, ''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="012345678" />
                       <div className="flex gap-2 mb-3">
                         <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); debugLink(url); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch { } }}>Generate Hash</button>
-                        <button className="px-4 py-2 rounded-xl bg-gray-300" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
+                        <button className="px-4 py-2 rounded-xl bg-gray-300 text-black" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
+                        <button
+                          className={`px-4 py-2 rounded-xl ${generatedUrl.endsWith("/open")
+                              ? "bg-indigo-500 text-white"
+                              : "bg-indigo-200 text-black"
+                            }`}
+                          onClick={() => {
+                            if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) {
+                              alert("ID must be 9 or 12 digits");
+                              return;
+                            }
+
+                            setLastId(genUserId);
+
+                            const currentlyOpen = generatedUrl.endsWith("/open");
+                            const url = generateLink(genUserId, !currentlyOpen);
+
+                            setGeneratedUrl(url);
+
+                            try {
+                              navigator.clipboard.writeText(url);
+                            } catch { }
+                          }}
+                        >
+                          Point to Trade Hub
+                        </button>
+
                       </div>
                       <div className="flex gap-3 mb-4">
                         <button className={`px-3 py-2 rounded-xl ${offerAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>{offerAll ? "Undo Offer Everything" : "Offer everything I have"}</button>
@@ -1577,19 +1478,13 @@ export default function App() {
                       <div className="flex-1 p-4 overflow-auto">
                         {rarities.map(r => (
                           (() => {
-                            // Get *all* items for this rarity for progress calculation
                             const rarityItems = items.filter(it => it.rarity === r);
                             if (rarityItems.length === 0) return null;
-
                             const rarityProgress = {
                               owned: rarityItems.filter(it => mapOwned(it.id)).length,
                               total: rarityItems.length
                             };
-
-                            //if (visibleRarityItems.length === 0) return null;
-
                             const displayRarityTitle = filterMode === 'missing' ? `Rarity ${r}: Missing` : filterMode === 'completed' ? `Rarity ${r}: Have` : `Rarity ${r}`;
-
                             return (
                               <div key={r}>
                                 <div className="flex justify-between items-center my-4">
@@ -1597,26 +1492,18 @@ export default function App() {
                                   <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">{rarityProgress.owned} / {rarityProgress.total}</span>
                                 </div>
                                 {subFlags.map(sf => {
-                                  // Get *all* items for this sub-flag for progress
                                   const subs = rarityItems.filter(it => it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key)));
                                   if (!subs.length) return null;
-
                                   const subProgress = {
                                     owned: subs.filter(it => mapOwned(it.id)).length,
                                     total: subs.length
                                   };
-
-                                  // Filter items for *rendering*
                                   const visibleSubs = subs.filter(it => {
                                     if (filterMode === 'missing') return !mapOwned(it.id);
                                     if (filterMode === 'completed') return mapOwned(it.id);
-                                    return true; // 'all'
+                                    return true;
                                   });
-
-                                  //if (visibleSubs.length === 0) return null;
-
                                   const displaySubFlagTitle = filterMode === 'missing' ? `${sf.label}: Missing` : filterMode === 'completed' ? `${sf.label}: Have` : sf.label;
-
                                   const allComplete = subs.every(it => mapOwned(it.id));
                                   return (
                                     <div key={sf.key} className="mb-6">
