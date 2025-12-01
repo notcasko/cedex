@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand, Link as LinkIcon, ExternalLink } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand, Link as LinkIcon, ExternalLink, Check, CheckCheck } from "lucide-react";
 import LZString from "lz-string";
 import bondCeJson from "./data/bond_ces.json";
 import localforage from "localforage";
@@ -97,7 +97,8 @@ const CECell = React.memo(({
   onItemClick,
   onDragStart,
   onDragOver,
-  onToggle
+  onToggle,
+  fullOpacityMissing
 }) => {
   const [imageUrl, setImageUrl] = useState(null);
 
@@ -155,8 +156,14 @@ const CECell = React.memo(({
   const activeTouchAction = (dragSelectEnabled && selectionMode === 'none' && !isViewingShared)
     ? 'none'
     : 'pan-y';
+  
+  const showMissingFullOpacity = filterMode === 'missing' && fullOpacityMissing;
+  
+  const imageOpacityClass = imageUrl 
+      ? (owned || showMissingFullOpacity ? "opacity-100" : "opacity-50")
+      : "opacity-0 bg-gray-500/20";
 
-  return (
+    return (
     <div
       id={`ce-${item.id}`}
       className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select`}
@@ -173,7 +180,7 @@ const CECell = React.memo(({
         src={imageUrl || ''}
         alt={item.name}
         title={item.name}
-        className={`w-full h-full object-contain transition ${imageUrl ? (owned ? "opacity-100" : "opacity-50") : "opacity-0 bg-gray-500/20"}`}
+        className={`w-full h-full object-contain transition ${imageOpacityClass}`}
         draggable="false"
         style={{ pointerEvents: "none" }}
       />
@@ -235,6 +242,7 @@ export default function App() {
   const collectionSnapshot = useRef({});
   const lastDraggedOverId = useRef(null);
   const [dragSelectEnabled, setDragSelectEnabled] = usePersistedState("dragSelectEnabled", true);
+  const [fullOpacityMissing, setFullOpacityMissing] = usePersistedState("fullOpacityMissing", false);
 
   const bondCeOwnerMap = useMemo(() => {
     const map = {};
@@ -1005,6 +1013,7 @@ export default function App() {
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
                 onToggle={handleToggle}
+                fullOpacityMissing={fullOpacityMissing}
               />
             ))
             : <div className="text-sm text-gray-500 col-span-full">
@@ -1044,6 +1053,7 @@ export default function App() {
                   onDragStart={handleDragStart}
                   onDragOver={handleDragOver}
                   onToggle={handleToggle}
+                  fullOpacityMissing={fullOpacityMissing}
                 />
               ))
               : <div className="text-sm text-gray-500 col-span-full p-4">No items match the current filter.</div>
@@ -1236,6 +1246,13 @@ export default function App() {
               Viewing {sharedUserId} (read-only)
             </div>
           )}
+          <button 
+            className={`px-4 py-2 rounded-xl transition ${fullOpacityMissing ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`} 
+            onClick={() => setFullOpacityMissing(v => !v)} 
+            title={fullOpacityMissing ? "Missing items shown at full opacity" : "Missing items shown with grey opacity"}
+          >
+            {fullOpacityMissing ? <CheckCheck /> : <Check />}
+          </button>
           <button
             className={`px-4 py-2 rounded-xl transition ${dragSelectEnabled ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
             onClick={() => setDragSelectEnabled(v => !v)}
@@ -1531,6 +1548,7 @@ export default function App() {
                                               onDragStart={handleDragStart}
                                               onDragOver={handleDragOver}
                                               onToggle={handleToggle}
+                                              fullOpacityMissing={fullOpacityMissing}
                                             />
                                           ))
                                           : <div className="text-sm text-gray-500 col-span-full">
