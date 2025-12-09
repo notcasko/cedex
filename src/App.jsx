@@ -364,7 +364,17 @@ export default function App() {
     const newMode = currentlyOwned ? 'uncheck' : 'check';
     setDragToggleMode(newMode);
     setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
-  }, [isViewingShared, selectionMode, collection]);
+
+    // If starting a check drag, remove this start item from lookingFor
+    if (newMode === 'check') {
+      setLookingFor(prev => {
+        if (!prev[item.id]) return prev;
+        const copy = { ...prev };
+        delete copy[item.id];
+        return copy;
+      });
+    }
+  }, [isViewingShared, selectionMode, collection, dragSelectEnabled]);
 
   const handleDragOver = useCallback((item) => {
     if (!isDragging || !dragStartItem.current || selectionMode !== 'none') return;
@@ -432,11 +442,35 @@ export default function App() {
       changes[sectionItems[i].id] = dragToggleMode === 'check';
     }
     setCollection({ ...collectionSnapshot.current, ...changes });
-  }, [isDragging, selectionMode, active, dragToggleMode, getItems]);
+    // If we are dragging to "check" items, remove them from lookingFor
+    if (dragToggleMode === 'check') {
+      setLookingFor(prev => {
+        const copy = { ...prev };
+        let hasChanges = false;
+        for (let i = minIndex; i <= maxIndex; i++) {
+          const id = sectionItems[i].id;
+          if (copy[id]) {
+            delete copy[id];
+            hasChanges = true;
+          }
+        }
+        return hasChanges ? copy : prev;
+      });
+    }
+  }, [isDragging, selectionMode, active, dragToggleMode, getItems, dragSelectEnabled]);
 
   const handleToggle = useCallback((item) => {
     const currentlyOwned = !!collection[item.id];
     setCollection(prev => ({ ...prev, [item.id]: !currentlyOwned }));
+    // If adding to collection, remove from lookingFor
+    if (newOwned) {
+      setLookingFor(prev => {
+        if (!prev[item.id]) return prev;
+        const copy = { ...prev };
+        delete copy[item.id];
+        return copy;
+      });
+    }
   }, [collection]);
 
   useEffect(() => {
@@ -757,6 +791,20 @@ export default function App() {
       items.forEach(it => (copy[it.id] = value));
       return copy;
     });
+    // If marking all as owned, remove all from lookingFor
+    // if (value === true) {
+    //   setLookingFor(prev => {
+    //     const copy = { ...prev };
+    //     let hasChanges = false;
+    //     items.forEach(it => {
+    //       if (copy[it.id]) {
+    //         delete copy[it.id];
+    //         hasChanges = true;
+    //       }
+    //     });
+    //     return hasChanges ? copy : prev;
+    //   });
+    // }
   };
 
   const pulse = (id) => {
