@@ -86,6 +86,7 @@ const fontClasses = { 48: 'text-[10px]', 72: 'text-[14px]', 100: 'text-base', };
 
 const CECell = React.memo(({
   item,
+  bondFace,
   cachingMode,
   owned,
   isPulse,
@@ -102,6 +103,7 @@ const CECell = React.memo(({
   fullOpacityMissing
 }) => {
   const [imageUrl, setImageUrl] = useState(null);
+  const [showBondFace, setShowBondFace] = useState(false);
 
   useEffect(() => {
     if (!item.face) return;
@@ -130,16 +132,23 @@ const CECell = React.memo(({
     return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
   }, [item.face, cachingMode]);
 
+  useEffect(() => {
+    if (!bondFace) {
+      setShowBondFace(false);
+      return;
+    }
+    const interval = setInterval(() => {
+      setShowBondFace(prev => !prev);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [bondFace]);
+
   const handleInteractionStart = (e) => {
     if (e.button !== 0 && e.type === 'mousedown') return;
     if (isViewingShared) return;
     if (!dragSelectEnabled && selectionMode === 'none') return;
     if (e.cancelable) e.preventDefault();
-
-    // FIX: When in selection mode, exit to prevent double-toggle with the onClick handler.
     if (selectionMode !== "none") return;
-    
-    // Original logic for normal mode (now only executes if selectionMode is "none"):
     if (filterMode !== 'all') onToggle(item);
     else onDragStart(item);
   };
@@ -157,14 +166,11 @@ const CECell = React.memo(({
   const activeTouchAction = (dragSelectEnabled && selectionMode === 'none' && !isViewingShared)
     ? 'none'
     : 'pan-y';
-  
-  const showMissingFullOpacity = filterMode === 'missing' && fullOpacityMissing;
-  
-  const imageOpacityClass = imageUrl 
-      ? (owned || showMissingFullOpacity ? "opacity-100" : "opacity-50")
-      : "opacity-0 bg-gray-500/20";
 
-    return (
+  const showMissingFullOpacity = filterMode === 'missing' && fullOpacityMissing;
+  const baseOpacityClass = owned || showMissingFullOpacity ? "opacity-100" : "opacity-50";
+
+  return (
     <div
       id={`ce-${item.id}`}
       className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select`}
@@ -181,15 +187,24 @@ const CECell = React.memo(({
         src={imageUrl || ''}
         alt={item.name}
         title={item.name}
-        className={`w-full h-full object-contain transition ${imageOpacityClass}`}
+        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${imageUrl && !showBondFace ? baseOpacityClass : "opacity-0"}`}
         draggable="false"
         style={{ pointerEvents: "none" }}
       />
+      {bondFace && (
+        <img
+          src={bondFace}
+          alt={`${item.name} Owner`}
+          className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${showBondFace ? baseOpacityClass : "opacity-0"}`}
+          draggable="false"
+          style={{ pointerEvents: "none" }}
+        />
+      )}
       <a
         href={`https://apps.atlasacademy.io/db/JP/craft-essence/${item.collectionNo}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={`absolute bottom-0 right-0 ${fontClasses[itemSize]} leading-none bg-black/60 text-white px-1 rounded cursor-pointer hover:underline`}
+        className={`absolute bottom-0 right-0 ${fontClasses[itemSize]} leading-none bg-black/60 text-white px-1 rounded cursor-pointer hover:underline z-10`}
         onClick={(e) => e.stopPropagation()}
       >
         {item.collectionNo}
@@ -245,10 +260,20 @@ export default function App() {
   const [dragSelectEnabled, setDragSelectEnabled] = usePersistedState("dragSelectEnabled", true);
   const [fullOpacityMissing, setFullOpacityMissing] = usePersistedState("fullOpacityMissing", false);
 
-  const bondCeOwnerMap = useMemo(() => {
-    const map = {};
+  const bondCeMap = useMemo(() => {
+    const map = {
+      byCollectionNo: {},
+      byChocoId: {}
+    };
     for (const item of bondCeJson) {
-      map[item.id] = item.owner.toLowerCase();
+      const data = {
+        owner: item.owner.toLowerCase(),
+        face: item.face
+      };
+      map.byCollectionNo[item.id] = data; // item.id is the collectionNo in your JSON
+      if (item.choco_id) {
+        map.byChocoId[item.choco_id] = data;
+      }
     }
     return map;
   }, []);
@@ -343,7 +368,7 @@ export default function App() {
 
   const onItemClick = useCallback((item) => {
     if (isViewingShared) return;
-    const itemId = String(item.id); // Ensure ID is treated as a string key
+    const itemId = String(item.id);
     if (selectionMode === "looking") {
       setLookingFor(prev => ({ ...prev, [itemId]: !prev[itemId] }));
       pulse(item.id);
@@ -366,7 +391,6 @@ export default function App() {
     setDragToggleMode(newMode);
     setCollection(prev => ({ ...prev, [item.id]: newMode === 'check' }));
 
-    // If starting a check drag, remove this start item from lookingFor
     if (newMode === 'check') {
       setLookingFor(prev => {
         if (!prev[item.id]) return prev;
@@ -443,7 +467,6 @@ export default function App() {
       changes[sectionItems[i].id] = dragToggleMode === 'check';
     }
     setCollection({ ...collectionSnapshot.current, ...changes });
-    // If we are dragging to "check" items, remove them from lookingFor
     if (dragToggleMode === 'check') {
       setLookingFor(prev => {
         const copy = { ...prev };
@@ -463,8 +486,7 @@ export default function App() {
   const handleToggle = useCallback((item) => {
     const currentlyOwned = !!collection[item.id];
     setCollection(prev => ({ ...prev, [item.id]: !currentlyOwned }));
-    // If adding to collection, remove from lookingFor
-    if (newOwned) {
+    if (!currentlyOwned) { // if becoming owned
       setLookingFor(prev => {
         if (!prev[item.id]) return prev;
         const copy = { ...prev };
@@ -792,20 +814,6 @@ export default function App() {
       items.forEach(it => (copy[it.id] = value));
       return copy;
     });
-    // If marking all as owned, remove all from lookingFor
-    // if (value === true) {
-    //   setLookingFor(prev => {
-    //     const copy = { ...prev };
-    //     let hasChanges = false;
-    //     items.forEach(it => {
-    //       if (copy[it.id]) {
-    //         delete copy[it.id];
-    //         hasChanges = true;
-    //       }
-    //     });
-    //     return hasChanges ? copy : prev;
-    //   });
-    // }
   };
 
   const pulse = (id) => {
@@ -830,10 +838,13 @@ export default function App() {
       (it.name && it.name.toLowerCase().includes(q)) ||
       (it.originalName && it.originalName.toLowerCase().includes(q)) ||
       (!isNaN(qNum) && it.collectionNo === qNum) ||
-      (bondCeOwnerMap[it.collectionNo] && bondCeOwnerMap[it.collectionNo].includes(q))
+      // Search owner name for Bond CEs
+      (bondCeMap.byCollectionNo[it.collectionNo]?.owner?.includes(q)) ||
+      // Search owner name for Chocolate CEs
+      (bondCeMap.byChocoId[it.collectionNo]?.owner?.includes(q))
     );
     setResults(filtered.slice(0, 50));
-  }, [query, data, bondCeOwnerMap]);
+  }, [query, data, bondCeMap]);
 
   const onSearchSelect = (item) => {
     const matched = getCategoryForItem(item);
@@ -1025,6 +1036,17 @@ export default function App() {
       owned: sectionItems.filter(it => mapOwned(it.id)).length,
       total: sectionItems.length
     };
+    const getFaceUrl = (it) => {
+      // Check if it's a Bond CE modal
+      if (active?.label === "Bond CEs") {
+        return bondCeMap.byCollectionNo[it.collectionNo]?.face;
+      }
+      // Check if it's a Chocolate CE modal
+      if (active?.label === "Chocolate") {
+        return bondCeMap.byChocoId[it.collectionNo]?.face;
+      }
+      return null;
+    };
     const visibleItems = sectionItems.filter(it => {
       if (filterMode === 'missing') return !mapOwned(it.id);
       if (filterMode === 'completed') return mapOwned(it.id);
@@ -1049,6 +1071,7 @@ export default function App() {
               <CECell
                 key={it.id}
                 item={it}
+                bondFace={getFaceUrl(it)}
                 dragSelectEnabled={dragSelectEnabled}
                 cachingMode={cachingMode}
                 owned={mapOwned(it.id)}
@@ -1081,6 +1104,17 @@ export default function App() {
         if (filterMode === 'completed') return mapOwned(it.id);
         return true;
       });
+      const getFaceUrl = (it) => {
+        // Check if it's a Bond CE modal
+        if (active?.label === "Bond CEs") {
+          return bondCeMap.byCollectionNo[it.collectionNo]?.face;
+        }
+        // Check if it's a Chocolate CE modal
+        if (active?.label === "Chocolate") {
+          return bondCeMap.byChocoId[it.collectionNo]?.face;
+        }
+        return null;
+      };
       return (
         <div className="flex-1 p-4 overflow-auto">
           <div className={`grid ${gridColsClass} gap-1`}>
@@ -1089,6 +1123,7 @@ export default function App() {
                 <CECell
                   key={it.id}
                   item={it}
+                  bondFace={getFaceUrl(it)}
                   dragSelectEnabled={dragSelectEnabled}
                   cachingMode={cachingMode}
                   owned={mapOwned(it.id)}
@@ -1295,9 +1330,9 @@ export default function App() {
               Viewing {sharedUserId} (read-only)
             </div>
           )}
-          <button 
-            className={`px-4 py-2 rounded-xl transition ${fullOpacityMissing ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`} 
-            onClick={() => setFullOpacityMissing(v => !v)} 
+          <button
+            className={`px-4 py-2 rounded-xl transition ${fullOpacityMissing ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
+            onClick={() => setFullOpacityMissing(v => !v)}
             title={fullOpacityMissing ? "Missing items shown at full opacity" : "Missing items shown with grey opacity"}
           >
             {fullOpacityMissing ? <CheckCheck /> : <Check />}
@@ -1478,8 +1513,8 @@ export default function App() {
                         <button className="px-4 py-2 rounded-xl bg-gray-300 text-black" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
                         <button
                           className={`px-4 py-2 rounded-xl ${generatedUrl.endsWith("/open")
-                              ? "bg-indigo-500 text-white"
-                              : "bg-indigo-200 text-black"
+                            ? "bg-indigo-500 text-white"
+                            : "bg-indigo-200 text-black"
                             }`}
                           onClick={() => {
                             if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) {
@@ -1584,6 +1619,7 @@ export default function App() {
                                             <CECell
                                               key={it.id}
                                               item={it}
+                                              bondFace={bondCeMap[it.collectionNo]?.face}
                                               dragSelectEnabled={dragSelectEnabled}
                                               cachingMode={cachingMode}
                                               owned={mapOwned(it.id)}

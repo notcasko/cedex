@@ -1,1790 +1,2673 @@
 [
   {
     "id": 191,
-    "owner": "Altria Pendragon"
+    "owner": "Altria Pendragon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1001000.png",
+    "choco_id": 114
   },
   {
     "id": 192,
-    "owner": "Zhuge Liang (Lord El-Melloi II)"
+    "owner": "Zhuge Liang (Lord El-Melloi II)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5019000.png",
+    "choco_id": 488
   },
   {
     "id": 193,
-    "owner": "Vlad III"
+    "owner": "Vlad III",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7007000.png",
+    "choco_id": 524
   },
   {
     "id": 194,
-    "owner": "Jeanne d'Arc"
+    "owner": "Jeanne d'Arc",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9001000.png",
+    "choco_id": 153
   },
   {
     "id": 195,
-    "owner": "Altria Pendragon (Alter)"
+    "owner": "Altria Pendragon (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1002000.png",
+    "choco_id": 115
   },
   {
     "id": 196,
-    "owner": "Emiya"
+    "owner": "Emiya",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2001000.png",
+    "choco_id": 448
   },
   {
     "id": 197,
-    "owner": "Heracles"
+    "owner": "Heracles",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7001000.png",
+    "choco_id": 529
   },
   {
     "id": 198,
-    "owner": "Cú Chulainn"
+    "owner": "Cú Chulainn",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5021000.png",
+    "choco_id": 502
   },
   {
     "id": 199,
-    "owner": "Kiyohime"
+    "owner": "Kiyohime",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7013000.png",
+    "choco_id": 150
   },
   {
     "id": 200,
-    "owner": "Mata Hari"
+    "owner": "Mata Hari",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6014000.png",
+    "choco_id": 146
   },
   {
     "id": 201,
-    "owner": "Altera"
+    "owner": "Altera",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1018000.png",
+    "choco_id": 118
   },
   {
     "id": 202,
-    "owner": "Chevalier d'Eon"
+    "owner": "Chevalier d'Eon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1026000.png",
+    "choco_id": 119
   },
   {
     "id": 203,
-    "owner": "Elisabeth Báthory"
+    "owner": "Elisabeth Báthory",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3005000.png",
+    "choco_id": 128
   },
   {
     "id": 204,
-    "owner": "Marie Antoinette"
+    "owner": "Marie Antoinette",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4017000.png",
+    "choco_id": 134
   },
   {
     "id": 205,
-    "owner": "Martha"
+    "owner": "Martha",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4019000.png",
+    "choco_id": 135
   },
   {
     "id": 206,
-    "owner": "Carmilla"
+    "owner": "Carmilla",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6017000.png",
+    "choco_id": 147
   },
   {
     "id": 207,
-    "owner": "Tamamo Cat"
+    "owner": "Tamamo Cat",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7016000.png",
+    "choco_id": 151
   },
   {
     "id": 208,
-    "owner": "Boudica"
+    "owner": "Boudica",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4011000.png",
+    "choco_id": 120
   },
   {
     "id": 209,
-    "owner": "Hans Christian Andersen"
+    "owner": "Hans Christian Andersen",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5005000.png",
+    "choco_id": 506
   },
   {
     "id": 210,
-    "owner": "Arash"
+    "owner": "Arash",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2013000.png",
+    "choco_id": 457
   },
   {
     "id": 216,
-    "owner": "Gilgamesh"
+    "owner": "Gilgamesh",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2002000.png",
+    "choco_id": 442
   },
   {
     "id": 217,
-    "owner": "Sakata Kintoki"
+    "owner": "Sakata Kintoki",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7006000.png",
+    "choco_id": 523
   },
   {
     "id": 218,
-    "owner": "Nero Claudius"
+    "owner": "Nero Claudius",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1005000.png",
+    "choco_id": 117
   },
   {
     "id": 219,
-    "owner": "Siegfried"
+    "owner": "Siegfried",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1008000.png",
+    "choco_id": 432
   },
   {
     "id": 220,
-    "owner": "Stheno"
+    "owner": "Stheno",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6010000.png",
+    "choco_id": 144
   },
   {
     "id": 221,
-    "owner": "Altria Pendragon (Lily)"
+    "owner": "Altria Pendragon (Lily)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1003000.png",
+    "choco_id": 116
   },
   {
     "id": 222,
-    "owner": "David"
+    "owner": "David",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2006000.png",
+    "choco_id": 453
   },
   {
     "id": 223,
-    "owner": "Darius III"
+    "owner": "Darius III",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7011000.png",
+    "choco_id": 534
   },
   {
     "id": 224,
-    "owner": "Eric Bloodaxe"
+    "owner": "Eric Bloodaxe",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7015000.png",
+    "choco_id": 536
   },
   {
     "id": 225,
-    "owner": "Spartacus"
+    "owner": "Spartacus",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7005000.png",
+    "choco_id": 537
   },
   {
     "id": 230,
-    "owner": "Orion"
+    "owner": "Orion",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2009000.png",
+    "choco_id": 126
   },
   {
     "id": 231,
-    "owner": "Francis Drake"
+    "owner": "Francis Drake",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4003000.png",
+    "choco_id": 136
   },
   {
     "id": 232,
-    "owner": "Lancelot"
+    "owner": "Lancelot",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7002000.png",
+    "choco_id": 530
   },
   {
     "id": 233,
-    "owner": "Atalante"
+    "owner": "Atalante",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2005000.png",
+    "choco_id": 124
   },
   {
     "id": 234,
-    "owner": "Elisabeth Báthory (Halloween)"
+    "owner": "Elisabeth Báthory (Halloween)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5026000.png",
+    "choco_id": 140
   },
   {
     "id": 235,
-    "owner": "Oda Nobunaga"
+    "owner": "Oda Nobunaga",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2024000.png",
+    "choco_id": 127
   },
   {
     "id": 236,
-    "owner": "Altria Pendragon (Santa Alter)"
+    "owner": "Altria Pendragon (Santa Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4022000.png",
+    "choco_id": 138
   },
   {
     "id": 237,
-    "owner": "Henry Jekyll & Hyde"
+    "owner": "Henry Jekyll & Hyde",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6007000.png",
+    "choco_id": 515
   },
   {
     "id": 238,
-    "owner": "Edward Teach"
+    "owner": "Edward Teach",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4008000.png",
+    "choco_id": 487
   },
   {
     "id": 239,
-    "owner": "Sasaki Kojirou"
+    "owner": "Sasaki Kojirou",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6001000.png",
+    "choco_id": 522
   },
   {
     "id": 248,
-    "owner": "Tamamo-no-Mae"
+    "owner": "Tamamo-no-Mae",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5003000.png",
+    "choco_id": 142
   },
   {
     "id": 249,
-    "owner": "Okita Souji"
+    "owner": "Okita Souji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1027000.png",
+    "choco_id": 121
   },
   {
     "id": 250,
-    "owner": "Anne Bonny & Mary Read"
+    "owner": "Anne Bonny & Mary Read",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4009000.png",
+    "choco_id": 137
   },
   {
     "id": 251,
-    "owner": "Scáthach"
+    "owner": "Scáthach",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3013000.png",
+    "choco_id": 129
   },
   {
     "id": 252,
-    "owner": "Cú Chulainn"
+    "owner": "Cú Chulainn",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3001000.png",
+    "choco_id": 469
   },
   {
     "id": 253,
-    "owner": "Medea"
+    "owner": "Medea",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5001000.png",
+    "choco_id": 139
   },
   {
     "id": 254,
-    "owner": "Medusa"
+    "owner": "Medusa",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4001000.png",
+    "choco_id": 132
   },
   {
     "id": 255,
-    "owner": "Alexander"
+    "owner": "Alexander",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4015000.png",
+    "choco_id": 485
   },
   {
     "id": 256,
-    "owner": "Hassan of the Cursed Arm"
+    "owner": "Hassan of the Cursed Arm",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6002000.png",
+    "choco_id": 519
   },
   {
     "id": 257,
-    "owner": "Asterios"
+    "owner": "Asterios",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7009000.png",
+    "choco_id": 538
   },
   {
     "id": 266,
-    "owner": "Mordred"
+    "owner": "Mordred",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1009000.png",
+    "choco_id": 122
   },
   {
     "id": 267,
-    "owner": "Jack the Ripper"
+    "owner": "Jack the Ripper",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6005000.png",
+    "choco_id": 148
   },
   {
     "id": 268,
-    "owner": "Nursery Rhyme"
+    "owner": "Nursery Rhyme",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5004000.png",
+    "choco_id": 143
   },
   {
     "id": 269,
-    "owner": "Robin Hood"
+    "owner": "Robin Hood",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2003000.png",
+    "choco_id": 452
   },
   {
     "id": 270,
-    "owner": "Ushiwakamaru"
+    "owner": "Ushiwakamaru",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4014000.png",
+    "choco_id": 133
   },
   {
     "id": 271,
-    "owner": "Jing Ke"
+    "owner": "Jing Ke",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6011000.png",
+    "choco_id": 145
   },
   {
     "id": 272,
-    "owner": "Lu Bu Fengxian"
+    "owner": "Lu Bu Fengxian",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7003000.png",
+    "choco_id": 533
   },
   {
     "id": 273,
-    "owner": "Georgios"
+    "owner": "Georgios",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4006000.png",
+    "choco_id": 486
   },
   {
     "id": 274,
-    "owner": "Leonidas I"
+    "owner": "Leonidas I",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3009000.png",
+    "choco_id": 476
   },
   {
     "id": 275,
-    "owner": "Wolfgang Amadeus Mozart"
+    "owner": "Wolfgang Amadeus Mozart",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5015000.png",
+    "choco_id": 508
   },
   {
     "id": 281,
-    "owner": "Nikola Tesla"
+    "owner": "Nikola Tesla",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2011000.png",
+    "choco_id": 444
   },
   {
     "id": 282,
-    "owner": "Arjuna"
+    "owner": "Arjuna",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2015000.png",
+    "choco_id": 445
   },
   {
     "id": 283,
-    "owner": "Karna"
+    "owner": "Karna",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3004000.png",
+    "choco_id": 458
   },
   {
     "id": 284,
-    "owner": "Frankenstein"
+    "owner": "Frankenstein",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7004000.png",
+    "choco_id": 152
   },
   {
     "id": 285,
-    "owner": "Altria Pendragon (Alter)"
+    "owner": "Altria Pendragon (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3019000.png",
+    "choco_id": 130
   },
   {
     "id": 286,
-    "owner": "Gaius Julius Caesar"
+    "owner": "Gaius Julius Caesar",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1013000.png",
+    "choco_id": 438
   },
   {
     "id": 287,
-    "owner": "Romulus"
+    "owner": "Romulus",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3010000.png",
+    "choco_id": 471
   },
   {
     "id": 288,
-    "owner": "Musashibou Benkei"
+    "owner": "Musashibou Benkei",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3006000.png",
+    "choco_id": 475
   },
   {
     "id": 289,
-    "owner": "Phantom of the Opera"
+    "owner": "Phantom of the Opera",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6013000.png",
+    "choco_id": 521
   },
   {
     "id": 290,
-    "owner": "William Shakespeare"
+    "owner": "William Shakespeare",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5007000.png",
+    "choco_id": 507
   },
   {
     "id": 299,
-    "owner": "Mysterious Heroine X"
+    "owner": "Mysterious Heroine X",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6018000.png",
+    "choco_id": 149
   },
   {
     "id": 300,
-    "owner": "Brynhild"
+    "owner": "Brynhild",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3012000.png",
+    "choco_id": 131
   },
   {
     "id": 301,
-    "owner": "Nero Claudius (Bride)"
+    "owner": "Nero Claudius (Bride)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1006000.png",
+    "choco_id": 123
   },
   {
     "id": 302,
-    "owner": "Beowulf"
+    "owner": "Beowulf",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7008000.png",
+    "choco_id": 531
   },
   {
     "id": 303,
-    "owner": "Fionn mac Cumhaill"
+    "owner": "Fionn mac Cumhaill",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3011000.png",
+    "choco_id": 463
   },
   {
     "id": 304,
-    "owner": "Gilles de Rais"
+    "owner": "Gilles de Rais",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1022000.png",
+    "choco_id": 439
   },
   {
     "id": 305,
-    "owner": "Mephistopheles"
+    "owner": "Mephistopheles",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5014000.png",
+    "choco_id": 501
   },
   {
     "id": 306,
-    "owner": "Fergus mac Róich"
+    "owner": "Fergus mac Róich",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1014000.png",
+    "choco_id": 440
   },
   {
     "id": 307,
-    "owner": "Charles-Henri Sanson"
+    "owner": "Charles-Henri Sanson",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6012000.png",
+    "choco_id": 520
   },
   {
     "id": 308,
-    "owner": "Caligula"
+    "owner": "Caligula",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7010000.png",
+    "choco_id": 535
   },
   {
     "id": 315,
-    "owner": "Ryougi Shiki"
+    "owner": "Ryougi Shiki",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1028000.png",
+    "choco_id": 430
   },
   {
     "id": 316,
-    "owner": "Amakusa Shirou"
+    "owner": "Amakusa Shirou",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9002000.png",
+    "choco_id": 539
   },
   {
     "id": 317,
-    "owner": "Edmond Dantès"
+    "owner": "Edmond Dantès",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11002000.png",
+    "choco_id": 541
   },
   {
     "id": 318,
-    "owner": "Medea (Lily)"
+    "owner": "Medea (Lily)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5017000.png",
+    "choco_id": 141
   },
   {
     "id": 319,
-    "owner": "Ryougi Shiki"
+    "owner": "Ryougi Shiki",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6023000.png",
+    "choco_id": 511
   },
   {
     "id": 320,
-    "owner": "Astolfo"
+    "owner": "Astolfo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4004000.png",
+    "choco_id": 481
   },
   {
     "id": 321,
-    "owner": "Gilles de Rais"
+    "owner": "Gilles de Rais",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5002000.png",
+    "choco_id": 500
   },
   {
     "id": 322,
-    "owner": "Cú Chulainn (Prototype)"
+    "owner": "Cú Chulainn (Prototype)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3007000.png",
+    "choco_id": 470
   },
   {
     "id": 323,
-    "owner": "Euryale"
+    "owner": "Euryale",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2012000.png",
+    "choco_id": 125
   },
   {
     "id": 324,
-    "owner": "Hektor"
+    "owner": "Hektor",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3016000.png",
+    "choco_id": 472
   },
   {
     "id": 334,
-    "owner": "Florence Nightingale"
+    "owner": "Florence Nightingale",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7014000.png",
+    "choco_id": 525
   },
   {
     "id": 335,
-    "owner": "Cú Chulainn (Alter)"
+    "owner": "Cú Chulainn (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7020000.png",
+    "choco_id": 526
   },
   {
     "id": 336,
-    "owner": "Queen Medb"
+    "owner": "Queen Medb",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4013000.png",
+    "choco_id": 477
   },
   {
     "id": 337,
-    "owner": "Rama"
+    "owner": "Rama",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1019000.png",
+    "choco_id": 434
   },
   {
     "id": 338,
-    "owner": "Helena Blavatsky"
+    "owner": "Helena Blavatsky",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5023000.png",
+    "choco_id": 494
   },
   {
     "id": 339,
-    "owner": "Thomas Edison"
+    "owner": "Thomas Edison",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5025000.png",
+    "choco_id": 495
   },
   {
     "id": 340,
-    "owner": "Li Shuwen"
+    "owner": "Li Shuwen",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3017000.png",
+    "choco_id": 464
   },
   {
     "id": 341,
-    "owner": "Diarmuid Ua Duibhne"
+    "owner": "Diarmuid Ua Duibhne",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3002000.png",
+    "choco_id": 473
   },
   {
     "id": 342,
-    "owner": "Paracelsus von Hohenheim"
+    "owner": "Paracelsus von Hohenheim",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5010000.png",
+    "choco_id": 503
   },
   {
     "id": 343,
-    "owner": "Charles Babbage"
+    "owner": "Charles Babbage",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5011000.png",
+    "choco_id": 504
   },
   {
     "id": 350,
-    "owner": "Jeanne d'Arc (Alter)"
+    "owner": "Jeanne d'Arc (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11003000.png",
+    "choco_id": 542
   },
   {
     "id": 351,
-    "owner": "Iskandar"
+    "owner": "Iskandar",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4002000.png",
+    "choco_id": 478
   },
   {
     "id": 352,
-    "owner": "Xuanzang Sanzang"
+    "owner": "Xuanzang Sanzang",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5022000.png",
+    "choco_id": 489
   },
   {
     "id": 353,
-    "owner": "Emiya (Assassin)"
+    "owner": "Emiya (Assassin)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6015000.png",
+    "choco_id": 512
   },
   {
     "id": 354,
-    "owner": "Irisviel (Holy Grail)"
+    "owner": "Irisviel (Holy Grail)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5020000.png",
+    "choco_id": 496
   },
   {
     "id": 355,
-    "owner": "Gilgamesh (Child)"
+    "owner": "Gilgamesh (Child)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2018000.png",
+    "choco_id": 454
   },
   {
     "id": 356,
-    "owner": "Geronimo"
+    "owner": "Geronimo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5016000.png",
+    "choco_id": 505
   },
   {
     "id": 357,
-    "owner": "Billy the Kid"
+    "owner": "Billy the Kid",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2010000.png",
+    "choco_id": 455
   },
   {
     "id": 358,
-    "owner": "Hassan of the Hundred Personas"
+    "owner": "Hassan of the Hundred Personas",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6003000.png",
+    "choco_id": 516
   },
   {
     "id": 359,
-    "owner": "Aŋra Mainiiu"
+    "owner": "Aŋra Mainiiu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11001000.png",
+    "choco_id": 544
   },
   {
     "id": 367,
-    "owner": "Shuten-Douji"
+    "owner": "Shuten-Douji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6021000.png",
+    "choco_id": 509
   },
   {
     "id": 368,
-    "owner": "Minamoto-no-Raikou"
+    "owner": "Minamoto-no-Raikou",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7023000.png",
+    "choco_id": 527
   },
   {
     "id": 369,
-    "owner": "Ozymandias"
+    "owner": "Ozymandias",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4012000.png",
+    "choco_id": 479
   },
   {
     "id": 370,
-    "owner": "Ibaraki-Douji"
+    "owner": "Ibaraki-Douji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7022000.png",
+    "choco_id": 532
   },
   {
     "id": 371,
-    "owner": "Sakata Kintoki"
+    "owner": "Sakata Kintoki",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4023000.png",
+    "choco_id": 483
   },
   {
     "id": 372,
-    "owner": "Gawain"
+    "owner": "Gawain",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1007000.png",
+    "choco_id": 436
   },
   {
     "id": 373,
-    "owner": "Tristan"
+    "owner": "Tristan",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2008000.png",
+    "choco_id": 449
   },
   {
     "id": 374,
-    "owner": "Nitocris"
+    "owner": "Nitocris",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5012000.png",
+    "choco_id": 497
   },
   {
     "id": 375,
-    "owner": "Fuuma \"Evil-wind\" Kotarou"
+    "owner": "Fuuma \"Evil-wind\" Kotarou",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6019000.png",
+    "choco_id": 517
   },
   {
     "id": 376,
-    "owner": "Tawara Touta"
+    "owner": "Tawara Touta",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2014000.png",
+    "choco_id": 456
   },
   {
     "id": 377,
-    "owner": "Altria Pendragon"
+    "owner": "Altria Pendragon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3020000.png",
+    "choco_id": 459
   },
   {
     "id": 378,
-    "owner": "Leonardo da Vinci"
+    "owner": "Leonardo da Vinci",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5009000.png",
+    "choco_id": 490
   },
   {
     "id": 379,
-    "owner": "Tamamo-no-Mae"
+    "owner": "Tamamo-no-Mae",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3024000.png",
+    "choco_id": 460
   },
   {
     "id": 380,
-    "owner": "Lancelot"
+    "owner": "Lancelot",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1020000.png",
+    "choco_id": 435
   },
   {
     "id": 381,
-    "owner": "Marie Antoinette"
+    "owner": "Marie Antoinette",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5027000.png",
+    "choco_id": 498
   },
   {
     "id": 382,
-    "owner": "Anne Bonny & Mary Read"
+    "owner": "Anne Bonny & Mary Read",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2025000.png",
+    "choco_id": 450
   },
   {
     "id": 383,
-    "owner": "Mordred"
+    "owner": "Mordred",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4024000.png",
+    "choco_id": 484
   },
   {
     "id": 384,
-    "owner": "Kiyohime"
+    "owner": "Kiyohime",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3025000.png",
+    "choco_id": 465
   },
   {
     "id": 385,
-    "owner": "Bedivere"
+    "owner": "Bedivere",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1012000.png",
+    "choco_id": 441
   },
   {
     "id": 386,
-    "owner": "Hassan of the Serenity"
+    "owner": "Hassan of the Serenity",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6009000.png",
+    "choco_id": 518
   },
   {
     "id": 391,
-    "owner": "Altria Pendragon"
+    "owner": "Altria Pendragon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2026000.png",
+    "choco_id": 446
   },
   {
     "id": 392,
-    "owner": "Illyasviel von Einzbern"
+    "owner": "Illyasviel von Einzbern",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5028000.png",
+    "choco_id": 492
   },
   {
     "id": 393,
-    "owner": "Cleopatra"
+    "owner": "Cleopatra",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6008000.png",
+    "choco_id": 514
   },
   {
     "id": 394,
-    "owner": "Martha"
+    "owner": "Martha",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9004000.png",
+    "choco_id": 540
   },
   {
     "id": 395,
-    "owner": "Scáthach"
+    "owner": "Scáthach",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6024000.png",
+    "choco_id": 513
   },
   {
     "id": 396,
-    "owner": "Chloe von Einzbern"
+    "owner": "Chloe von Einzbern",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2027000.png",
+    "choco_id": 451
   },
   {
     "id": 397,
-    "owner": "Vlad III (EXTRA)"
+    "owner": "Vlad III (EXTRA)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3003000.png",
+    "choco_id": 466
   },
   {
     "id": 398,
-    "owner": "Elisabeth Báthory (Brave)"
+    "owner": "Elisabeth Báthory (Brave)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1010000.png",
+    "choco_id": 437
   },
   {
     "id": 403,
-    "owner": "Ishtar"
+    "owner": "Ishtar",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2020000.png",
+    "choco_id": 447
   },
   {
     "id": 404,
-    "owner": "Enkidu"
+    "owner": "Enkidu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3008000.png",
+    "choco_id": 461
   },
   {
     "id": 405,
-    "owner": "Quetzalcoatl"
+    "owner": "Quetzalcoatl",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4018000.png",
+    "choco_id": 480
   },
   {
     "id": 406,
-    "owner": "Jeanne d'Arc Alter Santa Lily"
+    "owner": "Jeanne d'Arc Alter Santa Lily",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3026000.png",
+    "choco_id": 467
   },
   {
     "id": 407,
-    "owner": "Gilgamesh"
+    "owner": "Gilgamesh",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5018000.png",
+    "choco_id": 499
   },
   {
     "id": 408,
-    "owner": "Gorgon"
+    "owner": "Gorgon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11004000.png",
+    "choco_id": 543
   },
   {
     "id": 409,
-    "owner": "Medusa"
+    "owner": "Medusa",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3027000.png",
+    "choco_id": 468
   },
   {
     "id": 410,
-    "owner": "Jaguar Warrior"
+    "owner": "Jaguar Warrior",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3028000.png",
+    "choco_id": 474
   },
   {
     "id": 411,
-    "owner": "Merlin"
+    "owner": "Merlin",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5008000.png",
+    "choco_id": 493
   },
   {
     "id": 416,
-    "owner": "Miyamoto Musashi"
+    "owner": "Miyamoto Musashi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1017000.png",
+    "choco_id": 431
   },
   {
     "id": 417,
-    "owner": "\"First Hassan\""
+    "owner": "\"First Hassan\"",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6025000.png",
+    "choco_id": 510
   },
   {
     "id": 429,
-    "owner": "Mysterious Heroine X (Alter)"
+    "owner": "Mysterious Heroine X (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7024000.png",
+    "choco_id": 528
   },
   {
     "id": 546,
-    "owner": "James Moriarty"
+    "owner": "James Moriarty",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2023000.png",
+    "choco_id": 718
   },
   {
     "id": 547,
-    "owner": "Emiya (Alter)"
+    "owner": "Emiya (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2016000.png",
+    "choco_id": 719
   },
   {
     "id": 548,
-    "owner": "Hessian Lobo"
+    "owner": "Hessian Lobo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11005000.png",
+    "choco_id": 720
   },
   {
     "id": 549,
-    "owner": "Yan Qing"
+    "owner": "Yan Qing",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6026000.png",
+    "choco_id": 721
   },
   {
     "id": 559,
-    "owner": "Arthur Pendragon (Prototype)"
+    "owner": "Arthur Pendragon (Prototype)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1029000.png",
+    "choco_id": 722
   },
   {
     "id": 567,
-    "owner": "Hijikata Toshizo"
+    "owner": "Hijikata Toshizo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7025000.png",
+    "choco_id": 723
   },
   {
     "id": 568,
-    "owner": "Chacha"
+    "owner": "Chacha",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7026000.png",
+    "choco_id": 724
   },
   {
     "id": 575,
-    "owner": "Meltryllis"
+    "owner": "Meltryllis",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10002000.png",
+    "choco_id": 729
   },
   {
     "id": 576,
-    "owner": "Passionlip"
+    "owner": "Passionlip",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10001000.png",
+    "choco_id": 731
   },
   {
     "id": 577,
-    "owner": "BB"
+    "owner": "BB",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23001000.png",
+    "choco_id": 732
   },
   {
     "id": 578,
-    "owner": "Suzuka Gozen"
+    "owner": "Suzuka Gozen",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1030000.png",
+    "choco_id": 733
   },
   {
     "id": 579,
-    "owner": "Sessyoin Kiara"
+    "owner": "Sessyoin Kiara",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10003000.png",
+    "choco_id": 730
   },
   {
     "id": 586,
-    "owner": "Scheherazade"
+    "owner": "Scheherazade",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5030000.png",
+    "choco_id": 725
   },
   {
     "id": 587,
-    "owner": "Wu Zetian"
+    "owner": "Wu Zetian",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6027000.png",
+    "choco_id": 726
   },
   {
     "id": 588,
-    "owner": "Penthesilea"
+    "owner": "Penthesilea",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7027000.png",
+    "choco_id": 727
   },
   {
     "id": 589,
-    "owner": "Christopher Columbus"
+    "owner": "Christopher Columbus",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4025000.png",
+    "choco_id": 728
   },
   {
     "id": 641,
-    "owner": "Paul Bunyan"
+    "owner": "Paul Bunyan",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7028000.png",
+    "choco_id": 735
   },
   {
     "id": 642,
-    "owner": "Sherlock Holmes"
+    "owner": "Sherlock Holmes",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9005000.png",
+    "choco_id": 734
   },
   {
     "id": 647,
-    "owner": "Nero Claudius"
+    "owner": "Nero Claudius",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5032000.png",
+    "choco_id": 736
   },
   {
     "id": 648,
-    "owner": "Frankenstein"
+    "owner": "Frankenstein",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1031000.png",
+    "choco_id": 739
   },
   {
     "id": 649,
-    "owner": "Nitocris"
+    "owner": "Nitocris",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6028000.png",
+    "choco_id": 743
   },
   {
     "id": 650,
-    "owner": "Oda Nobunaga"
+    "owner": "Oda Nobunaga",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7029000.png",
+    "choco_id": 741
   },
   {
     "id": 651,
-    "owner": "Ishtar"
+    "owner": "Ishtar",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4026000.png",
+    "choco_id": 737
   },
   {
     "id": 656,
-    "owner": "Altria Pendragon (Alter)"
+    "owner": "Altria Pendragon (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4027000.png",
+    "choco_id": 740
   },
   {
     "id": 657,
-    "owner": "Helena Blavatsky"
+    "owner": "Helena Blavatsky",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2028000.png",
+    "choco_id": 738
   },
   {
     "id": 658,
-    "owner": "Minamoto-no-Raikou"
+    "owner": "Minamoto-no-Raikou",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3029000.png",
+    "choco_id": 742
   },
   {
     "id": 669,
-    "owner": "Pārvatī"
+    "owner": "Pārvatī",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3030000.png",
+    "choco_id": 749
   },
   {
     "id": 675,
-    "owner": "Tomoe Gozen"
+    "owner": "Tomoe Gozen",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2021000.png",
+    "choco_id": 747
   },
   {
     "id": 676,
-    "owner": "Mochizuki Chiyome"
+    "owner": "Mochizuki Chiyome",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6029000.png",
+    "choco_id": 746
   },
   {
     "id": 677,
-    "owner": "Houzouin Inshun"
+    "owner": "Houzouin Inshun",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3014000.png",
+    "choco_id": 744
   },
   {
     "id": 678,
-    "owner": "Yagyu Tajima-no-kami Munenori"
+    "owner": "Yagyu Tajima-no-kami Munenori",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1032000.png",
+    "choco_id": 748
   },
   {
     "id": 679,
-    "owner": "Katou \"Black Kite\" Danzo"
+    "owner": "Katou \"Black Kite\" Danzo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6030000.png",
+    "choco_id": 745
   },
   {
     "id": 686,
-    "owner": "Osakabehime"
+    "owner": "Osakabehime",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6031000.png",
+    "choco_id": 750
   },
   {
     "id": 687,
-    "owner": "Mecha Eli-chan"
+    "owner": "Mecha Eli-chan",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10004000.png",
+    "choco_id": 751
   },
   {
     "id": 688,
-    "owner": "Mecha Eli-chan Mk.II"
+    "owner": "Mecha Eli-chan Mk.II",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10005000.png",
+    "choco_id": 752
   },
   {
     "id": 692,
-    "owner": "Circe"
+    "owner": "Circe",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5033000.png",
+    "choco_id": 754
   },
   {
     "id": 693,
-    "owner": "Nezha"
+    "owner": "Nezha",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3031000.png",
+    "choco_id": 756
   },
   {
     "id": 694,
-    "owner": "Queen of Sheba"
+    "owner": "Queen of Sheba",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5034000.png",
+    "choco_id": 755
   },
   {
     "id": 695,
-    "owner": "Abigail Williams"
+    "owner": "Abigail Williams",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25001000.png",
+    "choco_id": 753
   },
   {
     "id": 700,
-    "owner": "Ereshkigal"
+    "owner": "Ereshkigal",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3032000.png",
+    "choco_id": 758
   },
   {
     "id": 701,
-    "owner": "Attila the San(ta)"
+    "owner": "Attila the San(ta)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2022000.png",
+    "choco_id": 757
   },
   {
     "id": 709,
-    "owner": "Katsushika Hokusai"
+    "owner": "Katsushika Hokusai",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25002000.png",
+    "choco_id": 759
   },
   {
     "id": 717,
-    "owner": "Semiramis"
+    "owner": "Semiramis",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6032000.png",
+    "choco_id": 760
   },
   {
     "id": 762,
-    "owner": "Asagami Fujino"
+    "owner": "Asagami Fujino",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2029000.png",
+    "choco_id": 949
   },
   {
     "id": 787,
-    "owner": "Anastasia"
+    "owner": "Anastasia",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5035000.png",
+    "choco_id": 950
   },
   {
     "id": 788,
-    "owner": "Atalante (Alter)"
+    "owner": "Atalante (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7030000.png",
+    "choco_id": 951
   },
   {
     "id": 789,
-    "owner": "Avicebron"
+    "owner": "Avicebron",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5036000.png",
+    "choco_id": 952
   },
   {
     "id": 790,
-    "owner": "Antonio Salieri"
+    "owner": "Antonio Salieri",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11006000.png",
+    "choco_id": 954
   },
   {
     "id": 791,
-    "owner": "Ivan the Terrible"
+    "owner": "Ivan the Terrible",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4028000.png",
+    "choco_id": 953
   },
   {
     "id": 798,
-    "owner": "Achilles"
+    "owner": "Achilles",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4029000.png",
+    "choco_id": 955
   },
   {
     "id": 799,
-    "owner": "Chiron"
+    "owner": "Chiron",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2030000.png",
+    "choco_id": 956
   },
   {
     "id": 800,
-    "owner": "Sieg"
+    "owner": "Sieg",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5038000.png",
+    "choco_id": 957
   },
   {
     "id": 809,
-    "owner": "Okita Souji (Alter)"
+    "owner": "Okita Souji (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10007000.png",
+    "choco_id": 958
   },
   {
     "id": 810,
-    "owner": "Okada Izo"
+    "owner": "Okada Izo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6033000.png",
+    "choco_id": 959
   },
   {
     "id": 811,
-    "owner": "Sakamoto Ryouma"
+    "owner": "Sakamoto Ryouma",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4030000.png",
+    "choco_id": 960
   },
   {
     "id": 812,
-    "owner": "Napoleon"
+    "owner": "Napoleon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2031000.png",
+    "choco_id": 961
   },
   {
     "id": 817,
-    "owner": "Sigurd"
+    "owner": "Sigurd",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1033000.png",
+    "choco_id": 962
   },
   {
     "id": 818,
-    "owner": "Valkyrie"
+    "owner": "Valkyrie",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3033000.png",
+    "choco_id": 963
   },
   {
     "id": 862,
-    "owner": "Scáthach-Skadi"
+    "owner": "Scáthach-Skadi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5039000.png",
+    "choco_id": 964
   },
   {
     "id": 886,
-    "owner": "Jeanne d'Arc"
+    "owner": "Jeanne d'Arc",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2032000.png",
+    "choco_id": 965
   },
   {
     "id": 887,
-    "owner": "Ibaraki-Douji"
+    "owner": "Ibaraki-Douji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3034000.png",
+    "choco_id": 966
   },
   {
     "id": 888,
-    "owner": "Ushiwakamaru"
+    "owner": "Ushiwakamaru",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6034000.png",
+    "choco_id": 967
   },
   {
     "id": 889,
-    "owner": "Jeanne d'Arc (Alter)"
+    "owner": "Jeanne d'Arc (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7031000.png",
+    "choco_id": 968
   },
   {
     "id": 890,
-    "owner": "BB"
+    "owner": "BB",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23002000.png",
+    "choco_id": 969
   },
   {
     "id": 891,
-    "owner": "Queen Medb"
+    "owner": "Queen Medb",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1034000.png",
+    "choco_id": 970
   },
   {
     "id": 892,
-    "owner": "Mysterious Heroine XX"
+    "owner": "Mysterious Heroine XX",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25003000.png",
+    "choco_id": 971
   },
   {
     "id": 894,
-    "owner": "Diarmuid Ua Duibhne"
+    "owner": "Diarmuid Ua Duibhne",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1035000.png",
+    "choco_id": 972
   },
   {
     "id": 908,
-    "owner": "Sitonai"
+    "owner": "Sitonai",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10008000.png",
+    "choco_id": 973
   },
   {
     "id": 909,
-    "owner": "Shuten-Douji"
+    "owner": "Shuten-Douji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5040000.png",
+    "choco_id": 974
   },
   {
     "id": 916,
-    "owner": "Xiang Yu"
+    "owner": "Xiang Yu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7032000.png",
+    "choco_id": 975
   },
   {
     "id": 917,
-    "owner": "Prince of Lan Ling"
+    "owner": "Prince of Lan Ling",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1036000.png",
+    "choco_id": 976
   },
   {
     "id": 918,
-    "owner": "Qin Liangyu"
+    "owner": "Qin Liangyu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3035000.png",
+    "choco_id": 977
   },
   {
     "id": 919,
-    "owner": "Qin Shi Huang"
+    "owner": "Qin Shi Huang",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9006000.png",
+    "choco_id": 978
   },
   {
     "id": 920,
-    "owner": "Yu Mei-ren"
+    "owner": "Yu Mei-ren",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6035000.png",
+    "choco_id": 980
   },
   {
     "id": 921,
-    "owner": "Red Hare"
+    "owner": "Red Hare",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4031000.png",
+    "choco_id": 981
   },
   {
     "id": 927,
-    "owner": "Bradamante"
+    "owner": "Bradamante",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3036000.png",
+    "choco_id": 982
   },
   {
     "id": 928,
-    "owner": "Quetzalcoatl (Samba/Santa)"
+    "owner": "Quetzalcoatl (Samba/Santa)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9007000.png",
+    "choco_id": 983
   },
   {
     "id": 935,
-    "owner": "Beni-Enma"
+    "owner": "Beni-Enma",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1037000.png",
+    "choco_id": 984
   },
   {
     "id": 936,
-    "owner": "Li Shuwen"
+    "owner": "Li Shuwen",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6036000.png",
+    "choco_id": 985
   },
   {
     "id": 943,
-    "owner": "Miyu Edelfelt"
+    "owner": "Miyu Edelfelt",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5041000.png",
+    "choco_id": 986
   },
   {
     "id": 948,
-    "owner": "Murasaki Shikibu"
+    "owner": "Murasaki Shikibu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5042000.png",
+    "choco_id": 987
   },
   {
     "id": 989,
-    "owner": "Kingprotea"
+    "owner": "Kingprotea",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10009000.png",
+    "choco_id": 1155
   },
   {
     "id": 1003,
-    "owner": "Kama"
+    "owner": "Kama",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6037000.png",
+    "choco_id": 1156
   },
   {
     "id": 1009,
-    "owner": "Sima Yi (Reines)"
+    "owner": "Sima Yi (Reines)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4032000.png",
+    "choco_id": 1157
   },
   {
     "id": 1010,
-    "owner": "Astraea"
+    "owner": "Astraea",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9008000.png",
+    "choco_id": 1158
   },
   {
     "id": 1011,
-    "owner": "Gray"
+    "owner": "Gray",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6039000.png",
+    "choco_id": 1159
   },
   {
     "id": 1019,
-    "owner": "Great Stone Statue God"
+    "owner": "Great Stone Statue God",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23003000.png",
+    "choco_id": 1160
   },
   {
     "id": 1020,
-    "owner": "Lakshmi Bai"
+    "owner": "Lakshmi Bai",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1039000.png",
+    "choco_id": 1161
   },
   {
     "id": 1021,
-    "owner": "William Tell"
+    "owner": "William Tell",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2034000.png",
+    "choco_id": 1162
   },
   {
     "id": 1022,
-    "owner": "Arjuna (Alter)"
+    "owner": "Arjuna (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7033000.png",
+    "choco_id": 1163
   },
   {
     "id": 1023,
-    "owner": "Aśvatthāman"
+    "owner": "Aśvatthāman",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2033000.png",
+    "choco_id": 1164
   },
   {
     "id": 1024,
-    "owner": "Asclepius"
+    "owner": "Asclepius",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5043000.png",
+    "choco_id": 1165
   },
   {
     "id": 1032,
-    "owner": "Oda Nobunaga"
+    "owner": "Oda Nobunaga",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11007000.png",
+    "choco_id": 1166
   },
   {
     "id": 1033,
-    "owner": "Mori Nagayoshi"
+    "owner": "Mori Nagayoshi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7035000.png",
+    "choco_id": 1168
   },
   {
     "id": 1034,
-    "owner": "Nagao Kagetora"
+    "owner": "Nagao Kagetora",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3038000.png",
+    "choco_id": 1169
   },
   {
     "id": 1081,
-    "owner": "Leonardo da Vinci"
+    "owner": "Leonardo da Vinci",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4035000.png",
+    "choco_id": 1170
   },
   {
     "id": 1082,
-    "owner": "Jason"
+    "owner": "Jason",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1038000.png",
+    "choco_id": 1171
   },
   {
     "id": 1083,
-    "owner": "Paris"
+    "owner": "Paris",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2035000.png",
+    "choco_id": 1172
   },
   {
     "id": 1084,
-    "owner": "Gareth"
+    "owner": "Gareth",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3039000.png",
+    "choco_id": 1173
   },
   {
     "id": 1085,
-    "owner": "Bartholomew Roberts"
+    "owner": "Bartholomew Roberts",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4034000.png",
+    "choco_id": 1174
   },
   {
     "id": 1086,
-    "owner": "Chen Gong"
+    "owner": "Chen Gong",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5044000.png",
+    "choco_id": 1175
   },
   {
     "id": 1087,
-    "owner": "Charlotte Corday"
+    "owner": "Charlotte Corday",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6038000.png",
+    "choco_id": 1176
   },
   {
     "id": 1088,
-    "owner": "Salome"
+    "owner": "Salome",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7034000.png",
+    "choco_id": 1177
   },
   {
     "id": 1097,
-    "owner": "Miyamoto Musashi"
+    "owner": "Miyamoto Musashi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7036000.png",
+    "choco_id": 1178
   },
   {
     "id": 1098,
-    "owner": "Osakabehime"
+    "owner": "Osakabehime",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2036000.png",
+    "choco_id": 1179
   },
   {
     "id": 1099,
-    "owner": "Carmilla"
+    "owner": "Carmilla",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4036000.png",
+    "choco_id": 1180
   },
   {
     "id": 1100,
-    "owner": "Katsushika Hokusai"
+    "owner": "Katsushika Hokusai",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1040000.png",
+    "choco_id": 1181
   },
   {
     "id": 1101,
-    "owner": "Altria Pendragon"
+    "owner": "Altria Pendragon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9009000.png",
+    "choco_id": 1182
   },
   {
     "id": 1102,
-    "owner": "Mysterious Alter Ego Λ"
+    "owner": "Mysterious Alter Ego Λ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3040000.png",
+    "choco_id": 1183
   },
   {
     "id": 1103,
-    "owner": "Okita J. Souji"
+    "owner": "Okita J. Souji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6040000.png",
+    "choco_id": 1184
   },
   {
     "id": 1119,
-    "owner": "Space Ishtar"
+    "owner": "Space Ishtar",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11009000.png",
+    "choco_id": 1185
   },
   {
     "id": 1120,
-    "owner": "Calamity Jane"
+    "owner": "Calamity Jane",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2037000.png",
+    "choco_id": 1186
   },
   {
     "id": 1127,
-    "owner": "Astolfo"
+    "owner": "Astolfo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1041000.png",
+    "choco_id": 1187
   },
   {
     "id": 1128,
-    "owner": "Florence Nightingale (Santa)"
+    "owner": "Florence Nightingale (Santa)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2039000.png",
+    "choco_id": 1189
   },
   {
     "id": 1133,
-    "owner": "Super Orion"
+    "owner": "Super Orion",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2038000.png",
+    "choco_id": 1190
   },
   {
     "id": 1134,
-    "owner": "Mandricardo"
+    "owner": "Mandricardo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4039000.png",
+    "choco_id": 1191
   },
   {
     "id": 1135,
-    "owner": "Europa"
+    "owner": "Europa",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4040000.png",
+    "choco_id": 1192
   },
   {
     "id": 1145,
-    "owner": "Yang Guifei"
+    "owner": "Yang Guifei",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25004000.png",
+    "choco_id": 1193
   },
   {
     "id": 1154,
-    "owner": "Sei Shounagon"
+    "owner": "Sei Shounagon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2040000.png",
+    "choco_id": 1194
   },
   {
     "id": 1205,
-    "owner": "Odysseus"
+    "owner": "Odysseus",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4038000.png",
+    "choco_id": 1353
   },
   {
     "id": 1211,
-    "owner": "Dioscuri"
+    "owner": "Dioscuri",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1042000.png",
+    "choco_id": 1354
   },
   {
     "id": 1212,
-    "owner": "Caenis"
+    "owner": "Caenis",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3041000.png",
+    "choco_id": 1356
   },
   {
     "id": 1213,
-    "owner": "Romulus=Quirinus"
+    "owner": "Romulus=Quirinus",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3042000.png",
+    "choco_id": 1357
   },
   {
     "id": 1219,
-    "owner": "Voyager"
+    "owner": "Voyager",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25005000.png",
+    "choco_id": 1358
   },
   {
     "id": 1220,
-    "owner": "Kijyo Koyo"
+    "owner": "Kijyo Koyo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7037000.png",
+    "choco_id": 1359
   },
   {
     "id": 1221,
-    "owner": "Utsumi Erice"
+    "owner": "Utsumi Erice",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3043000.png",
+    "choco_id": 1360
   },
   {
     "id": 1274,
-    "owner": "Altria Caster"
+    "owner": "Altria Caster",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5045000.png",
+    "choco_id": 1361
   },
   {
     "id": 1288,
-    "owner": "Sessyoin Kiara"
+    "owner": "Sessyoin Kiara",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23004000.png",
+    "choco_id": 1362
   },
   {
     "id": 1289,
-    "owner": "Illyasviel von Einzbern"
+    "owner": "Illyasviel von Einzbern",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2042000.png",
+    "choco_id": 1363
   },
   {
     "id": 1290,
-    "owner": "Brynhild"
+    "owner": "Brynhild",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7038000.png",
+    "choco_id": 1364
   },
   {
     "id": 1291,
-    "owner": "Yu Mei-ren"
+    "owner": "Yu Mei-ren",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3044000.png",
+    "choco_id": 1365
   },
   {
     "id": 1292,
-    "owner": "Abigail Williams (Summer)"
+    "owner": "Abigail Williams (Summer)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25007000.png",
+    "choco_id": 1366
   },
   {
     "id": 1293,
-    "owner": "Tomoe Gozen"
+    "owner": "Tomoe Gozen",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1045000.png",
+    "choco_id": 1367
   },
   {
     "id": 1294,
-    "owner": "Murasaki Shikibu"
+    "owner": "Murasaki Shikibu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4041000.png",
+    "choco_id": 1368
   },
   {
     "id": 1303,
-    "owner": "Himiko"
+    "owner": "Himiko",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9010000.png",
+    "choco_id": 1369
   },
   {
     "id": 1304,
-    "owner": "Saito Hajime"
+    "owner": "Saito Hajime",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1044000.png",
+    "choco_id": 1370
   },
   {
     "id": 1305,
-    "owner": "Oda Nobukatsu"
+    "owner": "Oda Nobukatsu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2041000.png",
+    "choco_id": 1371
   },
   {
     "id": 1312,
-    "owner": "Nemo"
+    "owner": "Nemo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4037000.png",
+    "choco_id": 1373
   },
   {
     "id": 1313,
-    "owner": "Van Gogh"
+    "owner": "Van Gogh",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25006000.png",
+    "choco_id": 1372
   },
   {
     "id": 1319,
-    "owner": "Ashiya Douman"
+    "owner": "Ashiya Douman",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10010000.png",
+    "choco_id": 1374
   },
   {
     "id": 1320,
-    "owner": "Watanabe-no-Tsuna"
+    "owner": "Watanabe-no-Tsuna",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1047000.png",
+    "choco_id": 1375
   },
   {
     "id": 1326,
-    "owner": "Ibuki-Douji"
+    "owner": "Ibuki-Douji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1046000.png",
+    "choco_id": 1376
   },
   {
     "id": 1331,
-    "owner": "Vritra"
+    "owner": "Vritra",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3046000.png",
+    "choco_id": 1377
   },
   {
     "id": 1332,
-    "owner": "Karna (Santa)"
+    "owner": "Karna (Santa)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1048000.png",
+    "choco_id": 1378
   },
   {
     "id": 1338,
-    "owner": "Senji Muramasa"
+    "owner": "Senji Muramasa",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1049000.png",
+    "choco_id": 1379
   },
   {
     "id": 1345,
-    "owner": "Taira-no-Kagekiyo"
+    "owner": "Taira-no-Kagekiyo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11010000.png",
+    "choco_id": 1380
   },
   {
     "id": 1346,
-    "owner": "Kiichi Hogen"
+    "owner": "Kiichi Hogen",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6041000.png",
+    "choco_id": 1381
   },
   {
     "id": 1352,
-    "owner": "Amor (Caren)"
+    "owner": "Amor (Caren)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9011000.png",
+    "choco_id": 1382
   },
   {
     "id": 1398,
-    "owner": "Galatea"
+    "owner": "Galatea",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7039000.png",
+    "choco_id": 1533
   },
   {
     "id": 1403,
-    "owner": "Miss Crane"
+    "owner": "Miss Crane",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5046000.png",
+    "choco_id": 1534
   },
   {
     "id": 1404,
-    "owner": "Mysterious Idol X (Alter)"
+    "owner": "Mysterious Idol X (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25008000.png",
+    "choco_id": 1535
   },
   {
     "id": 1416,
-    "owner": "Morgan"
+    "owner": "Morgan",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7040000.png",
+    "choco_id": 1536
   },
   {
     "id": 1417,
-    "owner": "Tam Lin Gawain"
+    "owner": "Tam Lin Gawain",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1050000.png",
+    "choco_id": 1537
   },
   {
     "id": 1418,
-    "owner": "Tam Lin Tristan"
+    "owner": "Tam Lin Tristan",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2043000.png",
+    "choco_id": 1538
   },
   {
     "id": 1419,
-    "owner": "Tam Lin Lancelot"
+    "owner": "Tam Lin Lancelot",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3048000.png",
+    "choco_id": 1539
   },
   {
     "id": 1420,
-    "owner": "Percival"
+    "owner": "Percival",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3047000.png",
+    "choco_id": 1540
   },
   {
     "id": 1462,
-    "owner": "Koyanskaya of Light"
+    "owner": "Koyanskaya of Light",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6042000.png",
+    "choco_id": 1541
   },
   {
     "id": 1464,
-    "owner": "Habetrot"
+    "owner": "Habetrot",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4042000.png",
+    "choco_id": 1542
   },
   {
     "id": 1465,
-    "owner": "Oberon"
+    "owner": "Oberon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28001000.png",
+    "choco_id": 1543
   },
   {
     "id": 1476,
-    "owner": "Okita Souji (Alter)"
+    "owner": "Okita Souji (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1051000.png",
+    "choco_id": 1544
   },
   {
     "id": 1477,
-    "owner": "Anastasia & Viy"
+    "owner": "Anastasia & Viy",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2044000.png",
+    "choco_id": 1545
   },
   {
     "id": 1478,
-    "owner": "Charlotte Corday"
+    "owner": "Charlotte Corday",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5048000.png",
+    "choco_id": 1546
   },
   {
     "id": 1479,
-    "owner": "Leonardo da Vinci"
+    "owner": "Leonardo da Vinci",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9012000.png",
+    "choco_id": 1547
   },
   {
     "id": 1480,
-    "owner": "Kama"
+    "owner": "Kama",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11011000.png",
+    "choco_id": 1548
   },
   {
     "id": 1481,
-    "owner": "Caenis"
+    "owner": "Caenis",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4045000.png",
+    "choco_id": 1549
   },
   {
     "id": 1482,
-    "owner": "Sei Shounagon"
+    "owner": "Sei Shounagon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7041000.png",
+    "choco_id": 1550
   },
   {
     "id": 1492,
-    "owner": "Jacques de Molay"
+    "owner": "Jacques de Molay",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25010000.png",
+    "choco_id": 1551
   },
   {
     "id": 1493,
-    "owner": "Zenobia"
+    "owner": "Zenobia",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2045000.png",
+    "choco_id": 1552
   },
   {
     "id": 1494,
-    "owner": "Elisabeth Báthory (Cinderella)"
+    "owner": "Elisabeth Báthory (Cinderella)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4046000.png",
+    "choco_id": 1553
   },
   {
     "id": 1501,
-    "owner": "Izumo-no-Okuni"
+    "owner": "Izumo-no-Okuni",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5049000.png",
+    "choco_id": 1554
   },
   {
     "id": 1502,
-    "owner": "Mysterious Ranmaru X"
+    "owner": "Mysterious Ranmaru X",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11012000.png",
+    "choco_id": 1555
   },
   {
     "id": 1503,
-    "owner": "Sakamoto Ryouma"
+    "owner": "Sakamoto Ryouma",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3050000.png",
+    "choco_id": 1556
   },
   {
     "id": 1509,
-    "owner": "Martha (Santa)"
+    "owner": "Martha (Santa)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5050000.png",
+    "choco_id": 1557
   },
   {
     "id": 1517,
-    "owner": "Taigong Wang"
+    "owner": "Taigong Wang",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4043000.png",
+    "choco_id": 1558
   },
   {
     "id": 1518,
-    "owner": "Dobrynya Nikitich"
+    "owner": "Dobrynya Nikitich",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4044000.png",
+    "choco_id": 1559
   },
   {
     "id": 1523,
-    "owner": "Koyanskaya of Dark"
+    "owner": "Koyanskaya of Dark",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25009000.png",
+    "choco_id": 1560
   },
   {
     "id": 1526,
-    "owner": "Hephaistíon"
+    "owner": "Hephaistíon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28002000.png",
+    "choco_id": 1561
   },
   {
     "id": 1532,
-    "owner": "Manannán mac Lir (Bazett)"
+    "owner": "Manannán mac Lir (Bazett)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10011000.png",
+    "choco_id": 1562
   },
   {
     "id": 1588,
-    "owner": "Hai Bà Trưng"
+    "owner": "Hai Bà Trưng",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1053000.png",
+    "choco_id": 1757
   },
   {
     "id": 1589,
-    "owner": "Taisui Xingjun"
+    "owner": "Taisui Xingjun",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10012000.png",
+    "choco_id": 1758
   },
   {
     "id": 1599,
-    "owner": "Super Bunyan"
+    "owner": "Super Bunyan",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10013000.png",
+    "choco_id": 1759
   },
   {
     "id": 1600,
-    "owner": "Daikokuten"
+    "owner": "Daikokuten",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5047000.png",
+    "choco_id": 1760
   },
   {
     "id": 1601,
-    "owner": "Mary Anning"
+    "owner": "Mary Anning",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3049000.png",
+    "choco_id": 1761
   },
   {
     "id": 1602,
-    "owner": "Kōnstantînos XI"
+    "owner": "Kōnstantînos XI",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4047000.png",
+    "choco_id": 1762
   },
   {
     "id": 1612,
-    "owner": "Charlemagne"
+    "owner": "Charlemagne",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1052000.png",
+    "choco_id": 1763
   },
   {
     "id": 1613,
-    "owner": "Roland"
+    "owner": "Roland",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1043000.png",
+    "choco_id": 1764
   },
   {
     "id": 1614,
-    "owner": "Kriemhild"
+    "owner": "Kriemhild",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7042000.png",
+    "choco_id": 1765
   },
   {
     "id": 1615,
-    "owner": "James Moriarty"
+    "owner": "James Moriarty",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9013000.png",
+    "choco_id": 1766
   },
   {
     "id": 1616,
-    "owner": "Don Quixote"
+    "owner": "Don Quixote",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3051000.png",
+    "choco_id": 1767
   },
   {
     "id": 1617,
-    "owner": "Zhang Jue"
+    "owner": "Zhang Jue",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5051000.png",
+    "choco_id": 1768
   },
   {
     "id": 1624,
-    "owner": "Kyokutei Bakin"
+    "owner": "Kyokutei Bakin",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4048000.png",
+    "choco_id": 1769
   },
   {
     "id": 1625,
-    "owner": "Minamoto-no-Tametomo"
+    "owner": "Minamoto-no-Tametomo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2046000.png",
+    "choco_id": 1770
   },
   {
     "id": 1671,
-    "owner": "Archetype: Earth"
+    "owner": "Archetype: Earth",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23005000.png",
+    "choco_id": 1771
   },
   {
     "id": 1672,
-    "owner": "Xu Fu"
+    "owner": "Xu Fu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10014000.png",
+    "choco_id": 1772
   },
   {
     "id": 1681,
-    "owner": "Lady Avalon"
+    "owner": "Lady Avalon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28003000.png",
+    "choco_id": 1773
   },
   {
     "id": 1682,
-    "owner": "Gareth"
+    "owner": "Gareth",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1054000.png",
+    "choco_id": 1774
   },
   {
     "id": 1683,
-    "owner": "Ibuki-Douji"
+    "owner": "Ibuki-Douji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7043000.png",
+    "choco_id": 1775
   },
   {
     "id": 1684,
-    "owner": "Utsumi Erice"
+    "owner": "Utsumi Erice",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11014000.png",
+    "choco_id": 1776
   },
   {
     "id": 1685,
-    "owner": "Scáthach-Skadi"
+    "owner": "Scáthach-Skadi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9014000.png",
+    "choco_id": 1777
   },
   {
     "id": 1686,
-    "owner": "Wu Zetian"
+    "owner": "Wu Zetian",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5052000.png",
+    "choco_id": 1778
   },
   {
     "id": 1687,
-    "owner": "Thrúd"
+    "owner": "Thrúd",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6045000.png",
+    "choco_id": 1779
   },
   {
     "id": 1688,
-    "owner": "Hildr"
+    "owner": "Hildr",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6044000.png",
+    "choco_id": 1780
   },
   {
     "id": 1689,
-    "owner": "Ortlinde"
+    "owner": "Ortlinde",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6043000.png",
+    "choco_id": 1781
   },
   {
     "id": 1702,
-    "owner": "Sen-no-Rikyu"
+    "owner": "Sen-no-Rikyu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7044000.png",
+    "choco_id": 1782
   },
   {
     "id": 1703,
-    "owner": "Yamanami Keisuke"
+    "owner": "Yamanami Keisuke",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1055000.png",
+    "choco_id": 1783
   },
   {
     "id": 1704,
-    "owner": "Iyo"
+    "owner": "Iyo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9015000.png",
+    "choco_id": 1784
   },
   {
     "id": 1713,
-    "owner": "Huyan Zhuo"
+    "owner": "Huyan Zhuo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6046000.png",
+    "choco_id": 1785
   },
   {
     "id": 1714,
-    "owner": "Huang Feihu"
+    "owner": "Huang Feihu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4049000.png",
+    "choco_id": 1786
   },
   {
     "id": 1715,
-    "owner": "Nine-Tattoo Dragon Elisa"
+    "owner": "Nine-Tattoo Dragon Elisa",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28004000.png",
+    "choco_id": 1787
   },
   {
     "id": 1723,
-    "owner": "Britomart"
+    "owner": "Britomart",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3053000.png",
+    "choco_id": 1788
   },
   {
     "id": 1740,
-    "owner": "Grigori Rasputin"
+    "owner": "Grigori Rasputin",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10015000.png",
+    "choco_id": 1789
   },
   {
     "id": 1742,
-    "owner": "Nitocris (Alter)"
+    "owner": "Nitocris (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11015000.png",
+    "choco_id": 1790
   },
   {
     "id": 1749,
-    "owner": "Tezcatlipoca"
+    "owner": "Tezcatlipoca",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6047000.png",
+    "choco_id": 1791
   },
   {
     "id": 1750,
-    "owner": "Tlaloc"
+    "owner": "Tlaloc",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28005000.png",
+    "choco_id": 1792
   },
   {
     "id": 1751,
-    "owner": "Kukulcan"
+    "owner": "Kukulcan",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25011000.png",
+    "choco_id": 1793
   },
   {
     "id": 1756,
-    "owner": "Pope Johanna"
+    "owner": "Pope Johanna",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9016000.png",
+    "choco_id": 1794
   },
   {
     "id": 1807,
-    "owner": "Takasugi Shinsaku"
+    "owner": "Takasugi Shinsaku",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2047000.png",
+    "choco_id": 1986
   },
   {
     "id": 1816,
-    "owner": "Larva/Tiamat"
+    "owner": "Larva/Tiamat",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10016000.png",
+    "choco_id": 1987
   },
   {
     "id": 1818,
-    "owner": "Sodom's Beast/Draco"
+    "owner": "Sodom's Beast/Draco",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_33001000.png",
+    "choco_id": 1988
   },
   {
     "id": 1819,
-    "owner": "Locusta"
+    "owner": "Locusta",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6048000.png",
+    "choco_id": 1989
   },
   {
     "id": 1820,
-    "owner": "Setanta"
+    "owner": "Setanta",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1057000.png",
+    "choco_id": 1990
   },
   {
     "id": 1826,
-    "owner": "Kashin Koji"
+    "owner": "Kashin Koji",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6049000.png",
+    "choco_id": 1991
   },
   {
     "id": 1833,
-    "owner": "Bhima"
+    "owner": "Bhima",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3054000.png",
+    "choco_id": 1992
   },
   {
     "id": 1834,
-    "owner": "Duryodhana"
+    "owner": "Duryodhana",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7046000.png",
+    "choco_id": 1993
   },
   {
     "id": 1835,
-    "owner": "Durga"
+    "owner": "Durga",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2048000.png",
+    "choco_id": 1994
   },
   {
     "id": 1842,
-    "owner": "Medusa"
+    "owner": "Medusa",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1056000.png",
+    "choco_id": 1995
   },
   {
     "id": 1893,
-    "owner": "Aesc the Rain Witch"
+    "owner": "Aesc the Rain Witch",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5053000.png",
+    "choco_id": 1996
   },
   {
     "id": 1903,
-    "owner": "Altria Caster"
+    "owner": "Altria Caster",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7047000.png",
+    "choco_id": 1997
   },
   {
     "id": 1904,
-    "owner": "Suzuka Gozen (Summer Vacation)"
+    "owner": "Suzuka Gozen (Summer Vacation)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4050000.png",
+    "choco_id": 1998
   },
   {
     "id": 1905,
-    "owner": "Chloe von Einzbern"
+    "owner": "Chloe von Einzbern",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11016000.png",
+    "choco_id": 1999
   },
   {
     "id": 1911,
-    "owner": "Cnoc na Riabh Yaraan-doo"
+    "owner": "Cnoc na Riabh Yaraan-doo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25012000.png",
+    "choco_id": 2000
   },
   {
     "id": 1912,
-    "owner": "Mélusine"
+    "owner": "Mélusine",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9017000.png",
+    "choco_id": 2001
   },
   {
     "id": 1913,
-    "owner": "UDK-Barghest"
+    "owner": "UDK-Barghest",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2049000.png",
+    "choco_id": 2002
   },
   {
     "id": 1914,
-    "owner": "Cait Cú Cerpriestess"
+    "owner": "Cait Cú Cerpriestess",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28006000.png",
+    "choco_id": 2003
   },
   {
     "id": 1927,
-    "owner": "Wandjina"
+    "owner": "Wandjina",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25013000.png",
+    "choco_id": 2004
   },
   {
     "id": 1933,
-    "owner": "Ptolemaîos"
+    "owner": "Ptolemaîos",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2050000.png",
+    "choco_id": 2005
   },
   {
     "id": 1934,
-    "owner": "Sugitani Zenjubou"
+    "owner": "Sugitani Zenjubou",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2051000.png",
+    "choco_id": 2006
   },
   {
     "id": 1935,
-    "owner": "Theseus"
+    "owner": "Theseus",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1058000.png",
+    "choco_id": 2007
   },
   {
     "id": 1946,
-    "owner": "Takeda Harunobu"
+    "owner": "Takeda Harunobu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4052000.png",
+    "choco_id": 2008
   },
   {
     "id": 1947,
-    "owner": "Nagakura Shinpachi"
+    "owner": "Nagakura Shinpachi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7048000.png",
+    "choco_id": 2009
   },
   {
     "id": 1948,
-    "owner": "Saika Magoichi"
+    "owner": "Saika Magoichi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2052000.png",
+    "choco_id": 2010
   },
   {
     "id": 1950,
-    "owner": "Uesugi Kenshin"
+    "owner": "Uesugi Kenshin",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9018000.png",
+    "choco_id": 2011
   },
   {
     "id": 1955,
-    "owner": "Nemo (Santa)"
+    "owner": "Nemo (Santa)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4053000.png",
+    "choco_id": 2012
   },
   {
     "id": 1963,
-    "owner": "Yamato Takeru"
+    "owner": "Yamato Takeru",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1059000.png",
+    "choco_id": 2013
   },
   {
     "id": 1970,
-    "owner": "Minamoto-no-Raikou/Ushi Gozen"
+    "owner": "Minamoto-no-Raikou/Ushi Gozen",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11018000.png",
+    "choco_id": 2015
   },
   {
     "id": 1971,
-    "owner": "Yui Shousetsu"
+    "owner": "Yui Shousetsu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5054000.png",
+    "choco_id": 2016
   },
   {
     "id": 1972,
-    "owner": "Miyamoto Iori"
+    "owner": "Miyamoto Iori",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1060000.png",
+    "choco_id": 2017
   },
   {
     "id": 1985,
-    "owner": "Andromeda"
+    "owner": "Andromeda",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4055000.png",
+    "choco_id": 2018
   },
   {
     "id": 2035,
-    "owner": "Marie Antoinette (Alter)"
+    "owner": "Marie Antoinette (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11013000.png",
+    "choco_id": 2180
   },
   {
     "id": 2036,
-    "owner": "Hassan of the Shining Star"
+    "owner": "Hassan of the Shining Star",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6050000.png",
+    "choco_id": 2181
   },
   {
     "id": 2037,
-    "owner": "The Count of Monte Cristo"
+    "owner": "The Count of Monte Cristo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11017000.png",
+    "choco_id": 2182
   },
   {
     "id": 2038,
-    "owner": "Alessandro di Cagliostro"
+    "owner": "Alessandro di Cagliostro",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28007000.png",
+    "choco_id": 2183
   },
   {
     "id": 2048,
-    "owner": "Aozaki Aoko"
+    "owner": "Aozaki Aoko",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25014000.png",
+    "choco_id": 2184
   },
   {
     "id": 2049,
-    "owner": "Shizuki Soujuurou"
+    "owner": "Shizuki Soujuurou",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7049000.png",
+    "choco_id": 2185
   },
   {
     "id": 2050,
-    "owner": "Kuonji Alice"
+    "owner": "Kuonji Alice",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5055000.png",
+    "choco_id": 2186
   },
   {
     "id": 2057,
-    "owner": "Hibiki & Chikagi"
+    "owner": "Hibiki & Chikagi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10017000.png",
+    "choco_id": 2187
   },
   {
     "id": 2105,
-    "owner": "Ereshkigal"
+    "owner": "Ereshkigal",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_33002000.png",
+    "choco_id": 2188
   },
   {
     "id": 2116,
-    "owner": "Mysterious Executor C.I.E.L"
+    "owner": "Mysterious Executor C.I.E.L",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23009000.png",
+    "choco_id": 2189
   },
   {
     "id": 2117,
-    "owner": "Dobrynya Nikitich"
+    "owner": "Dobrynya Nikitich",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3055000.png",
+    "choco_id": 2190
   },
   {
     "id": 2118,
-    "owner": "Xu Fu"
+    "owner": "Xu Fu",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11019000.png",
+    "choco_id": 2191
   },
   {
     "id": 2119,
-    "owner": "BB Dubai"
+    "owner": "BB Dubai",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23006000.png",
+    "choco_id": 2192
   },
   {
     "id": 2120,
-    "owner": "Tenochtitlan"
+    "owner": "Tenochtitlan",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23010000.png",
+    "choco_id": 2193
   },
   {
     "id": 2121,
-    "owner": "Mysterious Heroine XX (Alter)"
+    "owner": "Mysterious Heroine XX (Alter)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_25016000.png",
+    "choco_id": 2194
   },
   {
     "id": 2126,
-    "owner": "Kishinami Hakuno"
+    "owner": "Kishinami Hakuno",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23007000.png",
+    "choco_id": 2195
   },
   {
     "id": 2127,
-    "owner": "Kishinami Hakuno"
+    "owner": "Kishinami Hakuno",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23008000.png",
+    "choco_id": 2196
   },
   {
     "id": 2135,
-    "owner": "Kazuradrop"
+    "owner": "Kazuradrop",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10018000.png",
+    "choco_id": 2197
   },
   {
     "id": 2140,
-    "owner": "Tutankhamun"
+    "owner": "Tutankhamun",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2053000.png",
+    "choco_id": 2198
   },
   {
     "id": 2141,
-    "owner": "Van Gogh (Miner)"
+    "owner": "Van Gogh (Miner)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3056000.png",
+    "choco_id": 2199
   },
   {
     "id": 2148,
-    "owner": "Louhi"
+    "owner": "Louhi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7050000.png",
+    "choco_id": 2200
   },
   {
     "id": 2149,
-    "owner": "Abigail Williams (Santa)"
+    "owner": "Abigail Williams (Santa)",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28008000.png",
+    "choco_id": 2201
   },
   {
     "id": 2154,
-    "owner": "Phantasmoon"
+    "owner": "Phantasmoon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28009000.png",
+    "choco_id": 2202
   },
   {
     "id": 2160,
-    "owner": "Richard I"
+    "owner": "Richard I",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1061000.png",
+    "choco_id": 2203
   },
   {
     "id": 2171,
-    "owner": "Biscione"
+    "owner": "Biscione",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3057000.png",
+    "choco_id": 2204
   },
   {
     "id": 2172,
-    "owner": "Kurohime"
+    "owner": "Kurohime",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1062000.png",
+    "choco_id": 2205
   },
   {
     "id": 2179,
-    "owner": "Ono no Komachi"
+    "owner": "Ono no Komachi",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5058000.png",
+    "choco_id": 2206
   },
   {
     "id": 2219,
-    "owner": "Dante Alighieri"
+    "owner": "Dante Alighieri",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28010000.png"
   },
   {
     "id": 2227,
-    "owner": "Metatron Jeanne"
+    "owner": "Metatron Jeanne",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9019000.png"
   },
   {
     "id": 2228,
-    "owner": "King Ashoka"
+    "owner": "King Ashoka",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3058000.png"
   },
   {
     "id": 2229,
-    "owner": "Mash Kyrielight"
+    "owner": "Mash Kyrielight",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_8001000.png",
+    "choco_id": 113
   },
   {
     "id": 2230,
-    "owner": "Lilith"
+    "owner": "Lilith",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7051000.png"
   },
   {
     "id": 2238,
-    "owner": "Typhon Ephemeros"
+    "owner": "Typhon Ephemeros",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28011000.png"
   },
   {
     "id": 2263,
-    "owner": "Indra"
+    "owner": "Indra",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3059000.png"
   },
   {
     "id": 2401,
-    "owner": "U-Olga Marie"
+    "owner": "U-Olga Marie",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_40001000.png"
   },
   {
     "id": 2414,
-    "owner": "Passionlip"
+    "owner": "Passionlip",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1063000.png"
   },
   {
     "id": 2415,
-    "owner": "Kriemhild"
+    "owner": "Kriemhild",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4058000.png"
   },
   {
     "id": 2416,
-    "owner": "Huyan Zhuo"
+    "owner": "Huyan Zhuo",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7052000.png"
   },
   {
     "id": 2417,
-    "owner": "Jade Rabbit"
+    "owner": "Jade Rabbit",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23011000.png"
   },
   {
     "id": 2418,
-    "owner": "Miyu Edelfelt"
+    "owner": "Miyu Edelfelt",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3060000.png"
   },
   {
     "id": 2419,
-    "owner": "Larva/Tiamat"
+    "owner": "Larva/Tiamat",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2054000.png"
   },
   {
     "id": 2420,
-    "owner": "Jeunesse Crane"
+    "owner": "Jeunesse Crane",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10019000.png"
   },
   {
     "id": 2441,
-    "owner": "Nemo/Noah"
+    "owner": "Nemo/Noah",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4057000.png"
   },
   {
     "id": 2465,
-    "owner": "Kawakami Gensai"
+    "owner": "Kawakami Gensai",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6051000.png"
   },
   {
     "id": 2466,
-    "owner": "Tōdō Heisuke"
+    "owner": "Tōdō Heisuke",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11021000.png"
   },
   {
     "id": 2467,
-    "owner": "Harada Sanosuke"
+    "owner": "Harada Sanosuke",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3061000.png"
   },
   {
     "id": 2468,
-    "owner": "Kondo Isami"
+    "owner": "Kondo Isami",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1064000.png"
   },
   {
     "id": 2477,
-    "owner": "Elisabeth Báthory"
+    "owner": "Elisabeth Báthory",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3062000.png"
   },
   {
     "id": 2478,
-    "owner": "Elisabeth of the End"
+    "owner": "Elisabeth of the End",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11022000.png"
+  },
+  {
+    "id": 2511,
+    "owner": "Solomon",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28012000.png"
+  },
+  {
+    "id": 2539,
+    "owner": "Lord Logres",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1065000.png"
   }
 ]
