@@ -789,7 +789,7 @@ export default function App() {
     const items = getItems(cat);
     if (!items.length) return 0;
     const ownedCount = items.filter(it => mapOwned(it.id)).length;
-    return Math.round((ownedCount / items.length) * 100);
+    return Math.floor((ownedCount / items.length) * 100);
   };
 
   const markAll = (items, value) => {
