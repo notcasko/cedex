@@ -27,7 +27,8 @@ const bondSubcategories = [
   { label: "2022", range: [1523, 1739] },
   { label: "2023", range: [1740, 1962] },
   { label: "2024", range: [1963, 2159] },
-  { label: "2025", range: [2160, 2899] },
+  { label: "2025", range: [2160, 2539] },
+  //{ label: "2026", range: [2540, 3000] },
 ];
 
 const commemorativeSubcategories = [
@@ -672,33 +673,86 @@ export default function App() {
   const tryDecodeLink = (url, categories, data) => {
     try {
       if (!url.includes("#/view/")) return null;
+
       const baseUrl = import.meta.env.BASE_URL || "/";
       const cleanUrl = url.replace(`${window.location.origin}${baseUrl}`, "");
       const parts = cleanUrl.split("#/view/")[1].split("/");
+
       const uid = parts[0];
       const compressed = parts[1];
-
       const shouldOpen = parts.length > 2 && parts[2] === "open";
 
-      const json = LZString.decompressFromEncodedURIComponent(compressed);
-      if (!json) throw new Error("Decompression failed");
-      const parsed = JSON.parse(json);
-      if (!parsed || typeof parsed !== "object") throw new Error("Invalid payload");
+      const raw = LZString.decompressFromEncodedURIComponent(compressed);
+      if (!raw) throw new Error("Decompression failed");
+
+      let i = 0;
+      const len = raw.length;
+
+      const parsed = { c: {}, l: null, o: null };
+
+      const readNumberList = () => {
+        let buf = "";
+        while (i < len && /[0-9,]/.test(raw[i])) {
+          buf += raw[i++];
+        }
+        return buf ? buf.split(",").map(Number) : [];
+      };
+
+      while (i < len) {
+        const key = raw[i++];
+
+        if (key === "c") {
+          let catId = "";
+          while (i < len && /[0-9]/.test(raw[i])) catId += raw[i++];
+          catId = Number(catId);
+
+          const modeChar = raw[i++]; // m
+          if (modeChar !== "m") throw new Error("Invalid category encoding");
+
+          const mode = Number(raw[i++]);
+          const section = { m: mode };
+
+          if (raw[i] === "x") {
+            i++;
+            section.x = readNumberList();
+          } else if (raw[i] === "d") {
+            i++;
+            section.d = readNumberList();
+          }
+
+          parsed.c[catId] = section;
+        }
+
+        else if (key === "l" || key === "o") {
+          if (raw.startsWith("ALL", i)) {
+            parsed[key] = "ALL";
+            i += 3;
+          } else {
+            parsed[key] = readNumberList();
+          }
+        }
+
+        else {
+          throw new Error("Unknown token");
+        }
+      }
+
       const cm = expandCollection(parsed.c, categories, data);
-      const lookingData = parsed.l;
-      const offeringData = parsed.o;
+
       return {
         uid,
         collection: cm,
-        lookingFor: lookingData,
-        offering: offeringData,
+        lookingFor: parsed.l,
+        offering: parsed.o,
         shouldOpen
       };
+
     } catch (err) {
       console.error("Failed to decode link:", err);
       return null;
     }
   };
+
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -889,114 +943,69 @@ export default function App() {
 
   const generateLink = (uid, openMode = false) => {
     const compressSection = (items, map) => {
-      if (!items.length) return undefined;
+      if (!items.length) return null;
+
       const ids = items.map(it => it.collectionNo);
       const owned = ids.filter(no => map[noToId[no]]);
       const total = ids.length;
       const count = owned.length;
-      if (count === 0) return undefined;
-      if (count === total) return { m: 0 };
-      const missingNos = ids.filter(no => !map[noToId[no]]);
-      if (count / total >= 0.85) {
-        return { m: 1, x: compressList(missingNos) };
+
+      if (count === 0) return null;
+      if (count === total) return "m0";
+
+      const ratio = count / total;
+
+      if (ratio >= 0.85) {
+        const missing = ids.filter(no => !map[noToId[no]]);
+        return `m1x${compressList(missing).join(",")}`;
       }
-      const ownedNos = ids.filter(no => map[noToId[no]]);
-      if (count / total <= 0.15) {
-        return { m: 2, d: compressList(ownedNos) };
+
+      const ownedNos = owned;
+      if (ratio <= 0.15) {
+        return `m2d${compressList(ownedNos).join(",")}`;
       }
-      return { m: 3, d: compressList(ownedNos) };
+
+      return `m3d${compressList(ownedNos).join(",")}`;
     };
 
-    const compressedCategories = {};
+    let cStr = "";
+
     categories.forEach(cat => {
       const items = getItems(cat);
       if (!items.length) return;
-      const catCompression = compressSection(items, collection);
-      if (!catCompression) return;
-      if (catCompression.mode !== "LIST") {
-        compressedCategories[cat.id] = catCompression;
-        return;
-      }
-      const subsResult = {};
-      const processedIds = new Set();
-      if (cat.label === "Event free") {
-        const rarities = [5, 4, 3];
-        const subFlags = ["svtEquipEventReward", "svtEquipExp"];
-        rarities.forEach(r => {
-          subFlags.forEach(flag => {
-            const subs = items.filter(it =>
-              it.rarity === r &&
-              (it.flag === flag || (Array.isArray(it.flags) && it.flags.includes(flag)))
-            );
-            if (subs.length) {
-              const section = compressSection(subs, collection);
-              if (section) subsResult[`${r}-${flag}`] = section;
-            }
-          });
-        });
-      } else if (cat.label === "Bond CEs") {
-        bondSubcategories.forEach(sub => {
-          const subsItems = items.filter(it =>
-            it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
-          );
-          subsItems.forEach(it => processedIds.add(it.id));
-          if (subsItems.length) {
-            const section = compressSection(subsItems, collection);
-            if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
-          }
-        });
-      } else if (cat.label === "Chocolate" || cat.label === "Commemorative") {
-        const subs = (cat.label === "Chocolate"
-          ? chocolateSubcategories
-          : commemorativeSubcategories);
-        subs.forEach(sub => {
-          const subsItems = items.filter(it =>
-            it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]
-          );
-          subsItems.forEach(it => processedIds.add(it.id));
-          if (subsItems.length) {
-            const section = compressSection(subsItems, collection);
-            if (section) subsResult[`${sub.range[0]}-${sub.range[1]}`] = section;
-          }
-        });
-      }
-      if (cat.label === "Bond CEs" || cat.label === "Chocolate" || cat.label === "Commemorative") {
-        const restItems = items.filter(it => !processedIds.has(it.id));
-        if (restItems.length > 0) {
-          const restSection = compressSection(restItems, collection);
-          if (restSection) subsResult["rest"] = restSection;
-        }
-      } else if (cat.raritySplit) {
-        [5, 4, 3].forEach(r => {
-          const subs = items.filter(it => it.rarity === r);
-          if (subs.length) {
-            const section = compressSection(subs, collection);
-            if (section) subsResult[`rarity-${r}`] = section;
-          }
-        });
-      } else {
-        const section = compressSection(items, collection);
-        if (section) subsResult["all"] = section;
-      }
-      if (Object.keys(subsResult).length) {
-        compressedCategories[cat.id] = subsResult;
-      }
+
+      const base = compressSection(items, collection);
+      if (!base) return;
+
+      // no subcategory logic changed — only serialization
+      cStr += `c${cat.id}${base}`;
     });
 
-    const payload = {
-      c: compressedCategories,
-      l: lookingAll ? "ALL" : compressList(
-        Object.keys(lookingFor).filter(k => lookingFor[k]).map(id => idToNo[id])
-      ),
-      o: offerAll ? "ALL" : compressList(
-        Object.keys(offering).filter(k => offering[k]).map(id => idToNo[id])
-      ),
-    };
-    const json = JSON.stringify(payload);
-    const compressed = LZString.compressToEncodedURIComponent(json);
+    const lStr =
+      lookingAll
+        ? "lALL"
+        : `l${compressList(
+          Object.keys(lookingFor)
+            .filter(k => lookingFor[k])
+            .map(id => idToNo[id])
+        ).join(",")}`;
+
+    const oStr =
+      offerAll
+        ? "oALL"
+        : `o${compressList(
+          Object.keys(offering)
+            .filter(k => offering[k])
+            .map(id => idToNo[id])
+        ).join(",")}`;
+
+    const raw = `${cStr}${lStr}${oStr}`;
+    const compressed = LZString.compressToEncodedURIComponent(raw);
+
     const baseUrl = import.meta.env.BASE_URL || "/";
     let link = `${window.location.origin}${baseUrl}#/view/${uid}/${compressed}`;
     if (openMode) link += "/open";
+
     return link;
   };
 
