@@ -27,8 +27,8 @@ const bondSubcategories = [
   { label: "2022", range: [1523, 1739] },
   { label: "2023", range: [1740, 1962] },
   { label: "2024", range: [1963, 2159] },
-  { label: "2025", range: [2160, 2539] },
-  //{ label: "2026", range: [2540, 3000] },
+  { label: "2025", range: [2160, 2538] },
+  { label: "2026", range: [2539, 3000] },
 ];
 
 const commemorativeSubcategories = [
@@ -63,6 +63,7 @@ const chocolateSubcategories = [
   { label: "2023 Valentine", range: [1757, 1795] },
   { label: "2024 Valentine", range: [1986, 2019] },
   { label: "2025 Valentine", range: [2180, 2207] },
+  { label: "2026 Valentine", range: [2556, 2581] },
 ];
 
 const usePersistedState = (key, initial) => {

@@ -2552,17 +2552,23 @@
   {
     "id": 2219,
     "owner": "Dante Alighieri",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_28010000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28010000.png",
+    "owner_id": 2801000,
+    "choco_id": 2556
   },
   {
     "id": 2227,
     "owner": "Metatron Jeanne",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_9019000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9019000.png",
+    "owner_id": 901900,
+    "choco_id": 2557
   },
   {
     "id": 2228,
     "owner": "King Ashoka",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3058000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3058000.png",
+    "owner_id": 305800,
+    "choco_id": 2558
   },
   {
     "id": 2229,
@@ -2573,101 +2579,164 @@
   {
     "id": 2230,
     "owner": "Lilith",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_7051000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7051000.png",
+    "owner_id": 705100,
+    "choco_id": 2559
   },
   {
     "id": 2238,
     "owner": "Typhon Ephemeros",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_28011000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28011000.png",
+    "owner_id": 2801100,
+    "choco_id": 2560
   },
   {
     "id": 2263,
     "owner": "Indra",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3059000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3059000.png",
+    "owner_id": 305900,
+    "choco_id": 2561
   },
   {
     "id": 2401,
     "owner": "U-Olga Marie",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_40001000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_40001000.png",
+    "owner_id": 4000100,
+    "choco_id": 2562
   },
   {
     "id": 2414,
     "owner": "Passionlip",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_1063000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1063000.png",
+    "owner_id": 106300,
+    "choco_id": 2563
   },
   {
     "id": 2415,
     "owner": "Kriemhild",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_4058000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4058000.png",
+    "owner_id": 405800,
+    "choco_id": 2564
   },
   {
     "id": 2416,
     "owner": "Huyan Zhuo",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_7052000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7052000.png",
+    "owner_id": 705200,
+    "choco_id": 2565
   },
   {
     "id": 2417,
     "owner": "Jade Rabbit",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_23011000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23011000.png",
+    "owner_id": 2301100,
+    "choco_id": 2566
   },
   {
     "id": 2418,
     "owner": "Miyu Edelfelt",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3060000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3060000.png",
+    "owner_id": 306000,
+    "choco_id": 2567
   },
   {
     "id": 2419,
     "owner": "Larva/Tiamat",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_2054000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2054000.png",
+    "owner_id": 205400,
+    "choco_id": 2568
   },
   {
     "id": 2420,
     "owner": "Jeunesse Crane",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_10019000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10019000.png",
+    "owner_id": 1001900,
+    "choco_id": 2569
   },
   {
     "id": 2441,
     "owner": "Nemo/Noah",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_4057000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4057000.png",
+    "owner_id": 405700,
+    "choco_id": 2570
   },
   {
     "id": 2465,
     "owner": "Kawakami Gensai",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_6051000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6051000.png",
+    "owner_id": 605100,
+    "choco_id": 2571
   },
   {
     "id": 2466,
     "owner": "Tōdō Heisuke",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_11021000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11021000.png",
+    "owner_id": 1102100,
+    "choco_id": 2572
   },
   {
     "id": 2467,
     "owner": "Harada Sanosuke",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3061000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3061000.png",
+    "owner_id": 306100,
+    "choco_id": 2573
   },
   {
     "id": 2468,
     "owner": "Kondo Isami",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_1064000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1064000.png",
+    "owner_id": 106400,
+    "choco_id": 2574
   },
   {
     "id": 2477,
     "owner": "Elisabeth Báthory",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3062000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3062000.png",
+    "owner_id": 306200,
+    "choco_id": 2575
   },
   {
     "id": 2478,
     "owner": "Elisabeth of the End",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_11022000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11022000.png",
+    "owner_id": 1102200,
+    "choco_id": 2576
   },
   {
     "id": 2511,
     "owner": "Solomon",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_28012000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28012000.png",
+    "owner_id": 2801200
   },
   {
     "id": 2539,
     "owner": "Lord Logres",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_1065000.png"
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1065000.png",
+    "owner_id": 106500,
+    "choco_id": 2577
+  },
+  {
+    "id": 2547,
+    "owner": "The Old Man Who Made the Dead Trees Blossom",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5059000.png",
+    "choco_id": 2578
+  },
+  {
+    "id": 2548,
+    "owner": "蛇女房",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6052000.png",
+    "choco_id": 2579
+  },
+  {
+    "id": 2549,
+    "owner": "フローラ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10020000.png",
+    "choco_id": 2580
+  },
+  {
+    "id": 2555,
+    "owner": "Demeter",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3064000.png",
+    "choco_id": 2581
   }
 ]

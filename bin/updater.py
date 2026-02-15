@@ -129,43 +129,75 @@ def get_owner_data(ce_id):
 
     return None
 
+def build_valentine_map(all_ces):
+    """Creates a mapping of Servant ID -> Valentine CE ID."""
+    val_map = {}
+    for ce in all_ces:
+        if ce.get('flag') == 'svtEquipChocolate':
+            owner_id = ce.get('valentineEquipOwner')
+            if owner_id:
+                val_map[owner_id] = ce.get('collectionNo')
+    return val_map
+
 def main():
     existing_data, known_ids, last_known_id = load_existing_bonds()
     all_ces = fetch_all_ces()
-    new_ce_ids = find_new_bond_ces(all_ces, known_ids, last_known_id)
+    valentine_map = build_valentine_map(all_ces)
     
-    if not new_ce_ids:
-        print("Update complete. No changes made.")
-        return
+    updated_count = 0
+    
+    # --- Part 1: Check existing entries for missing Valentines ---
+    print("Checking existing entries for missing Valentines...")
+    for entry in existing_data:
+        if "choco_id" not in entry:
+            # We need the owner_id. If we didn't save it before, 
+            # we have to fetch it once via the API.
+            owner_info = get_owner_data(entry["id"])
+            if owner_info:
+                # Store the ID in the entry for future use
+                entry["owner_id"] = owner_info["id"] 
+                
+                choco_id = valentine_map.get(owner_info["id"])
+                if choco_id:
+                    entry["choco_id"] = choco_id
+                    print(f"Fixed: Found missing Valentine for {entry['owner']}")
+                    updated_count += 1
+            time.sleep(0.2) # Avoid rate limiting
 
+    # --- Part 2: Find entirely new servants/Bond CEs ---
+    new_ce_ids = find_new_bond_ces(all_ces, known_ids, last_known_id)
     new_entries = []
-    for ce_id in new_ce_ids:
-        owner_info = get_owner_data(ce_id)
-        if owner_info:
+    
+    if new_ce_ids:
+        print(f"Processing {len(new_ce_ids)} new servants...")
+        for ce_id in new_ce_ids:
+            owner_info = get_owner_data(ce_id)
+            if owner_info:
+                choco_id = valentine_map.get(owner_info["id"])
+                entry = {
+                    "id": ce_id,
+                    "owner_id": owner_info["id"], # Store this!
+                    "owner": owner_info["name"],
+                    "face": owner_info["face"]
+                }
+                if choco_id:
+                    entry["choco_id"] = choco_id
+                
+                new_entries.append(entry)
+                print(f"Added: {owner_info['name']}")
+            time.sleep(0.5)
 
-            # -- find chocolate ce for this owner --
-            choco_id = get_choco_id_for_servant(owner_info["id"], all_ces)
-            entry = {
-                "id": ce_id,
-                "owner": owner_info["name"],
-                "face": owner_info["face"]
-            }
-
-            # find chocolate CE via owner id
-            choco_id = get_choco_id_for_servant(owner_info["id"], all_ces)
-            if choco_id:
-                entry["choco_id"] = choco_id
-
-            new_entries.append(entry)
-            print(f"Processed: {owner_info['name']} (Choco CE: {choco_id})")
-
-        time.sleep(0.5)
-        
-    if new_entries:
+    # --- Part 3: Save results ---
+    if new_entries or updated_count > 0:
         existing_data.extend(new_entries)
+        # Sort by Bond CE ID to keep the file clean
+        existing_data.sort(key=lambda x: x.get('id', 0))
+        
         with open(BOND_JSON_PATH, 'w', encoding='utf-8') as f:
             json.dump(existing_data, f, indent=2, ensure_ascii=False)
-        print(f"Added {len(new_entries)} new entries.")
+        print(f"Done! Updated {updated_count} old entries and added {len(new_entries)} new ones.")
+    else:
+        print("No updates found.")
 
 if __name__ == "__main__":
     main()
