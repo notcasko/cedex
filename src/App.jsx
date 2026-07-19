@@ -1,9 +1,228 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand, Link as LinkIcon, ExternalLink, Check, CheckCheck } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand, Link as LinkIcon, ExternalLink, Check, CheckCheck, Search } from "lucide-react";
 import LZString from "lz-string";
 import bondCeJson from "./data/bond_ces.json";
 import localforage from "localforage";
+
+const i18n = {
+  en: {
+    categories: {
+      "Bond CEs": "Bond CEs",
+      "Chocolate": "Chocolate",
+      "Commemorative": "Commemorative",
+      "Normal": "Normal",
+      "Event gacha": "Event gacha",
+      "Event free": "Event free",
+      "Manaprism exchange": "Manaprism exchange",
+      "Export data": "Export data"
+    },
+    subcategories: {
+      "2015": "2015",
+      "2016": "2016",
+      "2017": "2017",
+      "2018": "2018",
+      "2019": "2019",
+      "2020": "2020",
+      "2021": "2021",
+      "2022": "2022",
+      "2023": "2023",
+      "2024": "2024",
+      "2025": "2025",
+      "2026": "2026",
+      "5M Downloads Heroic Portrait": "5M Downloads Heroic Portrait",
+      "Fate/EXTELLA Release": "Fate/EXTELLA Release",
+      "2nd Anni": "2nd Anni",
+      "3rd Anni": "3rd Anni",
+      "4th Anni": "4th Anni",
+      "5th Anni": "5th Anni",
+      "6th Anni": "6th Anni",
+      "7th Anni": "7th Anni",
+      "8th Anni": "8th Anni",
+      "Stay night 20th Anniversary": "Stay night 20th Anniversary",
+      "9th Anni": "9th Anni",
+      "10th Anni": "10th Anni",
+      "Over the Same Sky June": "Over the Same Sky June",
+      "Over the Same Sky July": "Over the Same Sky July",
+      "Over the Same Sky August": "Over the Same Sky August",
+      "Over the Same Sky September": "Over the Same Sky September",
+      "Over the Same Sky October": "Over the Same Sky October",
+      "Over the Same Sky November": "Over the Same Sky November",
+      "Part 2 Finale": "Part 2 Finale",
+      "2016 Valentine": "2016 Valentine",
+      "2017 Valentine": "2017 Valentine",
+      "2018 Valentine": "2018 Valentine",
+      "2019 Valentine": "2019 Valentine",
+      "2020 Valentine": "2020 Valentine",
+      "2021 Valentine": "2021 Valentine",
+      "2022 Valentine": "2022 Valentine",
+      "2023 Valentine": "2023 Valentine",
+      "2024 Valentine": "2024 Valentine",
+      "2025 Valentine": "2025 Valentine",
+      "2026 Valentine": "2026 Valentine"
+    },
+    ui: {
+      searchPlaceholder: "Search by name or ID...",
+      viewingShared: "Viewing {id} (read-only)",
+      missingSuffix: ": Missing",
+      haveSuffix: ": Have",
+      undoSubcategory: "Undo this subcategory",
+      completeSubcategory: "Complete this subcategory",
+      noItemsMatch: "No items match the current filter.",
+      categoryProgress: "Category progress:",
+      sortDescending: "Sort Descending",
+      sortAscending: "Sort Ascending",
+      filterItems: "Filter items",
+      changeItemSize: "Change item size",
+      markAllHave: "Mark all have",
+      markAllDontHave: "Mark all don't have",
+      lookingFor: "Looking for",
+      offering: "Offering",
+      undoChange: "Undo Change",
+      pasteLastId: "Paste last ID",
+      close: "Close",
+      shareCollection: "Share Your Collection",
+      shareInstructions: "Enter your 9 or 12 digit ID, then click Generate Hash to create a shareable link.",
+      generateHash: "Generate Hash",
+      clear: "Clear",
+      pointToTradeHub: "Point to Trade Hub",
+      undoOfferEverything: "Undo Offer Everything",
+      offerEverything: "Offer everything I have",
+      undoLookingEverything: "Undo Looking for Everything",
+      lookingEverything: "Looking for everything I don't have",
+      yourLink: "Your link:",
+      tips: "Tips:",
+      tip1: "You can click items in the preview to remove them from explicit lists.",
+      tip2: "Paste your 9/12 digit ID or drag a text onto this window.",
+      tip3: "The link contains your data compressed for sharing.",
+      previewLooking: "Preview: Looking for",
+      previewOffering: "Preview: Offering",
+      overallProgress: "Overall progress:",
+      itemsCount: "items",
+      none: "none",
+      theRest: "The rest",
+      rarity: "Rarity",
+      eventReward: "Event Reward",
+      ceExp: "CE EXP",
+      openTradeHub: "Open Trade Hub",
+      copyLink: "Copy Link",
+      fullOpacityOn: "Missing items shown at full opacity",
+      fullOpacityOff: "Missing items shown with grey opacity",
+      dragSelectOn: "Drag Selection ON (Not for touch screens)",
+      dragSelectOff: "Drag Selection OFF (Made for touch screens)",
+      cacheOn: "Image Caching Enabled",
+      cacheOff: "Image Caching Disabled"
+    }
+  },
+  ja: {
+    categories: {
+      "Bond CEs": "絆礼装",
+      "Chocolate": "チョコ",
+      "Commemorative": "記念",
+      "Normal": "恒常",
+      "Event gacha": "限定",
+      "Event free": "配布",
+      "Manaprism exchange": "マナプリ",
+      "Export data": "データ出力"
+    },
+    subcategories: {
+      "2015": "2015年",
+      "2016": "2016年",
+      "2017": "2017年",
+      "2018": "2018年",
+      "2019": "2019年",
+      "2020": "2020年",
+      "2021": "2021年",
+      "2022": "2022年",
+      "2023": "2023年",
+      "2024": "2024年",
+      "2025": "2025年",
+      "2026": "2026年",
+      "5M Downloads Heroic Portrait": "500万DL突破キャンペーン",
+      "Fate/EXTELLA Release": "「Fate/EXTELLA」発売記念キャンペーン",
+      "2nd Anni": "2周年",
+      "3rd Anni": "3周年",
+      "4th Anni": "4周年",
+      "5th Anni": "5周年",
+      "6th Anni": "6周年",
+      "7th Anni": "7周年",
+      "8th Anni": "8周年",
+      "Stay night 20th Anniversary": "「Fate/stay night」20周年記念キャンペーン",
+      "9th Anni": "9周年",
+      "10th Anni": "10周年",
+      "Over the Same Sky June": "Over the Same Sky 6月",
+      "Over the Same Sky July": "Over the Same Sky 7月",
+      "Over the Same Sky August": "Over the Same Sky 8月",
+      "Over the Same Sky September": "Over the Same Sky 9月",
+      "Over the Same Sky October": "Over the Same Sky 10月",
+      "Over the Same Sky November": "Over the Same Sky 11月",
+      "Part 2 Finale": "第2部 終章",
+      "2016 Valentine": "2016バレンタイン",
+      "2017 Valentine": "2017バレンタイン",
+      "2018 Valentine": "2018バレンタイン",
+      "2019 Valentine": "2019バレンタイン",
+      "2020 Valentine": "2020バレンタイン",
+      "2021 Valentine": "2021バレンタイン",
+      "2022 Valentine": "2022バレンタイン",
+      "2023 Valentine": "2023バレンタイン",
+      "2024 Valentine": "2024バレンタイン",
+      "2025 Valentine": "2025バレンタイン",
+      "2026 Valentine": "2026バレンタイン"
+    },
+    ui: {
+      searchPlaceholder: "名前またはIDで検索...",
+      viewingShared: "{id} のコレクションを表示中（閲覧のみ）",
+      missingSuffix: "：未所持",
+      haveSuffix: "：所持",
+      undoSubcategory: "このサブカテゴリを未達成に戻す",
+      completeSubcategory: "このサブカテゴリを達成にする",
+      noItemsMatch: "該当するアイテムがありません。",
+      categoryProgress: "カテゴリー進捗:",
+      sortDescending: "降順ソート",
+      sortAscending: "昇順ソート",
+      filterItems: "アイテムをフィルター",
+      changeItemSize: "サイズを変更",
+      markAllHave: "すべて所持にする",
+      markAllDontHave: "すべて未所持にする",
+      lookingFor: "募集依頼",
+      offering: "提供可能",
+      undoChange: "変更を元に戻す",
+      pasteLastId: "最後のIDを貼り付け",
+      close: "閉じる",
+      shareCollection: "コレクションを共有する",
+      shareInstructions: "9桁または12桁のIDを入力し、「ハッシュ生成」をクリックして共有リンクを作成します。",
+      generateHash: "ハッシュ生成",
+      clear: "クリア",
+      pointToTradeHub: "トレードハブへ指定",
+      undoOfferEverything: "すべての提供を解除",
+      offerEverything: "所持しているすべてを提供",
+      undoLookingEverything: "すべての募集を解除",
+      lookingEverything: "未所持のすべてを募集",
+      yourLink: "あなたのリンク:",
+      tips: "ヒント:",
+      tip1: "プレビュー内のアイテムをクリックすると、リストから除外できます。",
+      tip2: "9/12桁のIDを貼り付けるか、テキストをこのウィンドウにドラッグしてください。",
+      tip3: "リンクには共有用に圧縮されたデータが含まれています。",
+      previewLooking: "プレビュー: 募集依頼",
+      previewOffering: "プレビュー: 提供可能",
+      overallProgress: "全体の進捗:",
+      itemsCount: "個のアイテム",
+      none: "なし",
+      theRest: "その他",
+      rarity: "レア度",
+      eventReward: "イベント報酬",
+      ceExp: "概念礼装EXP",
+      openTradeHub: "トレードハブを開く",
+      copyLink: "リンクをコピー",
+      fullOpacityOn: "未所持のアイテムを不透明度100%で表示",
+      fullOpacityOff: "未所持のアイテムを半透明で表示",
+      dragSelectOn: "ドラッグ選択 ON (タッチ操作非推奨)",
+      dragSelectOff: "ドラッグ選択 OFF (タッチ操作推奨)",
+      cacheOn: "画像キャッシュ有効",
+      cacheOff: "画像キャッシュ無効"
+    }
+  }
+};
 
 const categories = [
   { id: 1, label: "Bond CEs", flag: "svtEquipFriendShip" },
@@ -52,6 +271,7 @@ const commemorativeSubcategories = [
   { label: "Over the Same Sky November", range: [2495, 2508] },
   { label: "Part 2 Finale", range: [2512, 2532] },
 ];
+
 const chocolateSubcategories = [
   { label: "2016 Valentine", range: [113, 153] },
   { label: "2017 Valentine", range: [430, 544] },
@@ -84,7 +304,7 @@ const usePersistedState = (key, initial) => {
 };
 
 const sizeClasses = { 48: 'w-12 h-12', 72: 'w-[72px] h-[72px]', 100: 'w-[100px] h-[100px]', };
-const fontClasses = { 48: 'text-[10px]', 72: 'text-[14px]', 100: 'text-base', };
+const fontClasses = { 48: 'text-[9px]', 72: 'text-[12px]', 100: 'text-sm', };
 
 const CECell = React.memo(({
   item,
@@ -102,10 +322,14 @@ const CECell = React.memo(({
   onDragStart,
   onDragOver,
   onToggle,
-  fullOpacityMissing
+  fullOpacityMissing,
+  theme,
+  lang
 }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [showBondFace, setShowBondFace] = useState(false);
+
+  const itemName = lang === 'ja' ? (item.originalName || item.name) : item.name;
 
   useEffect(() => {
     if (!item.face) return;
@@ -175,7 +399,7 @@ const CECell = React.memo(({
   return (
     <div
       id={`ce-${item.id}`}
-      className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select`}
+      className={`relative ${sizeClasses[itemSize]} ${isPulse ? "pulse-border" : ""} ${isAffected ? "drag-selected" : ""} no-select rounded-lg overflow-hidden border ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}
       style={{
         cursor: isViewingShared ? 'default' : 'pointer',
         touchAction: activeTouchAction
@@ -187,17 +411,17 @@ const CECell = React.memo(({
     >
       <img
         src={imageUrl || ''}
-        alt={item.name}
-        title={item.name}
-        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${imageUrl && !showBondFace ? baseOpacityClass : "opacity-0"}`}
+        alt={itemName}
+        title={itemName}
+        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 rounded-lg ${imageUrl && !showBondFace ? baseOpacityClass : "opacity-0"}`}
         draggable="false"
         style={{ pointerEvents: "none" }}
       />
       {bondFace && (
         <img
           src={bondFace}
-          alt={`${item.name} Owner`}
-          className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${showBondFace ? baseOpacityClass : "opacity-0"}`}
+          alt={`${itemName} Owner`}
+          className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 rounded-lg ${showBondFace ? baseOpacityClass : "opacity-0"}`}
           draggable="false"
           style={{ pointerEvents: "none" }}
         />
@@ -206,7 +430,7 @@ const CECell = React.memo(({
         href={`https://apps.atlasacademy.io/db/JP/craft-essence/${item.collectionNo}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={`absolute bottom-0 right-0 ${fontClasses[itemSize]} leading-none bg-black/60 text-white px-1 rounded cursor-pointer hover:underline z-10`}
+        className={`absolute bottom-1 right-1 ${fontClasses[itemSize]} leading-none bg-black/75 text-white px-1 py-0.5 rounded-sm cursor-pointer hover:underline z-10`}
         onClick={(e) => e.stopPropagation()}
       >
         {item.collectionNo}
@@ -219,6 +443,7 @@ CECell.displayName = 'CECell';
 export default function App() {
   const searchInputRef = useRef(null);
   const [theme, setTheme] = usePersistedState("theme", "dark");
+  const [lang, setLang] = usePersistedState("lang", "en");
   const [active, setActive] = useState(null);
   const [collection, setCollection] = usePersistedState("collection", {});
   const [lookingFor, setLookingFor] = usePersistedState("lookingFor", {});
@@ -253,7 +478,6 @@ export default function App() {
 
   const [data, setCollectionData] = useState([]);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isDragging, setIsDragging] = useState(false);
   const [dragToggleMode, setDragToggleMode] = useState(null);
   const dragStartItem = useRef(null);
@@ -272,7 +496,7 @@ export default function App() {
         owner: item.owner.toLowerCase(),
         face: item.face
       };
-      map.byCollectionNo[item.id] = data; // item.id is the collectionNo in your JSON
+      map.byCollectionNo[item.id] = data;
       if (item.choco_id) {
         map.byChocoId[item.choco_id] = data;
       }
@@ -283,10 +507,12 @@ export default function App() {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
 
   useEffect(() => {
     fetch("https://api.atlasacademy.io/export/JP/basic_equip_lang_en.json")
@@ -315,7 +541,7 @@ export default function App() {
     return categories.find(cat => {
       if (cat.flag === "normal") return item.flag === "normal" || !Array.isArray(item.flags) || item.flags.length === 0;
       if (cat.flag) return item.flag === cat.flag || (Array.isArray(item.flags) && item.flags.includes(cat.flag));
-      if (cat.flags) return cat.flags.some(f => item.flag === f || (Array.isArray(item.flags) && item.flags.includes(f)));
+      if (cat.flags) return cat.flags.some(f => item.flag === f || (Array.isArray(it.flags) && it.flags.includes(f)));
       return false;
     }) || categories[0];
   };
@@ -488,7 +714,7 @@ export default function App() {
   const handleToggle = useCallback((item) => {
     const currentlyOwned = !!collection[item.id];
     setCollection(prev => ({ ...prev, [item.id]: !currentlyOwned }));
-    if (!currentlyOwned) { // if becoming owned
+    if (!currentlyOwned) {
       setLookingFor(prev => {
         if (!prev[item.id]) return prev;
         const copy = { ...prev };
@@ -681,7 +907,8 @@ export default function App() {
 
       const uid = parts[0];
       const compressed = parts[1];
-      const shouldOpen = parts.length > 2 && parts[2] === "open";
+      const shouldOpen = parts.includes("open");
+      const isJa = parts.includes("ja");
 
       const raw = LZString.decompressFromEncodedURIComponent(compressed);
       if (!raw) throw new Error("Decompression failed");
@@ -707,7 +934,7 @@ export default function App() {
           while (i < len && /[0-9]/.test(raw[i])) catId += raw[i++];
           catId = Number(catId);
 
-          const modeChar = raw[i++]; // m
+          const modeChar = raw[i++];
           if (modeChar !== "m") throw new Error("Invalid category encoding");
 
           const mode = Number(raw[i++]);
@@ -745,7 +972,8 @@ export default function App() {
         collection: cm,
         lookingFor: parsed.l,
         offering: parsed.o,
-        shouldOpen
+        shouldOpen,
+        isJa
       };
 
     } catch (err) {
@@ -753,7 +981,6 @@ export default function App() {
       return null;
     }
   };
-
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -774,6 +1001,9 @@ export default function App() {
       setIsViewingShared(true);
       setSharedUserId(decoded.uid);
       setViewCollection(decoded.collection);
+      if (decoded.isJa) {
+        setLang("ja");
+      }
       if (decoded.lookingFor === "ALL") {
         setViewLookingFor("ALL");
       } else {
@@ -834,17 +1064,10 @@ export default function App() {
 
   const getCategoryProgress = (cat) => {
     const items = getItems(cat);
-    if (!items.length) return { owned: 0, total: 0 };
+    if (!items.length) return { owned: 0, total: 0, percentage: 0 };
     const owned = items.filter(it => mapOwned(it.id)).length;
     const total = items.length;
-    return { owned, total, percentage: total ? Math.round((owned / total) * 100) : 0 };
-  };
-
-  const getCategoryPercentage = (cat) => {
-    const items = getItems(cat);
-    if (!items.length) return 0;
-    const ownedCount = items.filter(it => mapOwned(it.id)).length;
-    return Math.floor((ownedCount / items.length) * 100);
+    return { owned, total, percentage: total ? Math.floor((owned / total) * 100) : 0 };
   };
 
   const markAll = (items, value) => {
@@ -893,9 +1116,7 @@ export default function App() {
       (it.name && it.name.toLowerCase().includes(q)) ||
       (it.originalName && it.originalName.toLowerCase().includes(q)) ||
       (!isNaN(qNum) && it.collectionNo === qNum) ||
-      // Search owner name for Bond CEs
       (bondCeMap.byCollectionNo[it.collectionNo]?.owner?.includes(q)) ||
-      // Search owner name for Chocolate CEs
       (bondCeMap.byChocoId[it.collectionNo]?.owner?.includes(q))
     );
     setResults(filtered.slice(0, 50));
@@ -978,7 +1199,6 @@ export default function App() {
       const base = compressSection(items, collection);
       if (!base) return;
 
-      // no subcategory logic changed — only serialization
       cStr += `c${cat.id}${base}`;
     });
 
@@ -1006,6 +1226,7 @@ export default function App() {
     const baseUrl = import.meta.env.BASE_URL || "/";
     let link = `${window.location.origin}${baseUrl}#/view/${uid}/${compressed}`;
     if (openMode) link += "/open";
+    if (lang === "ja") link += "/ja";
 
     return link;
   };
@@ -1019,27 +1240,6 @@ export default function App() {
     window.location.hash = "";
   };
 
-  const gridColsClass = (() => {
-    if (!active) return 'grid-cols-10';
-    const modalWidth = windowWidth * (11 / 12);
-    const contentAreaWidth = modalWidth * (3 / 4);
-    const padding = 32;
-    const availableGridWidth = contentAreaWidth - padding;
-    const size = Number(itemSize) || 72;
-    const gap = 4;
-    const getWidth = (n) => (n * size) + ((n - 1) * gap);
-    if (availableGridWidth >= getWidth(10)) return 'grid-cols-10';
-    if (availableGridWidth >= getWidth(9)) return 'grid-cols-9';
-    if (availableGridWidth >= getWidth(8)) return 'grid-cols-8';
-    if (availableGridWidth >= getWidth(7)) return 'grid-cols-7';
-    if (availableGridWidth >= getWidth(6)) return 'grid-cols-6';
-    if (availableGridWidth >= getWidth(5)) return 'grid-cols-5';
-    if (availableGridWidth >= getWidth(4)) return 'grid-cols-4';
-    if (availableGridWidth >= getWidth(3)) return 'grid-cols-3';
-    if (availableGridWidth >= getWidth(2)) return 'grid-cols-2';
-    return 'grid-cols-1';
-  })();
-
   const renderSection = (title, sectionItems) => {
     if (!sectionItems || !sectionItems.length) return null;
     const progress = {
@@ -1047,11 +1247,9 @@ export default function App() {
       total: sectionItems.length
     };
     const getFaceUrl = (it) => {
-      // Check if it's a Bond CE modal
       if (active?.label === "Bond CEs") {
         return bondCeMap.byCollectionNo[it.collectionNo]?.face;
       }
-      // Check if it's a Chocolate CE modal
       if (active?.label === "Chocolate") {
         return bondCeMap.byChocoId[it.collectionNo]?.face;
       }
@@ -1062,20 +1260,35 @@ export default function App() {
       if (filterMode === 'completed') return mapOwned(it.id);
       return true;
     });
-    const displayTitle = filterMode === 'missing' ? `${title}: Missing` : filterMode === 'completed' ? `${title}: Have` : title;
+
+    let displayTitle = title;
+    if (i18n[lang].subcategories && i18n[lang].subcategories[title]) {
+      displayTitle = i18n[lang].subcategories[title];
+    } else if (title === "The rest") {
+      displayTitle = i18n[lang].ui.theRest;
+    } else if (title.startsWith("Rarity ")) {
+      displayTitle = title.replace("Rarity ", `${i18n[lang].ui.rarity} `);
+    }
+
+    if (filterMode === 'missing') {
+      displayTitle = `${displayTitle}${i18n[lang].ui.missingSuffix}`;
+    } else if (filterMode === 'completed') {
+      displayTitle = `${displayTitle}${i18n[lang].ui.haveSuffix}`;
+    }
+
     const allComplete = sectionItems.every(it => mapOwned(it.id));
     return (
       <div key={displayTitle}>
         <div className="flex justify-between items-center my-2">
-          <h3 className={`text-lg font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>{displayTitle}</h3>
-          <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">{progress.owned} / {progress.total}</span>
+          <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{displayTitle}</h3>
+          <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{progress.owned} / {progress.total}</span>
         </div>
         {!isViewingShared && (
           <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(sectionItems, !allComplete)}>
-            {allComplete ? "Undo this subcategory" : "Complete this subcategory"}
+            {allComplete ? i18n[lang].ui.undoSubcategory : i18n[lang].ui.completeSubcategory}
           </p>
         )}
-        <div className={`grid ${gridColsClass} gap-1 mb-6`}>
+        <div className="grid gap-1 mb-6" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${itemSize}px, 1fr))` }}>
           {visibleItems.length > 0
             ? visibleItems.map((it) => (
               <CECell
@@ -1096,10 +1309,12 @@ export default function App() {
                 onDragOver={handleDragOver}
                 onToggle={handleToggle}
                 fullOpacityMissing={fullOpacityMissing}
+                theme={theme}
+                lang={lang}
               />
             ))
-            : <div className="text-sm text-gray-500 col-span-full">
-              {filterMode === 'missing' ? 'Full. ' : 'Empty. '}No items match the current filter.
+            : <div className={`text-sm col-span-full ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+              {i18n[lang].ui.noItemsMatch}
             </div>
           }
         </div>
@@ -1115,19 +1330,17 @@ export default function App() {
         return true;
       });
       const getFaceUrl = (it) => {
-        // Check if it's a Bond CE modal
         if (active?.label === "Bond CEs") {
           return bondCeMap.byCollectionNo[it.collectionNo]?.face;
         }
-        // Check if it's a Chocolate CE modal
         if (active?.label === "Chocolate") {
           return bondCeMap.byChocoId[it.collectionNo]?.face;
         }
         return null;
       };
       return (
-        <div className="flex-1 p-4 overflow-auto">
-          <div className={`grid ${gridColsClass} gap-1`}>
+        <div className={`flex-1 p-4 overflow-y-auto ${theme === 'dark' ? 'bg-[#0a0f1d]' : 'bg-white'}`}>
+          <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${itemSize}px, 1fr))` }}>
             {visibleItems.length > 0
               ? visibleItems.map(it => (
                 <CECell
@@ -1148,9 +1361,11 @@ export default function App() {
                   onDragOver={handleDragOver}
                   onToggle={handleToggle}
                   fullOpacityMissing={fullOpacityMissing}
+                  theme={theme}
+                  lang={lang}
                 />
               ))
-              : <div className="text-sm text-gray-500 col-span-full p-4">No items match the current filter.</div>
+              : <div className={`text-sm col-span-full p-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{i18n[lang].ui.noItemsMatch}</div>
             }
           </div>
         </div>
@@ -1166,30 +1381,22 @@ export default function App() {
     } else {
       ids = Object.keys(map || {}).filter(k => map[k]);
     }
-    const previewGridColsClass = (() => {
-      const modalWidth = windowWidth * (11 / 12);
-      const contentAreaWidth = modalWidth * (3 / 4);
-      const availableGridWidth = contentAreaWidth - 32;
 
-      if (availableGridWidth > 720) return 'grid-cols-6';
-      if (availableGridWidth > 600) return 'grid-cols-5';
-      if (availableGridWidth > 480) return 'grid-cols-4';
-      if (availableGridWidth > 360) return 'grid-cols-3';
-      return 'grid-cols-2';
-    })();
-
-    if (!ids.length) return <div className="text-sm text-gray-500">none</div>;
+    if (!ids.length) return <div className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{i18n[lang].ui.none}</div>;
     return (
       <>
-        <p className="text-xs text-gray-500 mb-1">{ids.length} items</p>
-        <div className={`grid ${previewGridColsClass} gap-2`}>
+        <p className={`text-xs mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{ids.length} {i18n[lang].ui.itemsCount}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {ids.map(id => {
             const item = data.find(d => String(d.id) === String(id));
             if (!item) return null;
+            const itemName = lang === 'ja' ? (item.originalName || item.name) : item.name;
             return (
               <div
                 key={id}
-                className={`flex items-center gap-2 p-1 bg-white/5 rounded ${map === "ALL" ? "" : "cursor-pointer hover:bg-white/10"
+                className={`flex items-center gap-3 p-2 border rounded-xl transition ${
+                  theme === 'dark' ? 'border-gray-800 bg-[#111a36]' : 'border-gray-200 bg-gray-100'
+                } ${map === "ALL" ? "" : theme === 'dark' ? "cursor-pointer hover:bg-[#1f2e54]" : "cursor-pointer hover:bg-gray-200"
                   }`}
                 onClick={() => {
                   if (isViewingShared || map === "ALL") return;
@@ -1208,19 +1415,19 @@ export default function App() {
                   pulse(id);
                 }}
               >
-                <div className="relative w-16 h-16 flex-shrink-0">
+                <div className={`relative w-16 h-16 flex-shrink-0 border rounded-lg overflow-hidden bg-black/10 ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
                   <img
                     src={item.face}
-                    alt={item.name}
+                    alt={itemName}
                     className="w-full h-full object-contain"
                   />
-                  <span className="absolute bottom-0 right-0 text-[10px] bg-black/60 text-white px-1 rounded">
-                    {item.collectionNo}
-                  </span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <span className="block text-sm text-black dark:text-white line-clamp-3">
-                    {item.name}
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  <span className={`text-sm font-medium mb-0.5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                    No. {item.collectionNo}
+                  </span>
+                  <span className={`text-sm font-medium truncate block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} title={itemName}>
+                    {itemName}
                   </span>
                 </div>
               </div>
@@ -1231,10 +1438,122 @@ export default function App() {
     );
   };
 
+  const renderMainCard = (cat) => {
+    const prog = cat.special === "generate" ? getProgress() : getCategoryProgress(cat);
+    const pct = cat.special === "generate" ? (prog.total ? Math.floor((prog.owned / prog.total) * 100) : 0) : prog.percentage;
+
+    return (
+      <div
+        key={cat.id}
+        className={`group relative rounded-2xl shadow-md h-[250px] overflow-hidden transition hover:shadow-xl border cursor-pointer ${
+          theme === 'dark' ? 'bg-[#111a36] border-gray-800 text-white' : 'bg-white border-gray-200 text-black'
+        }`}
+        onClick={() => {
+          setActive(cat);
+          setSelectionMode("none");
+          setShowUndo(false);
+          setUndoState(null);
+        }}
+      >
+        <div className="relative z-10 p-5 flex flex-col h-full justify-between w-full pointer-events-none">
+          <div className={`p-2 rounded-xl w-fit bg-gradient-to-r ${
+            theme === 'dark' 
+              ? 'bg-gradient-to-r from-[#111a36] from-50% to-transparent to-100%'
+              : 'bg-gradient-to-r from-white from-50% to-transparent to-100%'
+          }`}>
+            <span className={`text-2xl font-medium tracking-tight line-clamp-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+              {i18n[lang].categories[cat.label] || cat.label}
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-1 w-full">
+            <div className={`flex justify-between items-end ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+              <span className="text-xs font-normal">{prog.owned} / {prog.total}</span>
+              <span className="text-xl font-semibold tracking-tight">{pct}%</span>
+            </div>
+            <div className={`w-full h-2 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}>
+              <div 
+                className="bg-gradient-to-l from-purple-500 to-blue-500 h-full transition-all duration-300" 
+                style={{ width: `${pct}%` }} 
+              />
+            </div>
+          </div>
+        </div>
+
+        <div 
+          className={`absolute overflow-hidden border transition-transform duration-500 group-hover:scale-[1.03] z-0 pointer-events-none ${
+            theme === 'dark' ? 'bg-[#0a0f1d] border-gray-800' : 'bg-slate-100 border-gray-200'
+          }`}
+          style={{
+            width: '360px',
+            height: '468px',
+            top: '-180.5px',
+            right: '-140px',
+            borderRadius: '50%',
+          }}
+        >
+          <img
+            src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`}
+            alt=""
+            className="w-full object-cover opacity-85"
+            style={{
+              position: 'absolute',
+              top: '180.5px',
+              left: '-13%',  
+              height: '250px',
+              objectFit: 'cover',
+              maskImage: 'linear-gradient(to bottom, white 0%, transparent 95%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, white 0%, transparent 95%)'
+            }}
+            onError={(e) => e.currentTarget.style.display = 'none'}
+          />
+        </div>
+
+        {cat.special === "generate" && (
+          <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 z-20 backdrop-blur-xs">
+            <button
+              onClick={(e) => { e.stopPropagation(); setActive(cat); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold flex items-center gap-2 text-sm transform hover:scale-105 transition shadow-lg"
+            >
+              <ExternalLink size={16} />
+              {i18n[lang].ui.openTradeHub}
+            </button>
+            {!isViewingShared && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (lastId) {
+                    const uid = lastId;
+                    setGenUserId(uid);
+                    const url = generateLink(uid);
+                    setGeneratedUrl(url);
+                    try {
+                      navigator.clipboard.writeText(url);
+                    } catch (e) {
+                      console.error("Failed to copy link:", e);
+                      alert("Link generated, but failed to copy. Open Trade Hub to manually copy.");
+                    }
+                  } else {
+                    setActive(cat);
+                    setSelectionMode("none");
+                  }
+                }}
+                className="px-5 py-2.5 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold flex items-center gap-2 text-sm transform hover:scale-105 transition shadow-lg"
+              >
+                <LinkIcon size={16} />
+                {i18n[lang].ui.copyLink}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className={theme === "dark" ? "dark bg-gray-900 text-white min-h-screen" : "bg-white text-black min-h-screen"}>
+    <div className={theme === "dark" ? "dark bg-[#0a0f1d] text-white min-h-screen" : "bg-[#f8fafc] text-black min-h-screen"}>
       <style>{`
-        .pulse-border { animation: pulseBorder 1.2s ease-in-out; border-radius: 6px; }
+        .pulse-border { animation: pulseBorder 1.2s ease-in-out; border-radius: 0.5rem; }
         @keyframes pulseBorder {
           0% { box-shadow: 0 0 0 0 rgba(246, 59, 59, 0.95); }
           50% { box-shadow: 0 0 12px 6px rgba(221, 246, 59, 1); }
@@ -1245,13 +1564,22 @@ export default function App() {
         }
         .drag-selected {
           box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.9), inset 0 0 0 5px rgba(239, 68, 68, 0.9);
-          border-radius: 6px;
+          border-radius: 0.5rem;
         }
       `}</style>
-      <div className="p-4 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold md:order-1 order-1"> CEdex {getProgress().owned > 0 && (<> ({getProgress().owned}/{getProgress().total})</>)} </h1>
+      
+      <div className={`p-4 flex flex-wrap items-center justify-between gap-4 border-b shadow-sm ${
+        theme === 'dark' ? 'bg-[#111a36] border-gray-800 text-white' : 'bg-[#e2e8f0] border-gray-300 text-black'
+      }`}>
+        <h1 className={`text-2xl font-bold md:order-1 order-1 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          <span className="bg-gradient-to-tr from-purple-400 to-blue-400 bg-clip-text text-transparent font-extrabold">
+            {lang === "ja" ? "マテ埋め" : "CEdex"}
+          </span>
+          {getProgress().owned > 0 && (<span className={`text-lg font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}> ({getProgress().owned}/{getProgress().total})</span>)}
+        </h1>
         <div className="w-full md:flex-1 md:max-w-xl md:order-2 order-3">
-          <div ref={searchRef} className="relative">
+          <div ref={searchRef} className="relative flex items-center">
+            <Search className="absolute left-3 text-gray-400 w-5 h-5 pointer-events-none" />
             <input
               ref={searchInputRef}
               value={query}
@@ -1275,38 +1603,45 @@ export default function App() {
                   }
                 }
               }}
-              placeholder="Search by name or ID..."
-              className="w-full px-4 py-2 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white text-base"
+              placeholder={i18n[lang].ui.searchPlaceholder}
+              className={`w-full pl-10 pr-4 py-2 rounded-xl border text-base focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                theme === 'dark' ? 'bg-[#0a0f1d] text-white border-gray-700' : 'bg-white text-black border-gray-400'
+              }`}
             />
             {results.length > 0 && (
-              <div className="absolute z-50 top-full left-0 right-0 bg-white dark:bg-gray-700 rounded-xl shadow-lg max-h-96 overflow-auto mt-2">
-                {results.map((item, idx) => (
-                  <div
-                    key={item.id}
-                    ref={(el) => {
-                      if (idx === highlightedIndex && el) {
-                        el.scrollIntoView({ block: "nearest" });
-                      }
-                    }}
-                    className={`flex items-center gap-3 p-2 cursor-pointer ${highlightedIndex === idx
-                      ? "bg-gray-200 dark:bg-gray-600"
-                      : "hover:bg-gray-100 dark:hover:bg-gray-600"
-                      }`}
-                    onClick={() => onSearchSelect(item)}
-                  >
-                    <div className="relative w-20 h-20 flex-shrink-0">
-                      <img
-                        src={item.face}
-                        alt={item.name}
-                        className={`w-20 h-20 object-contain ${mapOwned(item.id) ? "opacity-100" : "opacity-50"}`}
-                      />
-                      <span className="absolute bottom-0 right-0 text-[14px] leading-none bg-black/60 text-white px-1 rounded">
-                        {item.collectionNo}
-                      </span>
+              <div className={`absolute z-50 top-full left-0 right-0 rounded-xl shadow-lg max-h-96 overflow-auto mt-2 border ${
+                theme === 'dark' ? 'bg-[#111a36] border-gray-700 text-white' : 'bg-white border-gray-250 text-black'
+              }`}>
+                {results.map((item, idx) => {
+                  const itemSearchName = lang === 'ja' ? (item.originalName || item.name) : item.name;
+                  return (
+                    <div
+                      key={item.id}
+                      ref={(el) => {
+                        if (idx === highlightedIndex && el) {
+                          el.scrollIntoView({ block: "nearest" });
+                        }
+                      }}
+                      className={`flex items-center gap-3 p-2 cursor-pointer ${highlightedIndex === idx
+                        ? theme === 'dark' ? "bg-[#0a0f1d]" : "bg-gray-200"
+                        : theme === 'dark' ? "hover:bg-[#0a0f1d]" : "hover:bg-gray-100"
+                        }`}
+                      onClick={() => onSearchSelect(item)}
+                    >
+                      <div className="relative w-20 h-20 flex-shrink-0">
+                        <img
+                          src={item.face}
+                          alt={itemSearchName}
+                          className={`w-20 h-20 object-contain ${mapOwned(item.id) ? "opacity-100" : "opacity-50"}`}
+                        />
+                        <span className="absolute bottom-1 right-1 text-[12px] leading-none bg-black/60 text-white px-1 rounded-sm">
+                          {item.collectionNo}
+                        </span>
+                      </div>
+                      <div className={`text-base ${theme === 'dark' ? 'text-white' : 'text-black'}`}>{itemSearchName}</div>
                     </div>
-                    <div className="text-base text-black dark:text-white">{item.name}</div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -1314,7 +1649,7 @@ export default function App() {
         <div className="flex items-center gap-3 md:order-3 order-2">
           {isViewingShared && (
             <div
-              className="bg-amber-300 dark:bg-amber-600 text-black dark:text-white px-3 py-1 rounded-xl text-sm font-semibold cursor-pointer hover:bg-amber-400 dark:hover:bg-amber-500 transition"
+              className="bg-amber-500 text-white px-3 py-1 rounded-xl text-sm font-semibold cursor-pointer hover:bg-amber-400 transition shadow-sm"
               title="Click to import this collection as your own (this will overwrite your local data)"
               onClick={() => {
                 if (window.confirm(`This will overwrite your current collection with the data from '${sharedUserId}'.\n\nThis action cannot be undone. Are you sure you want to import it?`)) {
@@ -1337,194 +1672,145 @@ export default function App() {
                 }
               }}
             >
-              Viewing {sharedUserId} (read-only)
+              {i18n[lang].ui.viewingShared.replace("{id}", sharedUserId)}
             </div>
           )}
           <button
-            className={`px-4 py-2 rounded-xl transition ${fullOpacityMissing ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
+            className={`px-4 py-2 rounded-xl transition shadow-sm ${fullOpacityMissing ? 'bg-amber-500 text-white hover:bg-amber-600' : theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
             onClick={() => setFullOpacityMissing(v => !v)}
-            title={fullOpacityMissing ? "Missing items shown at full opacity" : "Missing items shown with grey opacity"}
+            title={fullOpacityMissing ? i18n[lang].ui.fullOpacityOn : i18n[lang].ui.fullOpacityOff}
           >
-            {fullOpacityMissing ? <CheckCheck /> : <Check />}
+            {fullOpacityMissing ? <CheckCheck size={20} /> : <Check size={20} />}
           </button>
           <button
-            className={`px-4 py-2 rounded-xl transition ${dragSelectEnabled ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
+            className={`px-4 py-2 rounded-xl transition shadow-sm ${dragSelectEnabled ? 'bg-indigo-500 text-white hover:bg-indigo-600' : theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
             onClick={() => setDragSelectEnabled(v => !v)}
-            title={dragSelectEnabled ? "Drag Selection ON (Not for touch screens)" : "Drag Selection OFF (Made for touch screens)"}
+            title={dragSelectEnabled ? i18n[lang].ui.dragSelectOn : i18n[lang].ui.dragSelectOff}
           >
-            <Hand />
+            <Hand size={20} />
           </button>
           <button
-            className={`px-4 py-2 rounded-xl transition ${cachingMode ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-green-500 text-white hover:bg-green-600'}`}
+            className={`px-4 py-2 rounded-xl transition shadow-sm ${cachingMode ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-green-500 text-white hover:bg-green-600'}`}
             onClick={() => setCachingMode(c => !c)}
-            title={cachingMode ? "Image Caching Enabled" : "Image Caching Disabled"}
+            title={cachingMode ? i18n[lang].ui.cacheOn : i18n[lang].ui.cacheOff}
           >
-            <Router />
+            <Router size={20} />
           </button>
-          <button className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition" onClick={() => setTheme(t => t === "light" ? "dark" : "light")}>
-            {theme === "light" ? <Moon /> : <Sun />}
+          <button 
+            className={`px-4 py-2 rounded-xl font-bold transition shadow-sm ${theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-300 text-black hover:bg-gray-400'}`}
+            onClick={() => setLang(l => l === "en" ? "ja" : "en")}
+          >
+            {lang === "en" ? "JA" : "EN"}
+          </button>
+          <button className={`px-4 py-2 rounded-xl transition shadow-sm ${theme === 'dark' ? 'bg-yellow-500 text-black hover:bg-yellow-400' : 'bg-blue-500 text-white hover:bg-blue-600'}`} onClick={() => setTheme(t => t === "light" ? "dark" : "light")}>
+            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
         </div>
       </div>
 
-      <div className="hidden grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10"></div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 min-h-[50vh]">
-        {categories.map(cat => {
-          if (cat.special === "generate") {
-            return (
-              <div
-                key={cat.id}
-                className="group relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow h-[250px] flex items-center justify-center overflow-hidden"
-                onClick={() => {
-                  setActive(cat);
-                  setSelectionMode("none");
-                  setShowUndo(false);
-                  setUndoState(null);
-                }}
-              >
-                <img
-                  src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`}
-                  alt=""
-                  className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40"
-                  onError={(e) => e.currentTarget.style.display = 'none'}
-                />
-                <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>
-                  {cat.label}
-                </span>
-
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4 z-10 backdrop-blur-sm">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setActive(cat); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold flex items-center gap-2 transform hover:scale-105 transition shadow-lg"
-                  >
-                    <ExternalLink size={20} />
-                    Open Trade Hub
-                  </button>
-                  {!isViewingShared && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        if (lastId) {
-                          const uid = lastId;
-                          setGenUserId(uid);
-                          const url = generateLink(uid);
-                          setGeneratedUrl(url);
-                          try {
-                            navigator.clipboard.writeText(url);
-                          } catch (e) {
-                            console.error("Failed to copy link:", e);
-                            alert("Link generated, but failed to copy. Open Trade Hub to manually copy.");
-                          }
-                        } else {
-                          setActive(cat);
-                          setSelectionMode("none");
-                        }
-                      }}
-                      className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold flex items-center gap-2 transform hover:scale-105 transition shadow-lg"
-                    >
-                      <LinkIcon size={20} />
-                      Copy Link
-                    </button>
-                  )}
-                </div>
-              </div>
-            )
-          }
-          return (
-            <div key={cat.id} className="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow cursor-pointer hover:shadow-lg transition h-[250px] flex items-center justify-center" onClick={() => { setActive(cat); setSelectionMode("none"); setShowUndo(false); setUndoState(null); }}>
-              <img src={`${import.meta.env.BASE_URL}${cat.label.replace(/\s+/g, "_")}.png`} alt="" className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-40" onError={(e) => e.currentTarget.style.display = 'none'} />
-              <span className={theme === "dark" ? "relative text-4xl font-bold text-center [text-shadow:2px_2px_3px_black]" : "relative text-3xl font-bold text-center [text-shadow:1px_1px_3px_white]"}>{cat.label}</span>
-              <span className={theme === "dark" ? "absolute bottom-2 right-2 text-2xl font-bold [text-shadow:2px_2px_3px_black]" : "absolute bottom-2 right-2 text-2xl font-bold"}>{getCategoryPercentage(cat)}%</span>
-            </div>
-          );
-        })}
+        {categories.map(cat => renderMainCard(cat))}
       </div>
 
       <AnimatePresence>
         {active && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); } }}>
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-xl w-11/12 h-5/6 overflow-hidden flex ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
-              <div className="w-1/4 p-4 border-r dark:border-gray-700 flex flex-col gap-3 overflow-y-auto">
-                <div className="flex items-center flex-wrap">
-                  <h2 className="text-xl font-bold">{active.label}</h2>
-                  {(active.label === "Bond CEs" ||
-                    active.label === "Chocolate" ||
-                    active.label === "Commemorative" ||
-                    active.label === "Event free" ||
-                    (active.raritySplit && active.special !== "generate")) && (
-                      <div className="flex items-center ml-auto">
-                        <button onClick={() => setSortAsc((prev) => !prev)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition" title={sortAsc ? "Sort Descending" : "Sort Ascending"}>
-                          {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
-                        </button>
-                        <button
-                          onClick={() => setFilterMode(f => f === 'all' ? 'missing' : f === 'missing' ? 'completed' : 'all')}
-                          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                          title={`Filter items (Current: ${filterMode === 'all' ? 'All' : filterMode === 'missing' ? 'Missing' : 'Completed'})`}
-                        >
-                          {filterMode === 'all' ? <Folder size={20} /> : filterMode === 'missing' ? <FolderMinus size={20} /> : <FolderPlus size={20} />}
-                        </button>
-                        <button
-                          onClick={() => setItemSize(s => s === 72 ? 100 : s === 100 ? 48 : 72)}
-                          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                          title={`Change item size (current: ${itemSize}px)`}
-                        >
-                          <ZoomIn size={20} />
-                        </button>
-                      </div>
-                    )
-                  }
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/75 flex justify-center items-center z-50 p-2 sm:p-4" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); } }}>
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-2xl w-full max-w-7xl h-[90vh] max-h-[90vh] overflow-hidden flex flex-col md:flex-row ${theme === 'dark' ? 'bg-[#0a0f1d] text-white' : 'bg-white text-black'}`}>
+              
+              <div className={`w-full md:w-1/4 p-4 border-b md:border-b-0 md:border-r flex flex-col gap-3 overflow-y-auto sticky top-0 md:relative z-20 shrink-0 max-h-[45vh] md:max-h-full shadow-sm md:shadow-none ${
+                theme === 'dark' ? 'bg-[#111a36] border-gray-800 text-white' : 'bg-[#e2e8f0] border-gray-300 text-black'
+              }`}>
+                <div className="flex flex-col gap-1">
+                  <h2 className={`text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{i18n[lang].categories[active.label] || active.label}</h2>
+                  {active.special !== "generate" && (
+                    <div className={`text-xs font-bold mt-0.5 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-400'}`}>
+                      {i18n[lang].ui.categoryProgress} {getCategoryProgress(active).owned}/{getCategoryProgress(active).total} ({getCategoryProgress(active).percentage}%)
+                    </div>
+                  )}
                 </div>
-                {active.special !== "generate" && !isViewingShared && (
-                  <>
-                    <button className="px-4 py-2 rounded-xl bg-green-500 text-white" onClick={() => markAll(getItems(active), true)}>Mark all have</button>
-                    <button className="px-4 py-2 rounded-xl bg-yellow-500 text-white" onClick={() => markAll(getItems(active), false)}>Mark all don't have</button>
-                    <button className={`px-4 py-2 rounded-xl ${selectionMode === "looking" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "looking" ? "none" : "looking")}>Looking for</button>
-                    <button className={`px-4 py-2 rounded-xl ${selectionMode === "offering" ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>Offering</button>
-                  </>
-                )}
-                {active.special !== "generate" && showUndo && (
-                  <button
-                    className="px-4 py-2 rounded-xl bg-pink-500 text-white hover:bg-pink-600 transition"
-                    onClick={() => {
-                      if (undoState) {
-                        setCollection(prev => ({ ...prev, ...undoState }));
-                        setUndoState(null);
-                        setShowUndo(false);
-                      }
-                    }}
-                  >
-                    Undo Change
-                  </button>
-                )}
-                {active.special === "generate" && lastId && !isViewingShared && <button className="px-4 py-2 rounded-xl bg-purple-500 text-white" onClick={() => setGenUserId(lastId)}>Paste in last ID {lastId}</button>}
-                <button className="px-4 py-2 rounded-xl bg-red-500 text-white" onClick={() => { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); }}>Close</button>
-                {active.special !== "generate" && <div className={`mt-1 font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>Category progress: {getCategoryProgress(active).owned}/{getCategoryProgress(active).total}</div>}
+
+                {(active.label === "Bond CEs" ||
+                  active.label === "Chocolate" ||
+                  active.label === "Commemorative" ||
+                  active.label === "Event free" ||
+                  (active.raritySplit && active.special !== "generate")) && (
+                    <div className={`w-full p-1.5 rounded-xl flex items-center justify-around shadow-sm border my-1 ${
+                      theme === 'dark' ? 'bg-[#0a0f1d] border-gray-800' : 'bg-white border-gray-200'
+                    }`}>
+                      <button onClick={() => setSortAsc((prev) => !prev)} className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`} title={sortAsc ? i18n[lang].ui.sortDescending : i18n[lang].ui.sortAscending}>
+                        {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
+                      </button>
+                      <button
+                        onClick={() => setFilterMode(f => f === 'all' ? 'missing' : f === 'missing' ? 'completed' : 'all')}
+                        className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`}
+                        title={i18n[lang].ui.filterItems}
+                      >
+                        {filterMode === 'all' ? <Folder size={20} /> : filterMode === 'missing' ? <FolderMinus size={20} /> : <FolderPlus size={20} />}
+                      </button>
+                      <button
+                        onClick={() => setItemSize(s => s === 72 ? 100 : s === 100 ? 48 : 72)}
+                        className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`}
+                        title={i18n[lang].ui.changeItemSize}
+                      >
+                        <ZoomIn size={20} />
+                      </button>
+                    </div>
+                  )
+                }
+
+                <div className="grid grid-cols-2 md:flex md:flex-col gap-2 mt-1">
+                  {active.special !== "generate" && !isViewingShared && (
+                    <>
+                      <button className="px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition shadow-xs" onClick={() => markAll(getItems(active), true)}>{i18n[lang].ui.markAllHave}</button>
+                      <button className="px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-yellow-600 hover:bg-yellow-500 text-white transition shadow-xs" onClick={() => markAll(getItems(active), false)}>{i18n[lang].ui.markAllDontHave}</button>
+                      <button className={`px-3 py-2 text-xs md:text-sm font-semibold rounded-xl border transition shadow-xs ${selectionMode === "looking" ? "bg-blue-600 border-blue-600 text-white" : theme === 'dark' ? "bg-[#0a0f1d] text-white border-gray-700 hover:bg-[#111a36]" : "bg-white text-black border-gray-300 hover:bg-gray-50"}`} onClick={() => setSelectionMode(s => s === "looking" ? "none" : "looking")}>{i18n[lang].ui.lookingFor}</button>
+                      <button className={`px-3 py-2 text-xs md:text-sm font-semibold rounded-xl border transition shadow-xs ${selectionMode === "offering" ? "bg-blue-600 border-blue-600 text-white" : theme === 'dark' ? "bg-[#0a0f1d] text-white border-gray-700 hover:bg-[#111a36]" : "bg-white text-black border-gray-300 hover:bg-gray-50"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>{i18n[lang].ui.offering}</button>
+                    </>
+                  )}
+                  {active.special !== "generate" && showUndo && (
+                    <button
+                      className="col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-pink-600 text-white hover:bg-pink-500 transition shadow-xs"
+                      onClick={() => {
+                        if (undoState) {
+                          setCollection(prev => ({ ...prev, ...undoState }));
+                          setUndoState(null);
+                          setShowUndo(false);
+                        }
+                      }}
+                    >
+                      {i18n[lang].ui.undoChange}
+                    </button>
+                  )}
+                  {active.special === "generate" && lastId && !isViewingShared && (
+                    <button className={`col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl transition shadow-xs ${theme === 'dark' ? 'bg-purple-700 text-white hover:bg-purple-600' : 'bg-purple-600 text-white hover:bg-purple-500'}`} onClick={() => setGenUserId(lastId)}>{i18n[lang].ui.pasteLastId} ({lastId})</button>
+                  )}
+                  <button className="col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-red-600 hover:bg-red-500 text-white transition shadow-xs" onClick={() => { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); }}>{i18n[lang].ui.close}</button>
+                </div>
               </div>
 
               {active.special === "generate" ? (
-                <div className="flex-1 p-6 overflow-auto text-black dark:text-white bg-white dark:bg-gray-800">
+                <div className={`flex-1 p-6 overflow-y-auto ${theme === 'dark' ? 'bg-[#0a0f1d] text-white' : 'bg-white text-black'}`}>
                   {isViewingShared ? (
                     <>
-                      <h3 className="text-lg font-bold mb-2">Looking for {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} items)` : ""}</h3>
+                      <h3 className="text-lg font-bold mb-2">{i18n[lang].ui.previewLooking} {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} ${i18n[lang].ui.itemsCount})` : ""}</h3>
                       <SmallList map={viewLookingFor} listName="looking" expandAll="looking" dataCollection={viewCollection} />
-                      <h3 className="text-lg font-bold mt-4 mb-2">Offering {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} items)` : ""}</h3>
+                      <h3 className="text-lg font-bold mt-4 mb-2">{i18n[lang].ui.previewOffering} {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} ${i18n[lang].ui.itemsCount})` : ""}</h3>
                       <SmallList map={viewOffering} listName="offering" expandAll="offering" dataCollection={viewCollection} />
-                      <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
-                      <p className="mt-4 text-sm text-gray-400">Viewing only — controls are hidden.</p>
+                      <div className={`mt-6 font-semibold border-t pt-4 ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>{i18n[lang].ui.overallProgress} {getProgress().owned}/{getProgress().total}</div>
+                      <p className="mt-2 text-sm text-gray-400">Viewing only — controls are hidden.</p>
                     </>
                   ) : (
                     <>
-                      <h2 className="text-lg font-bold mb-2">Share Your Collection</h2>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Enter your 9 or 12 digit ID, then click <strong>Generate Hash</strong> to create a shareable link.</p>
-                      <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g, ''))} className="w-full p-2 mb-3 rounded border dark:bg-gray-700" placeholder="012345678" />
-                      <div className="flex gap-2 mb-3">
-                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); debugLink(url); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch { } }}>Generate Hash</button>
-                        <button className="px-4 py-2 rounded-xl bg-gray-300 text-black" onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>Clear</button>
+                      <h2 className="text-lg font-bold mb-2">{i18n[lang].ui.shareCollection}</h2>
+                      <p className={`text-sm mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{i18n[lang].ui.shareInstructions}</p>
+                      <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g, ''))} className={`w-full p-2 mb-3 rounded-xl border ${theme === 'dark' ? 'bg-[#111a36] text-white border-gray-700' : 'bg-white text-black border-gray-300'}`} placeholder="012345678" />
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition shadow-sm" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); debugLink(url); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch { } }}>{i18n[lang].ui.generateHash}</button>
+                        <button className={`px-4 py-2 rounded-xl transition shadow-sm ${theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-300 text-black hover:bg-gray-400'}`} onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>{i18n[lang].ui.clear}</button>
                         <button
-                          className={`px-4 py-2 rounded-xl ${generatedUrl.endsWith("/open")
-                            ? "bg-indigo-500 text-white"
-                            : "bg-indigo-200 text-black"
+                          className={`px-4 py-2 rounded-xl transition shadow-sm ${generatedUrl.endsWith("/open")
+                            ? "bg-indigo-600 text-white hover:bg-indigo-500"
+                            : theme === 'dark' ? "bg-[#111a36] text-white border border-gray-700 hover:bg-[#1f2e54]" : "bg-indigo-200 text-black hover:bg-indigo-300"
                             }`}
                           onClick={() => {
                             if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) {
@@ -1544,34 +1830,38 @@ export default function App() {
                             } catch { }
                           }}
                         >
-                          Point to Trade Hub
+                          {i18n[lang].ui.pointToTradeHub}
                         </button>
-
                       </div>
-                      <div className="flex gap-3 mb-4">
-                        <button className={`px-3 py-2 rounded-xl ${offerAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>{offerAll ? "Undo Offer Everything" : "Offer everything I have"}</button>
-                        <button className={`px-3 py-2 rounded-xl ${lookingAll ? "bg-blue-600 text-white" : "bg-blue-200 text-black"}`} onClick={() => { setLookingAll(v => !v); if (!lookingAll) setLookingFor({}); }}>{lookingAll ? "Undo Looking for Everything" : "Looking for everything I don't have"}</button>
+                      <div className="flex flex-wrap gap-3 mb-4">
+                        <button className={`px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs ${offerAll ? "bg-blue-600 text-white" : theme === 'dark' ? "bg-[#111a36] text-white border border-gray-700 hover:bg-[#1f2e54]" : "bg-blue-100 text-black hover:bg-blue-200"}`} onClick={() => { setOfferAll(v => !v); if (!offerAll) setOffering({}); }}>{offerAll ? i18n[lang].ui.undoOfferEverything : i18n[lang].ui.offerEverything}</button>
+                        <button className={`px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs ${lookingAll ? "bg-blue-600 text-white" : theme === 'dark' ? "bg-[#111a36] text-white border border-gray-700 hover:bg-[#1f2e54]" : "bg-blue-100 text-black hover:bg-blue-200"}`} onClick={() => { setLookingAll(v => !v); if (!lookingAll) setLookingFor({}); }}>{lookingAll ? i18n[lang].ui.undoLookingEverything : i18n[lang].ui.lookingEverything}</button>
                       </div>
-                      {generatedUrl && <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-xl cursor-pointer hover:bg-green-200 dark:hover:bg-green-800 transition" onClick={() => { navigator.clipboard.writeText(generatedUrl); }}><p className="text-sm font-semibold mb-1">Your link:</p><p className="break-all text-sm text-green-700 dark:text-green-300">{generatedUrl}</p></div>}
-                      <div className="mt-6 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-xl text-sm"><p className="mb-1 font-semibold">Tips:</p><ul className="list-disc pl-5 space-y-1"><li>You can click items in the preview to remove them from explicit lists.</li><li>Paste your 9/12 digit ID or drag a text onto this window.</li><li>The link contains your data compressed for sharing.</li></ul></div>
-                      <div className="mt-6">
-                        <h4 className="font-bold">Preview: Looking for {lookingAll ? `(${data.filter(d => !collection[d.id]).length} items)` : ""}</h4>
-                        <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" dataCollection={collection} />
-                        <h4 className="font-bold mt-3">Preview: Offering {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} items)` : ""}</h4>
-                        <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" dataCollection={collection} />
+                      {generatedUrl && <div className={`mt-4 p-3 border rounded-xl cursor-pointer transition shadow-xs ${theme === 'dark' ? 'bg-green-950/40 border-green-800 hover:bg-green-900/60' : 'bg-green-100 border-green-200 hover:bg-green-200'}`} onClick={() => { navigator.clipboard.writeText(generatedUrl); }}><p className="text-sm font-semibold mb-1">{i18n[lang].ui.yourLink}</p><p className={`break-all text-sm font-mono ${theme === 'dark' ? 'text-green-300' : 'text-green-700'}`}>{generatedUrl}</p></div>}
+                      <div className={`mt-6 p-3 border rounded-xl text-sm ${theme === 'dark' ? 'bg-yellow-950/30 border-yellow-800 text-yellow-200' : 'bg-yellow-100 border-yellow-200 text-yellow-800'}`}><p className="mb-1 font-semibold">{i18n[lang].ui.tips}</p><ul className="list-disc pl-5 space-y-1"><li>{i18n[lang].ui.tip1}</li><li>{i18n[lang].ui.tip2}</li><li>{i18n[lang].ui.tip3}</li></ul></div>
+                      
+                      <div className="mt-6 space-y-6">
+                        <div>
+                          <h4 className={`font-bold text-lg mb-2 border-b pb-1 ${theme === 'dark' ? 'text-white border-gray-800' : 'text-gray-900 border-gray-200'}`}>{i18n[lang].ui.previewLooking} {lookingAll ? `(${data.filter(d => !collection[d.id]).length} ${i18n[lang].ui.itemsCount})` : ""}</h4>
+                          <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" dataCollection={collection} />
+                        </div>
+                        <div>
+                          <h4 className={`font-bold text-lg mb-2 border-b pb-1 ${theme === 'dark' ? 'text-white border-gray-800' : 'text-gray-900 border-gray-200'}`}>{i18n[lang].ui.previewOffering} {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} ${i18n[lang].ui.itemsCount})` : ""}</h4>
+                          <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" dataCollection={collection} />
+                        </div>
                       </div>
-                      <div className="mt-6 font-semibold">Overall progress: {getProgress().owned}/{getProgress().total}</div>
+                      <div className={`mt-6 font-semibold border-t pt-4 ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>{i18n[lang].ui.overallProgress} {getProgress().owned}/{getProgress().total}</div>
                     </>
                   )}
                 </div>
               ) : (
                 (() => {
                   const items = getItems(active).sort((a, b) => a.collectionNo - b.collectionNo);
-                  const renderWithSubcategories = (items, subs, gridColsClass) => {
+                  const renderWithSubcategories = (items, subs) => {
                     const sortedSubs = sortAsc ? subs : [...subs].reverse();
                     const used = new Set();
                     return (
-                      <div className="flex-1 p-4 overflow-auto">
+                      <div className={`flex-1 p-4 overflow-y-auto ${theme === 'dark' ? 'bg-[#0a0f1d]' : 'bg-white'}`}>
                         {sortedSubs.map((sub) => {
                           const subItems = items.filter(it => it.collectionNo >= sub.range[0] && it.collectionNo <= sub.range[1]);
                           subItems.forEach((si) => used.add(si.id));
@@ -1581,12 +1871,15 @@ export default function App() {
                       </div>
                     );
                   };
-                  const renderByRarity = (items, gridColsClass) => { const rarities = sortAsc ? [5, 4, 3, 2, 1] : [1, 2, 3, 4, 5]; return (<div className="flex-1 p-4 overflow-auto"> {rarities.map((r) => renderSection(`Rarity ${r}`, items.filter((it) => it.rarity === r)))} </div>); }; if (active.label === "Bond CEs") return renderWithSubcategories(items, bondSubcategories, gridColsClass); if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories, gridColsClass); if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories, gridColsClass);
+                  const renderByRarity = (items) => { const rarities = sortAsc ? [5, 4, 3, 2, 1] : [1, 2, 3, 4, 5]; return (<div className={`flex-1 p-4 overflow-y-auto ${theme === 'dark' ? 'bg-[#0a0f1d]' : 'bg-white'}`}> {rarities.map((r) => renderSection(`Rarity ${r}`, items.filter((it) => it.rarity === r)))} </div>); }; 
+                  if (active.label === "Bond CEs") return renderWithSubcategories(items, bondSubcategories); 
+                  if (active.label === "Chocolate") return renderWithSubcategories(items, chocolateSubcategories); 
+                  if (active.label === "Commemorative") return renderWithSubcategories(items, commemorativeSubcategories);
                   if (active.label === "Event free") {
                     const rarities = sortAsc ? [5, 4, 3] : [3, 4, 5];
-                    const subFlags = [{ key: "svtEquipEventReward", label: "Event Reward" }, { key: "svtEquipExp", label: "CE EXP" }];
+                    const subFlags = [{ key: "svtEquipEventReward", label: i18n[lang].ui.eventReward }, { key: "svtEquipExp", label: i18n[lang].ui.ceExp }];
                     return (
-                      <div className="flex-1 p-4 overflow-auto">
+                      <div className={`flex-1 p-4 overflow-y-auto ${theme === 'dark' ? 'bg-[#0a0f1d]' : 'bg-white'}`}>
                         {rarities.map(r => (
                           (() => {
                             const rarityItems = items.filter(it => it.rarity === r);
@@ -1595,12 +1888,17 @@ export default function App() {
                               owned: rarityItems.filter(it => mapOwned(it.id)).length,
                               total: rarityItems.length
                             };
-                            const displayRarityTitle = filterMode === 'missing' ? `Rarity ${r}: Missing` : filterMode === 'completed' ? `Rarity ${r}: Have` : `Rarity ${r}`;
+                            let displayRarityTitle = `${i18n[lang].ui.rarity} ${r}`;
+                            if (filterMode === 'missing') {
+                              displayRarityTitle = `${displayRarityTitle}${i18n[lang].ui.missingSuffix}`;
+                            } else if (filterMode === 'completed') {
+                              displayRarityTitle = `${displayRarityTitle}${i18n[lang].ui.haveSuffix}`;
+                            }
                             return (
                               <div key={r}>
                                 <div className="flex justify-between items-center my-4">
-                                  <h3 className={`text-lg font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>{displayRarityTitle}</h3>
-                                  <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">{rarityProgress.owned} / {rarityProgress.total}</span>
+                                  <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{displayRarityTitle}</h3>
+                                  <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{rarityProgress.owned} / {rarityProgress.total}</span>
                                 </div>
                                 {subFlags.map(sf => {
                                   const subs = rarityItems.filter(it => it.flag === sf.key || (Array.isArray(it.flags) && it.flags.includes(sf.key)));
@@ -1609,27 +1907,32 @@ export default function App() {
                                     owned: subs.filter(it => mapOwned(it.id)).length,
                                     total: subs.length
                                   };
+                                  let displaySubFlagTitle = sf.label;
+                                  if (filterMode === 'missing') {
+                                    displaySubFlagTitle = `${displaySubFlagTitle}${i18n[lang].ui.missingSuffix}`;
+                                  } else if (filterMode === 'completed') {
+                                    displaySubFlagTitle = `${displaySubFlagTitle}${i18n[lang].ui.haveSuffix}`;
+                                  }
+                                  const allComplete = subs.every(it => mapOwned(it.id));
                                   const visibleSubs = subs.filter(it => {
                                     if (filterMode === 'missing') return !mapOwned(it.id);
                                     if (filterMode === 'completed') return mapOwned(it.id);
                                     return true;
                                   });
-                                  const displaySubFlagTitle = filterMode === 'missing' ? `${sf.label}: Missing` : filterMode === 'completed' ? `${sf.label}: Have` : sf.label;
-                                  const allComplete = subs.every(it => mapOwned(it.id));
                                   return (
                                     <div key={sf.key} className="mb-6">
                                       <div className="flex justify-between items-center mb-1">
-                                        <h4 className={`text-md font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>{displaySubFlagTitle}</h4>
-                                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{subProgress.owned} / {subProgress.total}</span>
+                                        <h4 className={`text-md font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{displaySubFlagTitle}</h4>
+                                        <span className={`text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{subProgress.owned} / {subProgress.total}</span>
                                       </div>
-                                      {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? "Undo this subcategory" : "Complete this subcategory"}</p>}
-                                      <div className={`grid ${gridColsClass} gap-1`}>
+                                      {!isViewingShared && <p className="text-sm text-blue-500 hover:underline cursor-pointer mb-2" onClick={() => markAll(subs, !allComplete)}>{allComplete ? i18n[lang].ui.undoSubcategory : i18n[lang].ui.completeSubcategory}</p>}
+                                      <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${itemSize}px, 1fr))` }}>
                                         {visibleSubs.length > 0
                                           ? visibleSubs.map(it => (
                                             <CECell
                                               key={it.id}
                                               item={it}
-                                              bondFace={bondCeMap[it.collectionNo]?.face}
+                                              bondFace={bondCeMap.byCollectionNo[it.collectionNo]?.face}
                                               dragSelectEnabled={dragSelectEnabled}
                                               cachingMode={cachingMode}
                                               owned={mapOwned(it.id)}
@@ -1644,10 +1947,12 @@ export default function App() {
                                               onDragOver={handleDragOver}
                                               onToggle={handleToggle}
                                               fullOpacityMissing={fullOpacityMissing}
+                                              theme={theme}
+                                              lang={lang}
                                             />
                                           ))
-                                          : <div className="text-sm text-gray-500 col-span-full">
-                                            {filterMode === 'missing' ? 'Full. ' : 'Empty. '}No items match the current filter.
+                                          : <div className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            {i18n[lang].ui.noItemsMatch}
                                           </div>
                                         }
                                       </div>
@@ -1661,8 +1966,8 @@ export default function App() {
                       </div>
                     );
                   }
-                  if (active.raritySplit) return renderByRarity(items, gridColsClass);
-                  return renderGrid(items, gridColsClass);
+                  if (active.raritySplit) return renderByRarity(items);
+                  return renderGrid(items);
                 })()
               )}
             </motion.div>

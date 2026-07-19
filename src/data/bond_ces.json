@@ -2717,19 +2717,19 @@
   },
   {
     "id": 2547,
-    "owner": "The Old Man Who Made the Dead Trees Blossom",
+    "owner": "Hanasaka no Okina",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5059000.png",
     "choco_id": 2578
   },
   {
     "id": 2548,
-    "owner": "蛇女房",
+    "owner": "Hebi Nyōbō",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6052000.png",
     "choco_id": 2579
   },
   {
     "id": 2549,
-    "owner": "フローラ",
+    "owner": "Flora",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10020000.png",
     "choco_id": 2580
   },
@@ -2738,5 +2738,53 @@
     "owner": "Demeter",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3064000.png",
     "choco_id": 2581
+  },
+  {
+    "id": 2594,
+    "owner_id": 106600,
+    "owner": "Jacques de Molay",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1066000.png"
+  },
+  {
+    "id": 2604,
+    "owner_id": 505600,
+    "owner": "François Prélat",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_5056000.png"
+  },
+  {
+    "id": 2605,
+    "owner_id": 405600,
+    "owner": "Hippolyte",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4056000.png"
+  },
+  {
+    "id": 2606,
+    "owner_id": 1102000,
+    "owner": "John Lackland",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11020000.png"
+  },
+  {
+    "id": 2611,
+    "owner_id": 205500,
+    "owner": "ウルズ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2055000.png"
+  },
+  {
+    "id": 2616,
+    "owner_id": 1002200,
+    "owner": "アスカラポス",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10022000.png"
+  },
+  {
+    "id": 2617,
+    "owner_id": 106700,
+    "owner": "グレイ・リリィ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1067000.png"
+  },
+  {
+    "id": 2618,
+    "owner_id": 306300,
+    "owner": "グレイ・リリィ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3063000.png"
   }
 ]
