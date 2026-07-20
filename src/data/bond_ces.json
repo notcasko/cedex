@@ -1,2741 +1,3664 @@
 [
   {
     "id": 191,
+    "owner_id": 100100,
     "owner": "Altria Pendragon",
+    "owner_jp": "アルトリア・ペンドラゴン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1001000.png",
     "choco_id": 114
   },
   {
     "id": 192,
+    "owner_id": 501900,
     "owner": "Zhuge Liang (Lord El-Melloi II)",
+    "owner_jp": "諸葛孔明〔エルメロイⅡ世〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5019000.png",
     "choco_id": 488
   },
   {
     "id": 193,
+    "owner_id": 700700,
     "owner": "Vlad III",
+    "owner_jp": "ヴラド三世",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7007000.png",
     "choco_id": 524
   },
   {
     "id": 194,
+    "owner_id": 900100,
     "owner": "Jeanne d'Arc",
+    "owner_jp": "ジャンヌ・ダルク",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9001000.png",
     "choco_id": 153
   },
   {
     "id": 195,
+    "owner_id": 100200,
     "owner": "Altria Pendragon (Alter)",
+    "owner_jp": "アルトリア・ペンドラゴン〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1002000.png",
     "choco_id": 115
   },
   {
     "id": 196,
+    "owner_id": 200100,
     "owner": "Emiya",
+    "owner_jp": "エミヤ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2001000.png",
     "choco_id": 448
   },
   {
     "id": 197,
+    "owner_id": 700100,
     "owner": "Heracles",
+    "owner_jp": "ヘラクレス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7001000.png",
     "choco_id": 529
   },
   {
     "id": 198,
+    "owner_id": 502100,
     "owner": "Cú Chulainn",
+    "owner_jp": "クー・フーリン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5021000.png",
     "choco_id": 502
   },
   {
     "id": 199,
+    "owner_id": 701300,
     "owner": "Kiyohime",
+    "owner_jp": "清姫",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7013000.png",
     "choco_id": 150
   },
   {
     "id": 200,
+    "owner_id": 601400,
     "owner": "Mata Hari",
+    "owner_jp": "マタ・ハリ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6014000.png",
     "choco_id": 146
   },
   {
     "id": 201,
+    "owner_id": 101800,
     "owner": "Altera",
+    "owner_jp": "アルテラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1018000.png",
     "choco_id": 118
   },
   {
     "id": 202,
+    "owner_id": 102600,
     "owner": "Chevalier d'Eon",
+    "owner_jp": "シュヴァリエ・デオン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1026000.png",
-    "choco_id": 119
+    "choco_id": [
+      119,
+      433
+    ]
   },
   {
     "id": 203,
+    "owner_id": 300500,
     "owner": "Elisabeth Báthory",
+    "owner_jp": "エリザベート・バートリー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3005000.png",
     "choco_id": 128
   },
   {
     "id": 204,
+    "owner_id": 401700,
     "owner": "Marie Antoinette",
+    "owner_jp": "マリー・アントワネット",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4017000.png",
     "choco_id": 134
   },
   {
     "id": 205,
+    "owner_id": 401900,
     "owner": "Martha",
+    "owner_jp": "マルタ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4019000.png",
     "choco_id": 135
   },
   {
     "id": 206,
+    "owner_id": 601700,
     "owner": "Carmilla",
+    "owner_jp": "カーミラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6017000.png",
     "choco_id": 147
   },
   {
     "id": 207,
+    "owner_id": 701600,
     "owner": "Tamamo Cat",
+    "owner_jp": "タマモキャット",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7016000.png",
     "choco_id": 151
   },
   {
     "id": 208,
+    "owner_id": 401100,
     "owner": "Boudica",
+    "owner_jp": "ブーディカ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4011000.png",
     "choco_id": 120
   },
   {
     "id": 209,
+    "owner_id": 500500,
     "owner": "Hans Christian Andersen",
+    "owner_jp": "ハンス・クリスチャン・アンデルセン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5005000.png",
     "choco_id": 506
   },
   {
     "id": 210,
+    "owner_id": 201300,
     "owner": "Arash",
+    "owner_jp": "アーラシュ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2013000.png",
     "choco_id": 457
   },
   {
     "id": 216,
+    "owner_id": 200200,
     "owner": "Gilgamesh",
+    "owner_jp": "ギルガメッシュ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2002000.png",
     "choco_id": 442
   },
   {
     "id": 217,
+    "owner_id": 700600,
     "owner": "Sakata Kintoki",
+    "owner_jp": "坂田金時",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7006000.png",
     "choco_id": 523
   },
   {
     "id": 218,
+    "owner_id": 100500,
     "owner": "Nero Claudius",
+    "owner_jp": "ネロ・クラウディウス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1005000.png",
     "choco_id": 117
   },
   {
     "id": 219,
+    "owner_id": 100800,
     "owner": "Siegfried",
+    "owner_jp": "ジークフリート",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1008000.png",
     "choco_id": 432
   },
   {
     "id": 220,
+    "owner_id": 601000,
     "owner": "Stheno",
+    "owner_jp": "ステンノ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6010000.png",
     "choco_id": 144
   },
   {
     "id": 221,
+    "owner_id": 100300,
     "owner": "Altria Pendragon (Lily)",
+    "owner_jp": "アルトリア・ペンドラゴン〔リリィ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1003000.png",
     "choco_id": 116
   },
   {
     "id": 222,
+    "owner_id": 200600,
     "owner": "David",
+    "owner_jp": "ダビデ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2006000.png",
     "choco_id": 453
   },
   {
     "id": 223,
+    "owner_id": 701100,
     "owner": "Darius III",
+    "owner_jp": "ダレイオス三世",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7011000.png",
     "choco_id": 534
   },
   {
     "id": 224,
+    "owner_id": 701500,
     "owner": "Eric Bloodaxe",
+    "owner_jp": "エイリーク・ブラッドアクス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7015000.png",
     "choco_id": 536
   },
   {
     "id": 225,
+    "owner_id": 700500,
     "owner": "Spartacus",
+    "owner_jp": "スパルタクス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7005000.png",
     "choco_id": 537
   },
   {
     "id": 230,
+    "owner_id": 200900,
     "owner": "Orion",
+    "owner_jp": "オリオン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2009000.png",
-    "choco_id": 126
+    "choco_id": [
+      126,
+      443
+    ]
   },
   {
     "id": 231,
+    "owner_id": 400300,
     "owner": "Francis Drake",
+    "owner_jp": "フランシス・ドレイク",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4003000.png",
     "choco_id": 136
   },
   {
     "id": 232,
+    "owner_id": 700200,
     "owner": "Lancelot",
+    "owner_jp": "ランスロット",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7002000.png",
     "choco_id": 530
   },
   {
     "id": 233,
+    "owner_id": 200500,
     "owner": "Atalante",
+    "owner_jp": "アタランテ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2005000.png",
     "choco_id": 124
   },
   {
     "id": 234,
+    "owner_id": 502600,
     "owner": "Elisabeth Báthory (Halloween)",
+    "owner_jp": "エリザベート・バートリー〔ハロウィン〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5026000.png",
     "choco_id": 140
   },
   {
     "id": 235,
+    "owner_id": 202400,
     "owner": "Oda Nobunaga",
+    "owner_jp": "織田信長",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2024000.png",
     "choco_id": 127
   },
   {
     "id": 236,
+    "owner_id": 402200,
     "owner": "Altria Pendragon (Santa Alter)",
+    "owner_jp": "アルトリア・ペンドラゴン〔サンタオルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4022000.png",
     "choco_id": 138
   },
   {
     "id": 237,
+    "owner_id": 600700,
     "owner": "Henry Jekyll & Hyde",
+    "owner_jp": "ヘンリー・ジキル＆ハイド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6007000.png",
     "choco_id": 515
   },
   {
     "id": 238,
+    "owner_id": 400800,
     "owner": "Edward Teach",
+    "owner_jp": "エドワード・ティーチ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4008000.png",
     "choco_id": 487
   },
   {
     "id": 239,
+    "owner_id": 600100,
     "owner": "Sasaki Kojirou",
+    "owner_jp": "佐々木小次郎",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6001000.png",
     "choco_id": 522
   },
   {
     "id": 248,
+    "owner_id": 500300,
     "owner": "Tamamo-no-Mae",
+    "owner_jp": "玉藻の前",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5003000.png",
     "choco_id": 142
   },
   {
     "id": 249,
+    "owner_id": 102700,
     "owner": "Okita Souji",
+    "owner_jp": "沖田総司",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1027000.png",
     "choco_id": 121
   },
   {
     "id": 250,
+    "owner_id": 400900,
     "owner": "Anne Bonny & Mary Read",
+    "owner_jp": "アン・ボニー＆メアリー・リード",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4009000.png",
     "choco_id": 137
   },
   {
     "id": 251,
+    "owner_id": 301300,
     "owner": "Scáthach",
+    "owner_jp": "スカサハ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3013000.png",
     "choco_id": 129
   },
   {
     "id": 252,
+    "owner_id": 300100,
     "owner": "Cú Chulainn",
+    "owner_jp": "クー・フーリン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3001000.png",
     "choco_id": 469
   },
   {
     "id": 253,
+    "owner_id": 500100,
     "owner": "Medea",
+    "owner_jp": "メディア",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5001000.png",
     "choco_id": 139
   },
   {
     "id": 254,
+    "owner_id": 400100,
     "owner": "Medusa",
+    "owner_jp": "メドゥーサ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4001000.png",
     "choco_id": 132
   },
   {
     "id": 255,
+    "owner_id": 401500,
     "owner": "Alexander",
+    "owner_jp": "アレキサンダー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4015000.png",
     "choco_id": 485
   },
   {
     "id": 256,
+    "owner_id": 600200,
     "owner": "Hassan of the Cursed Arm",
+    "owner_jp": "呪腕のハサン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6002000.png",
     "choco_id": 519
   },
   {
     "id": 257,
+    "owner_id": 700900,
     "owner": "Asterios",
+    "owner_jp": "アステリオス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7009000.png",
     "choco_id": 538
   },
   {
     "id": 266,
+    "owner_id": 100900,
     "owner": "Mordred",
+    "owner_jp": "モードレッド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1009000.png",
     "choco_id": 122
   },
   {
     "id": 267,
+    "owner_id": 600500,
     "owner": "Jack the Ripper",
+    "owner_jp": "ジャック・ザ・リッパー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6005000.png",
     "choco_id": 148
   },
   {
     "id": 268,
+    "owner_id": 500400,
     "owner": "Nursery Rhyme",
+    "owner_jp": "ナーサリー・ライム",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5004000.png",
     "choco_id": 143
   },
   {
     "id": 269,
+    "owner_id": 200300,
     "owner": "Robin Hood",
+    "owner_jp": "ロビンフッド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2003000.png",
     "choco_id": 452
   },
   {
     "id": 270,
+    "owner_id": 401400,
     "owner": "Ushiwakamaru",
+    "owner_jp": "牛若丸",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4014000.png",
     "choco_id": 133
   },
   {
     "id": 271,
+    "owner_id": 601100,
     "owner": "Jing Ke",
+    "owner_jp": "荊軻",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6011000.png",
     "choco_id": 145
   },
   {
     "id": 272,
+    "owner_id": 700300,
     "owner": "Lu Bu Fengxian",
+    "owner_jp": "呂布奉先",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7003000.png",
     "choco_id": 533
   },
   {
     "id": 273,
+    "owner_id": 400600,
     "owner": "Georgios",
+    "owner_jp": "ゲオルギウス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4006000.png",
     "choco_id": 486
   },
   {
     "id": 274,
+    "owner_id": 300900,
     "owner": "Leonidas I",
+    "owner_jp": "レオニダス一世",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3009000.png",
     "choco_id": 476
   },
   {
     "id": 275,
+    "owner_id": 501500,
     "owner": "Wolfgang Amadeus Mozart",
+    "owner_jp": "ヴォルフガング・アマデウス・モーツァルト",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5015000.png",
     "choco_id": 508
   },
   {
     "id": 281,
+    "owner_id": 201100,
     "owner": "Nikola Tesla",
+    "owner_jp": "ニコラ・テスラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2011000.png",
     "choco_id": 444
   },
   {
     "id": 282,
+    "owner_id": 201500,
     "owner": "Arjuna",
+    "owner_jp": "アルジュナ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2015000.png",
     "choco_id": 445
   },
   {
     "id": 283,
+    "owner_id": 300400,
     "owner": "Karna",
+    "owner_jp": "カルナ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3004000.png",
     "choco_id": 458
   },
   {
     "id": 284,
+    "owner_id": 700400,
     "owner": "Frankenstein",
+    "owner_jp": "フランケンシュタイン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7004000.png",
     "choco_id": 152
   },
   {
     "id": 285,
+    "owner_id": 301900,
     "owner": "Altria Pendragon (Alter)",
+    "owner_jp": "アルトリア・ペンドラゴン〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3019000.png",
     "choco_id": 130
   },
   {
     "id": 286,
+    "owner_id": 101300,
     "owner": "Gaius Julius Caesar",
+    "owner_jp": "ガイウス・ユリウス・カエサル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1013000.png",
     "choco_id": 438
   },
   {
     "id": 287,
+    "owner_id": 301000,
     "owner": "Romulus",
+    "owner_jp": "ロムルス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3010000.png",
     "choco_id": 471
   },
   {
     "id": 288,
+    "owner_id": 300600,
     "owner": "Musashibou Benkei",
+    "owner_jp": "武蔵坊弁慶",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3006000.png",
     "choco_id": 475
   },
   {
     "id": 289,
+    "owner_id": 601300,
     "owner": "Phantom of the Opera",
+    "owner_jp": "ファントム・オブ・ジ・オペラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6013000.png",
     "choco_id": 521
   },
   {
     "id": 290,
+    "owner_id": 500700,
     "owner": "William Shakespeare",
+    "owner_jp": "ウィリアム・シェイクスピア",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5007000.png",
     "choco_id": 507
   },
   {
     "id": 299,
+    "owner_id": 601800,
     "owner": "Mysterious Heroine X",
+    "owner_jp": "謎のヒロインX",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6018000.png",
     "choco_id": 149
   },
   {
     "id": 300,
+    "owner_id": 301200,
     "owner": "Brynhild",
+    "owner_jp": "ブリュンヒルデ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3012000.png",
     "choco_id": 131
   },
   {
     "id": 301,
+    "owner_id": 100600,
     "owner": "Nero Claudius (Bride)",
+    "owner_jp": "ネロ・クラウディウス〔ブライド〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1006000.png",
     "choco_id": 123
   },
   {
     "id": 302,
+    "owner_id": 700800,
     "owner": "Beowulf",
+    "owner_jp": "ベオウルフ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7008000.png",
     "choco_id": 531
   },
   {
     "id": 303,
+    "owner_id": 301100,
     "owner": "Fionn mac Cumhaill",
+    "owner_jp": "フィン・マックール",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3011000.png",
     "choco_id": 463
   },
   {
     "id": 304,
+    "owner_id": 102200,
     "owner": "Gilles de Rais",
+    "owner_jp": "ジル・ド・レェ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1022000.png",
     "choco_id": 439
   },
   {
     "id": 305,
+    "owner_id": 501400,
     "owner": "Mephistopheles",
+    "owner_jp": "メフィストフェレス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5014000.png",
     "choco_id": 501
   },
   {
     "id": 306,
+    "owner_id": 101400,
     "owner": "Fergus mac Róich",
+    "owner_jp": "フェルグス・マック・ロイ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1014000.png",
     "choco_id": 440
   },
   {
     "id": 307,
+    "owner_id": 601200,
     "owner": "Charles-Henri Sanson",
+    "owner_jp": "シャルル＝アンリ・サンソン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6012000.png",
     "choco_id": 520
   },
   {
     "id": 308,
+    "owner_id": 701000,
     "owner": "Caligula",
+    "owner_jp": "カリギュラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7010000.png",
     "choco_id": 535
   },
   {
     "id": 315,
+    "owner_id": 102800,
     "owner": "Ryougi Shiki",
+    "owner_jp": "両儀式",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1028000.png",
     "choco_id": 430
   },
   {
     "id": 316,
+    "owner_id": 900200,
     "owner": "Amakusa Shirou",
+    "owner_jp": "天草四郎",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9002000.png",
     "choco_id": 539
   },
   {
     "id": 317,
+    "owner_id": 1100200,
     "owner": "Edmond Dantès",
+    "owner_jp": "巌窟王",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11002000.png",
     "choco_id": 541
   },
   {
     "id": 318,
+    "owner_id": 501700,
     "owner": "Medea (Lily)",
+    "owner_jp": "メディア〔リリィ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5017000.png",
     "choco_id": 141
   },
   {
     "id": 319,
+    "owner_id": 602300,
     "owner": "Ryougi Shiki",
+    "owner_jp": "両儀式",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6023000.png",
     "choco_id": 511
   },
   {
     "id": 320,
+    "owner_id": 400400,
     "owner": "Astolfo",
+    "owner_jp": "アストルフォ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4004000.png",
-    "choco_id": 481
+    "choco_id": [
+      481,
+      482
+    ]
   },
   {
     "id": 321,
+    "owner_id": 500200,
     "owner": "Gilles de Rais",
+    "owner_jp": "ジル・ド・レェ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5002000.png",
     "choco_id": 500
   },
   {
     "id": 322,
+    "owner_id": 300700,
     "owner": "Cú Chulainn (Prototype)",
+    "owner_jp": "クー・フーリン〔プロトタイプ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3007000.png",
     "choco_id": 470
   },
   {
     "id": 323,
+    "owner_id": 201200,
     "owner": "Euryale",
+    "owner_jp": "エウリュアレ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2012000.png",
     "choco_id": 125
   },
   {
     "id": 324,
+    "owner_id": 301600,
     "owner": "Hektor",
+    "owner_jp": "ヘクトール",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3016000.png",
     "choco_id": 472
   },
   {
     "id": 334,
+    "owner_id": 701400,
     "owner": "Florence Nightingale",
+    "owner_jp": "ナイチンゲール",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7014000.png",
     "choco_id": 525
   },
   {
     "id": 335,
+    "owner_id": 702000,
     "owner": "Cú Chulainn (Alter)",
+    "owner_jp": "クー・フーリン〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7020000.png",
     "choco_id": 526
   },
   {
     "id": 336,
+    "owner_id": 401300,
     "owner": "Queen Medb",
+    "owner_jp": "女王メイヴ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4013000.png",
     "choco_id": 477
   },
   {
     "id": 337,
+    "owner_id": 101900,
     "owner": "Rama",
+    "owner_jp": "ラーマ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1019000.png",
     "choco_id": 434
   },
   {
     "id": 338,
+    "owner_id": 502300,
     "owner": "Helena Blavatsky",
+    "owner_jp": "エレナ・ブラヴァツキー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5023000.png",
     "choco_id": 494
   },
   {
     "id": 339,
+    "owner_id": 502500,
     "owner": "Thomas Edison",
+    "owner_jp": "トーマス・エジソン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5025000.png",
     "choco_id": 495
   },
   {
     "id": 340,
+    "owner_id": 301700,
     "owner": "Li Shuwen",
+    "owner_jp": "李書文",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3017000.png",
     "choco_id": 464
   },
   {
     "id": 341,
+    "owner_id": 300200,
     "owner": "Diarmuid Ua Duibhne",
+    "owner_jp": "ディルムッド・オディナ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3002000.png",
     "choco_id": 473
   },
   {
     "id": 342,
+    "owner_id": 501000,
     "owner": "Paracelsus von Hohenheim",
+    "owner_jp": "ヴァン・ホーエンハイム・パラケルスス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5010000.png",
     "choco_id": 503
   },
   {
     "id": 343,
+    "owner_id": 501100,
     "owner": "Charles Babbage",
+    "owner_jp": "チャールズ・バベッジ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5011000.png",
     "choco_id": 504
   },
   {
     "id": 350,
+    "owner_id": 1100300,
     "owner": "Jeanne d'Arc (Alter)",
+    "owner_jp": "ジャンヌ・ダルク〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11003000.png",
     "choco_id": 542
   },
   {
     "id": 351,
+    "owner_id": 400200,
     "owner": "Iskandar",
+    "owner_jp": "イスカンダル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4002000.png",
     "choco_id": 478
   },
   {
     "id": 352,
+    "owner_id": 502200,
     "owner": "Xuanzang Sanzang",
+    "owner_jp": "玄奘三蔵",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5022000.png",
     "choco_id": 489
   },
   {
     "id": 353,
+    "owner_id": 601500,
     "owner": "Emiya (Assassin)",
+    "owner_jp": "エミヤ〔アサシン〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6015000.png",
     "choco_id": 512
   },
   {
     "id": 354,
+    "owner_id": 502000,
     "owner": "Irisviel (Holy Grail)",
+    "owner_jp": "アイリスフィール〔天の衣〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5020000.png",
     "choco_id": 496
   },
   {
     "id": 355,
+    "owner_id": 201800,
     "owner": "Gilgamesh (Child)",
+    "owner_jp": "子ギル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2018000.png",
     "choco_id": 454
   },
   {
     "id": 356,
+    "owner_id": 501600,
     "owner": "Geronimo",
+    "owner_jp": "ジェロニモ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5016000.png",
     "choco_id": 505
   },
   {
     "id": 357,
+    "owner_id": 201000,
     "owner": "Billy the Kid",
+    "owner_jp": "ビリー・ザ・キッド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2010000.png",
     "choco_id": 455
   },
   {
     "id": 358,
+    "owner_id": 600300,
     "owner": "Hassan of the Hundred Personas",
+    "owner_jp": "百貌のハサン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6003000.png",
     "choco_id": 516
   },
   {
     "id": 359,
+    "owner_id": 1100100,
     "owner": "Aŋra Mainiiu",
+    "owner_jp": "アンリマユ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11001000.png",
     "choco_id": 544
   },
   {
     "id": 367,
+    "owner_id": 602100,
     "owner": "Shuten-Douji",
+    "owner_jp": "酒呑童子",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6021000.png",
     "choco_id": 509
   },
   {
     "id": 368,
+    "owner_id": 702300,
     "owner": "Minamoto-no-Raikou",
+    "owner_jp": "源頼光",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7023000.png",
     "choco_id": 527
   },
   {
     "id": 369,
+    "owner_id": 401200,
     "owner": "Ozymandias",
+    "owner_jp": "オジマンディアス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4012000.png",
     "choco_id": 479
   },
   {
     "id": 370,
+    "owner_id": 702200,
     "owner": "Ibaraki-Douji",
+    "owner_jp": "茨木童子",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7022000.png",
     "choco_id": 532
   },
   {
     "id": 371,
+    "owner_id": 402300,
     "owner": "Sakata Kintoki",
+    "owner_jp": "坂田金時",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4023000.png",
     "choco_id": 483
   },
   {
     "id": 372,
+    "owner_id": 100700,
     "owner": "Gawain",
+    "owner_jp": "ガウェイン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1007000.png",
     "choco_id": 436
   },
   {
     "id": 373,
+    "owner_id": 200800,
     "owner": "Tristan",
+    "owner_jp": "トリスタン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2008000.png",
     "choco_id": 449
   },
   {
     "id": 374,
+    "owner_id": 501200,
     "owner": "Nitocris",
+    "owner_jp": "ニトクリス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5012000.png",
     "choco_id": 497
   },
   {
     "id": 375,
+    "owner_id": 601900,
     "owner": "Fuuma \"Evil-wind\" Kotarou",
+    "owner_jp": "風魔小太郎",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6019000.png",
     "choco_id": 517
   },
   {
     "id": 376,
+    "owner_id": 201400,
     "owner": "Tawara Touta",
+    "owner_jp": "俵藤太",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2014000.png",
     "choco_id": 456
   },
   {
     "id": 377,
+    "owner_id": 302000,
     "owner": "Altria Pendragon",
+    "owner_jp": "アルトリア・ペンドラゴン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3020000.png",
     "choco_id": 459
   },
   {
     "id": 378,
+    "owner_id": 500900,
     "owner": "Leonardo da Vinci",
+    "owner_jp": "レオナルド・ダ・ヴィンチ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5009000.png",
-    "choco_id": 490
+    "choco_id": [
+      490,
+      491
+    ]
   },
   {
     "id": 379,
+    "owner_id": 302400,
     "owner": "Tamamo-no-Mae",
+    "owner_jp": "玉藻の前",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3024000.png",
     "choco_id": 460
   },
   {
     "id": 380,
+    "owner_id": 102000,
     "owner": "Lancelot",
+    "owner_jp": "ランスロット",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1020000.png",
     "choco_id": 435
   },
   {
     "id": 381,
+    "owner_id": 502700,
     "owner": "Marie Antoinette",
+    "owner_jp": "マリー・アントワネット",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5027000.png",
     "choco_id": 498
   },
   {
     "id": 382,
+    "owner_id": 202500,
     "owner": "Anne Bonny & Mary Read",
+    "owner_jp": "アン・ボニー＆メアリー・リード",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2025000.png",
     "choco_id": 450
   },
   {
     "id": 383,
+    "owner_id": 402400,
     "owner": "Mordred",
+    "owner_jp": "モードレッド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4024000.png",
     "choco_id": 484
   },
   {
     "id": 384,
+    "owner_id": 302500,
     "owner": "Kiyohime",
+    "owner_jp": "清姫",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3025000.png",
     "choco_id": 465
   },
   {
     "id": 385,
+    "owner_id": 101200,
     "owner": "Bedivere",
+    "owner_jp": "ベディヴィエール",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1012000.png",
     "choco_id": 441
   },
   {
     "id": 386,
+    "owner_id": 600900,
     "owner": "Hassan of the Serenity",
+    "owner_jp": "静謐のハサン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6009000.png",
     "choco_id": 518
   },
   {
     "id": 391,
+    "owner_id": 202600,
     "owner": "Altria Pendragon",
+    "owner_jp": "アルトリア・ペンドラゴン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2026000.png",
     "choco_id": 446
   },
   {
     "id": 392,
+    "owner_id": 502800,
     "owner": "Illyasviel von Einzbern",
+    "owner_jp": "イリヤスフィール・フォン・アインツベルン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5028000.png",
     "choco_id": 492
   },
   {
     "id": 393,
+    "owner_id": 600800,
     "owner": "Cleopatra",
+    "owner_jp": "クレオパトラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6008000.png",
     "choco_id": 514
   },
   {
     "id": 394,
+    "owner_id": 900400,
     "owner": "Martha",
+    "owner_jp": "マルタ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9004000.png",
     "choco_id": 540
   },
   {
     "id": 395,
+    "owner_id": 602400,
     "owner": "Scáthach",
+    "owner_jp": "スカサハ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6024000.png",
     "choco_id": 513
   },
   {
     "id": 396,
+    "owner_id": 202700,
     "owner": "Chloe von Einzbern",
+    "owner_jp": "クロエ・フォン・アインツベルン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2027000.png",
     "choco_id": 451
   },
   {
     "id": 397,
+    "owner_id": 300300,
     "owner": "Vlad III (EXTRA)",
+    "owner_jp": "ヴラド三世〔EXTRA〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3003000.png",
     "choco_id": 466
   },
   {
     "id": 398,
+    "owner_id": 101000,
     "owner": "Elisabeth Báthory (Brave)",
+    "owner_jp": "エリザベート・バートリー〔ブレイブ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1010000.png",
     "choco_id": 437
   },
   {
     "id": 403,
+    "owner_id": 202000,
     "owner": "Ishtar",
+    "owner_jp": "イシュタル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2020000.png",
     "choco_id": 447
   },
   {
     "id": 404,
+    "owner_id": 300800,
     "owner": "Enkidu",
+    "owner_jp": "エルキドゥ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3008000.png",
-    "choco_id": 461
+    "choco_id": [
+      461,
+      462
+    ]
   },
   {
     "id": 405,
+    "owner_id": 401800,
     "owner": "Quetzalcoatl",
+    "owner_jp": "ケツァル・コアトル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4018000.png",
     "choco_id": 480
   },
   {
     "id": 406,
+    "owner_id": 302600,
     "owner": "Jeanne d'Arc Alter Santa Lily",
+    "owner_jp": "ジャンヌ・ダルク・オルタ・サンタ・リリィ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3026000.png",
     "choco_id": 467
   },
   {
     "id": 407,
+    "owner_id": 501800,
     "owner": "Gilgamesh",
+    "owner_jp": "ギルガメッシュ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5018000.png",
     "choco_id": 499
   },
   {
     "id": 408,
+    "owner_id": 1100400,
     "owner": "Gorgon",
+    "owner_jp": "ゴルゴーン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11004000.png",
     "choco_id": 543
   },
   {
     "id": 409,
+    "owner_id": 302700,
     "owner": "Medusa",
+    "owner_jp": "メドゥーサ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3027000.png",
     "choco_id": 468
   },
   {
     "id": 410,
+    "owner_id": 302800,
     "owner": "Jaguar Warrior",
+    "owner_jp": "ジャガーマン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3028000.png",
     "choco_id": 474
   },
   {
     "id": 411,
+    "owner_id": 500800,
     "owner": "Merlin",
+    "owner_jp": "マーリン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5008000.png",
     "choco_id": 493
   },
   {
     "id": 416,
+    "owner_id": 101700,
     "owner": "Miyamoto Musashi",
+    "owner_jp": "宮本武蔵",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1017000.png",
     "choco_id": 431
   },
   {
     "id": 417,
+    "owner_id": 602500,
     "owner": "\"First Hassan\"",
+    "owner_jp": "“山の翁”",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6025000.png",
     "choco_id": 510
   },
   {
     "id": 429,
+    "owner_id": 702400,
     "owner": "Mysterious Heroine X (Alter)",
+    "owner_jp": "謎のヒロインX〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7024000.png",
     "choco_id": 528
   },
   {
     "id": 546,
+    "owner_id": 202300,
     "owner": "James Moriarty",
+    "owner_jp": "ジェームズ・モリアーティ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2023000.png",
     "choco_id": 718
   },
   {
     "id": 547,
+    "owner_id": 201600,
     "owner": "Emiya (Alter)",
+    "owner_jp": "エミヤ〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2016000.png",
     "choco_id": 719
   },
   {
     "id": 548,
+    "owner_id": 1100500,
     "owner": "Hessian Lobo",
+    "owner_jp": "ヘシアン・ロボ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11005000.png",
     "choco_id": 720
   },
   {
     "id": 549,
+    "owner_id": 602600,
     "owner": "Yan Qing",
+    "owner_jp": "燕青",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6026000.png",
     "choco_id": 721
   },
   {
     "id": 559,
+    "owner_id": 102900,
     "owner": "Arthur Pendragon (Prototype)",
+    "owner_jp": "アーサー・ペンドラゴン〔プロトタイプ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1029000.png",
     "choco_id": 722
   },
   {
     "id": 567,
+    "owner_id": 702500,
     "owner": "Hijikata Toshizo",
+    "owner_jp": "土方歳三",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7025000.png",
     "choco_id": 723
   },
   {
     "id": 568,
+    "owner_id": 702600,
     "owner": "Chacha",
+    "owner_jp": "茶々",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7026000.png",
     "choco_id": 724
   },
   {
     "id": 575,
+    "owner_id": 1000200,
     "owner": "Meltryllis",
+    "owner_jp": "メルトリリス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10002000.png",
     "choco_id": 729
   },
   {
     "id": 576,
+    "owner_id": 1000100,
     "owner": "Passionlip",
+    "owner_jp": "パッションリップ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10001000.png",
     "choco_id": 731
   },
   {
     "id": 577,
+    "owner_id": 2300100,
     "owner": "BB",
+    "owner_jp": "ＢＢ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23001000.png",
     "choco_id": 732
   },
   {
     "id": 578,
+    "owner_id": 103000,
     "owner": "Suzuka Gozen",
+    "owner_jp": "鈴鹿御前",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1030000.png",
     "choco_id": 733
   },
   {
     "id": 579,
+    "owner_id": 1000300,
     "owner": "Sessyoin Kiara",
+    "owner_jp": "殺生院キアラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10003000.png",
     "choco_id": 730
   },
   {
     "id": 586,
+    "owner_id": 503000,
     "owner": "Scheherazade",
+    "owner_jp": "シェヘラザード",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5030000.png",
     "choco_id": 725
   },
   {
     "id": 587,
+    "owner_id": 602700,
     "owner": "Wu Zetian",
+    "owner_jp": "武則天",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6027000.png",
     "choco_id": 726
   },
   {
     "id": 588,
+    "owner_id": 702700,
     "owner": "Penthesilea",
+    "owner_jp": "ペンテシレイア",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7027000.png",
     "choco_id": 727
   },
   {
     "id": 589,
+    "owner_id": 402500,
     "owner": "Christopher Columbus",
+    "owner_jp": "クリストファー・コロンブス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4025000.png",
     "choco_id": 728
   },
   {
     "id": 641,
+    "owner_id": 702800,
     "owner": "Paul Bunyan",
+    "owner_jp": "ポール・バニヤン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7028000.png",
     "choco_id": 735
   },
   {
     "id": 642,
+    "owner_id": 900500,
     "owner": "Sherlock Holmes",
+    "owner_jp": "シャーロック・ホームズ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9005000.png",
     "choco_id": 734
   },
   {
     "id": 647,
+    "owner_id": 503200,
     "owner": "Nero Claudius",
+    "owner_jp": "ネロ・クラウディウス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5032000.png",
     "choco_id": 736
   },
   {
     "id": 648,
+    "owner_id": 103100,
     "owner": "Frankenstein",
+    "owner_jp": "フランケンシュタイン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1031000.png",
     "choco_id": 739
   },
   {
     "id": 649,
+    "owner_id": 602800,
     "owner": "Nitocris",
+    "owner_jp": "ニトクリス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6028000.png",
     "choco_id": 743
   },
   {
     "id": 650,
+    "owner_id": 702900,
     "owner": "Oda Nobunaga",
+    "owner_jp": "織田信長",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7029000.png",
     "choco_id": 741
   },
   {
     "id": 651,
+    "owner_id": 402600,
     "owner": "Ishtar",
+    "owner_jp": "イシュタル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4026000.png",
     "choco_id": 737
   },
   {
     "id": 656,
+    "owner_id": 402700,
     "owner": "Altria Pendragon (Alter)",
+    "owner_jp": "アルトリア・ペンドラゴン〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4027000.png",
     "choco_id": 740
   },
   {
     "id": 657,
+    "owner_id": 202800,
     "owner": "Helena Blavatsky",
+    "owner_jp": "エレナ・ブラヴァツキー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2028000.png",
     "choco_id": 738
   },
   {
     "id": 658,
+    "owner_id": 302900,
     "owner": "Minamoto-no-Raikou",
+    "owner_jp": "源頼光",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3029000.png",
     "choco_id": 742
   },
   {
     "id": 669,
+    "owner_id": 303000,
     "owner": "Pārvatī",
+    "owner_jp": "パールヴァティー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3030000.png",
     "choco_id": 749
   },
   {
     "id": 675,
+    "owner_id": 202100,
     "owner": "Tomoe Gozen",
+    "owner_jp": "巴御前",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2021000.png",
     "choco_id": 747
   },
   {
     "id": 676,
+    "owner_id": 602900,
     "owner": "Mochizuki Chiyome",
+    "owner_jp": "望月千代女",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6029000.png",
     "choco_id": 746
   },
   {
     "id": 677,
+    "owner_id": 301400,
     "owner": "Houzouin Inshun",
+    "owner_jp": "宝蔵院胤舜",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3014000.png",
     "choco_id": 744
   },
   {
     "id": 678,
+    "owner_id": 103200,
     "owner": "Yagyu Tajima-no-kami Munenori",
+    "owner_jp": "柳生但馬守宗矩",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1032000.png",
     "choco_id": 748
   },
   {
     "id": 679,
+    "owner_id": 603000,
     "owner": "Katou \"Black Kite\" Danzo",
+    "owner_jp": "加藤段蔵",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6030000.png",
     "choco_id": 745
   },
   {
     "id": 686,
+    "owner_id": 603100,
     "owner": "Osakabehime",
+    "owner_jp": "刑部姫",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6031000.png",
     "choco_id": 750
   },
   {
     "id": 687,
+    "owner_id": 1000400,
     "owner": "Mecha Eli-chan",
+    "owner_jp": "メカエリチャン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10004000.png",
     "choco_id": 751
   },
   {
     "id": 688,
+    "owner_id": 1000500,
     "owner": "Mecha Eli-chan Mk.II",
+    "owner_jp": "メカエリチャンⅡ号機",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10005000.png",
     "choco_id": 752
   },
   {
     "id": 692,
+    "owner_id": 503300,
     "owner": "Circe",
+    "owner_jp": "キルケー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5033000.png",
     "choco_id": 754
   },
   {
     "id": 693,
+    "owner_id": 303100,
     "owner": "Nezha",
+    "owner_jp": "哪吒",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3031000.png",
     "choco_id": 756
   },
   {
     "id": 694,
+    "owner_id": 503400,
     "owner": "Queen of Sheba",
+    "owner_jp": "シバの女王",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5034000.png",
     "choco_id": 755
   },
   {
     "id": 695,
+    "owner_id": 2500100,
     "owner": "Abigail Williams",
+    "owner_jp": "アビゲイル・ウィリアムズ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25001000.png",
     "choco_id": 753
   },
   {
     "id": 700,
+    "owner_id": 303200,
     "owner": "Ereshkigal",
+    "owner_jp": "エレシュキガル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3032000.png",
     "choco_id": 758
   },
   {
     "id": 701,
+    "owner_id": 202200,
     "owner": "Attila the San(ta)",
+    "owner_jp": "アルテラ・ザ・サン〔タ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2022000.png",
     "choco_id": 757
   },
   {
     "id": 709,
+    "owner_id": 2500200,
     "owner": "Katsushika Hokusai",
+    "owner_jp": "葛飾北斎",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25002000.png",
     "choco_id": 759
   },
   {
     "id": 717,
+    "owner_id": 603200,
     "owner": "Semiramis",
+    "owner_jp": "セミラミス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6032000.png",
     "choco_id": 760
   },
   {
     "id": 762,
+    "owner_id": 202900,
     "owner": "Asagami Fujino",
+    "owner_jp": "浅上藤乃",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2029000.png",
     "choco_id": 949
   },
   {
     "id": 787,
+    "owner_id": 503500,
     "owner": "Anastasia",
+    "owner_jp": "アナスタシア",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5035000.png",
     "choco_id": 950
   },
   {
     "id": 788,
+    "owner_id": 703000,
     "owner": "Atalante (Alter)",
+    "owner_jp": "アタランテ〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7030000.png",
     "choco_id": 951
   },
   {
     "id": 789,
+    "owner_id": 503600,
     "owner": "Avicebron",
+    "owner_jp": "アヴィケブロン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5036000.png",
     "choco_id": 952
   },
   {
     "id": 790,
+    "owner_id": 1100600,
     "owner": "Antonio Salieri",
+    "owner_jp": "アントニオ・サリエリ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11006000.png",
     "choco_id": 954
   },
   {
     "id": 791,
+    "owner_id": 402800,
     "owner": "Ivan the Terrible",
+    "owner_jp": "イヴァン雷帝",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4028000.png",
     "choco_id": 953
   },
   {
     "id": 798,
+    "owner_id": 402900,
     "owner": "Achilles",
+    "owner_jp": "アキレウス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4029000.png",
     "choco_id": 955
   },
   {
     "id": 799,
+    "owner_id": 203000,
     "owner": "Chiron",
+    "owner_jp": "ケイローン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2030000.png",
     "choco_id": 956
   },
   {
     "id": 800,
+    "owner_id": 503800,
     "owner": "Sieg",
+    "owner_jp": "ジーク",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5038000.png",
     "choco_id": 957
   },
   {
     "id": 809,
+    "owner_id": 1000700,
     "owner": "Okita Souji (Alter)",
+    "owner_jp": "沖田総司〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10007000.png",
     "choco_id": 958
   },
   {
     "id": 810,
+    "owner_id": 603300,
     "owner": "Okada Izo",
+    "owner_jp": "岡田以蔵",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6033000.png",
     "choco_id": 959
   },
   {
     "id": 811,
+    "owner_id": 403000,
     "owner": "Sakamoto Ryouma",
+    "owner_jp": "坂本龍馬",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4030000.png",
     "choco_id": 960
   },
   {
     "id": 812,
+    "owner_id": 203100,
     "owner": "Napoleon",
+    "owner_jp": "ナポレオン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2031000.png",
     "choco_id": 961
   },
   {
     "id": 817,
+    "owner_id": 103300,
     "owner": "Sigurd",
+    "owner_jp": "シグルド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1033000.png",
     "choco_id": 962
   },
   {
     "id": 818,
+    "owner_id": 303300,
     "owner": "Valkyrie",
+    "owner_jp": "ワルキューレ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3033000.png",
     "choco_id": 963
   },
   {
     "id": 862,
+    "owner_id": 503900,
     "owner": "Scáthach-Skadi",
+    "owner_jp": "スカサハ＝スカディ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5039000.png",
     "choco_id": 964
   },
   {
     "id": 886,
+    "owner_id": 203200,
     "owner": "Jeanne d'Arc",
+    "owner_jp": "ジャンヌ・ダルク",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2032000.png",
     "choco_id": 965
   },
   {
     "id": 887,
+    "owner_id": 303400,
     "owner": "Ibaraki-Douji",
+    "owner_jp": "茨木童子",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3034000.png",
     "choco_id": 966
   },
   {
     "id": 888,
+    "owner_id": 603400,
     "owner": "Ushiwakamaru",
+    "owner_jp": "牛若丸",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6034000.png",
     "choco_id": 967
   },
   {
     "id": 889,
+    "owner_id": 703100,
     "owner": "Jeanne d'Arc (Alter)",
+    "owner_jp": "ジャンヌ・ダルク〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7031000.png",
     "choco_id": 968
   },
   {
     "id": 890,
+    "owner_id": 2300200,
     "owner": "BB",
+    "owner_jp": "ＢＢ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23002000.png",
     "choco_id": 969
   },
   {
     "id": 891,
+    "owner_id": 103400,
     "owner": "Queen Medb",
+    "owner_jp": "女王メイヴ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1034000.png",
     "choco_id": 970
   },
   {
     "id": 892,
+    "owner_id": 2500300,
     "owner": "Mysterious Heroine XX",
+    "owner_jp": "謎のヒロインXX",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25003000.png",
     "choco_id": 971
   },
   {
     "id": 894,
+    "owner_id": 103500,
     "owner": "Diarmuid Ua Duibhne",
+    "owner_jp": "ディルムッド・オディナ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1035000.png",
     "choco_id": 972
   },
   {
     "id": 908,
+    "owner_id": 1000800,
     "owner": "Sitonai",
+    "owner_jp": "シトナイ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10008000.png",
     "choco_id": 973
   },
   {
     "id": 909,
+    "owner_id": 504000,
     "owner": "Shuten-Douji",
+    "owner_jp": "酒呑童子",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5040000.png",
     "choco_id": 974
   },
   {
     "id": 916,
+    "owner_id": 703200,
     "owner": "Xiang Yu",
+    "owner_jp": "項羽",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7032000.png",
     "choco_id": 975
   },
   {
     "id": 917,
+    "owner_id": 103600,
     "owner": "Prince of Lan Ling",
+    "owner_jp": "蘭陵王",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1036000.png",
     "choco_id": 976
   },
   {
     "id": 918,
+    "owner_id": 303500,
     "owner": "Qin Liangyu",
+    "owner_jp": "秦良玉",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3035000.png",
     "choco_id": 977
   },
   {
     "id": 919,
+    "owner_id": 900600,
     "owner": "Qin Shi Huang",
+    "owner_jp": "始皇帝",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9006000.png",
-    "choco_id": 978
+    "choco_id": [
+      978,
+      979
+    ]
   },
   {
     "id": 920,
+    "owner_id": 603500,
     "owner": "Yu Mei-ren",
+    "owner_jp": "虞美人",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6035000.png",
     "choco_id": 980
   },
   {
     "id": 921,
+    "owner_id": 403100,
     "owner": "Red Hare",
+    "owner_jp": "赤兎馬",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4031000.png",
     "choco_id": 981
   },
   {
     "id": 927,
+    "owner_id": 303600,
     "owner": "Bradamante",
+    "owner_jp": "ブラダマンテ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3036000.png",
     "choco_id": 982
   },
   {
     "id": 928,
+    "owner_id": 900700,
     "owner": "Quetzalcoatl (Samba/Santa)",
+    "owner_jp": "ケツァル・コアトル〔サンバ／サンタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9007000.png",
     "choco_id": 983
   },
   {
     "id": 935,
+    "owner_id": 103700,
     "owner": "Beni-Enma",
+    "owner_jp": "紅閻魔",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1037000.png",
     "choco_id": 984
   },
   {
     "id": 936,
+    "owner_id": 603600,
     "owner": "Li Shuwen",
+    "owner_jp": "李書文",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6036000.png",
     "choco_id": 985
   },
   {
     "id": 943,
+    "owner_id": 504100,
     "owner": "Miyu Edelfelt",
+    "owner_jp": "美遊・エーデルフェルト",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5041000.png",
     "choco_id": 986
   },
   {
     "id": 948,
+    "owner_id": 504200,
     "owner": "Murasaki Shikibu",
+    "owner_jp": "紫式部",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5042000.png",
     "choco_id": 987
   },
   {
     "id": 989,
+    "owner_id": 1000900,
     "owner": "Kingprotea",
+    "owner_jp": "キングプロテア",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10009000.png",
     "choco_id": 1155
   },
   {
     "id": 1003,
+    "owner_id": 603700,
     "owner": "Kama",
+    "owner_jp": "カーマ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6037000.png",
     "choco_id": 1156
   },
   {
     "id": 1009,
+    "owner_id": 403200,
     "owner": "Sima Yi (Reines)",
+    "owner_jp": "司馬懿〔ライネス〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4032000.png",
     "choco_id": 1157
   },
   {
     "id": 1010,
+    "owner_id": 900800,
     "owner": "Astraea",
+    "owner_jp": "アストライア",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9008000.png",
     "choco_id": 1158
   },
   {
     "id": 1011,
+    "owner_id": 603900,
     "owner": "Gray",
+    "owner_jp": "グレイ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6039000.png",
     "choco_id": 1159
   },
   {
     "id": 1019,
+    "owner_id": 2300300,
     "owner": "Great Stone Statue God",
+    "owner_jp": "大いなる石像神",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23003000.png",
     "choco_id": 1160
   },
   {
     "id": 1020,
+    "owner_id": 103900,
     "owner": "Lakshmi Bai",
+    "owner_jp": "ラクシュミー・バーイー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1039000.png",
     "choco_id": 1161
   },
   {
     "id": 1021,
+    "owner_id": 203400,
     "owner": "William Tell",
+    "owner_jp": "ウィリアム・テル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2034000.png",
     "choco_id": 1162
   },
   {
     "id": 1022,
+    "owner_id": 703300,
     "owner": "Arjuna (Alter)",
+    "owner_jp": "アルジュナ〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7033000.png",
     "choco_id": 1163
   },
   {
     "id": 1023,
+    "owner_id": 203300,
     "owner": "Aśvatthāman",
+    "owner_jp": "アシュヴァッターマン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2033000.png",
     "choco_id": 1164
   },
   {
     "id": 1024,
+    "owner_id": 504300,
     "owner": "Asclepius",
+    "owner_jp": "アスクレピオス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5043000.png",
     "choco_id": 1165
   },
   {
     "id": 1032,
+    "owner_id": 1100700,
     "owner": "Oda Nobunaga",
+    "owner_jp": "織田信長",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11007000.png",
-    "choco_id": 1166
+    "choco_id": [
+      1166,
+      1167
+    ]
   },
   {
     "id": 1033,
+    "owner_id": 703500,
     "owner": "Mori Nagayoshi",
+    "owner_jp": "森長可",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7035000.png",
     "choco_id": 1168
   },
   {
     "id": 1034,
+    "owner_id": 303800,
     "owner": "Nagao Kagetora",
+    "owner_jp": "長尾景虎",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3038000.png",
     "choco_id": 1169
   },
   {
     "id": 1081,
+    "owner_id": 403500,
     "owner": "Leonardo da Vinci",
+    "owner_jp": "レオナルド・ダ・ヴィンチ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4035000.png",
     "choco_id": 1170
   },
   {
     "id": 1082,
+    "owner_id": 103800,
     "owner": "Jason",
+    "owner_jp": "イアソン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1038000.png",
     "choco_id": 1171
   },
   {
     "id": 1083,
+    "owner_id": 203500,
     "owner": "Paris",
+    "owner_jp": "パリス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2035000.png",
     "choco_id": 1172
   },
   {
     "id": 1084,
+    "owner_id": 303900,
     "owner": "Gareth",
+    "owner_jp": "ガレス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3039000.png",
     "choco_id": 1173
   },
   {
     "id": 1085,
+    "owner_id": 403400,
     "owner": "Bartholomew Roberts",
+    "owner_jp": "バーソロミュー・ロバーツ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4034000.png",
     "choco_id": 1174
   },
   {
     "id": 1086,
+    "owner_id": 504400,
     "owner": "Chen Gong",
+    "owner_jp": "陳宮",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5044000.png",
     "choco_id": 1175
   },
   {
     "id": 1087,
+    "owner_id": 603800,
     "owner": "Charlotte Corday",
+    "owner_jp": "シャルロット・コルデー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6038000.png",
     "choco_id": 1176
   },
   {
     "id": 1088,
+    "owner_id": 703400,
     "owner": "Salome",
+    "owner_jp": "サロメ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7034000.png",
     "choco_id": 1177
   },
   {
     "id": 1097,
+    "owner_id": 703600,
     "owner": "Miyamoto Musashi",
+    "owner_jp": "宮本武蔵",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7036000.png",
     "choco_id": 1178
   },
   {
     "id": 1098,
+    "owner_id": 203600,
     "owner": "Osakabehime",
+    "owner_jp": "刑部姫",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2036000.png",
     "choco_id": 1179
   },
   {
     "id": 1099,
+    "owner_id": 403600,
     "owner": "Carmilla",
+    "owner_jp": "カーミラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4036000.png",
     "choco_id": 1180
   },
   {
     "id": 1100,
+    "owner_id": 104000,
     "owner": "Katsushika Hokusai",
+    "owner_jp": "葛飾北斎",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1040000.png",
     "choco_id": 1181
   },
   {
     "id": 1101,
+    "owner_id": 900900,
     "owner": "Altria Pendragon",
+    "owner_jp": "アルトリア・ペンドラゴン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9009000.png",
     "choco_id": 1182
   },
   {
     "id": 1102,
+    "owner_id": 304000,
     "owner": "Mysterious Alter Ego Λ",
+    "owner_jp": "謎のアルターエゴ・Λ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3040000.png",
     "choco_id": 1183
   },
   {
     "id": 1103,
+    "owner_id": 604000,
     "owner": "Okita J. Souji",
+    "owner_jp": "オキタ・Ｊ・ソウジ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6040000.png",
     "choco_id": 1184
   },
   {
     "id": 1119,
+    "owner_id": 1100900,
     "owner": "Space Ishtar",
+    "owner_jp": "スペース・イシュタル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11009000.png",
     "choco_id": 1185
   },
   {
     "id": 1120,
+    "owner_id": 203700,
     "owner": "Calamity Jane",
+    "owner_jp": "カラミティ・ジェーン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2037000.png",
     "choco_id": 1186
   },
   {
     "id": 1127,
+    "owner_id": 104100,
     "owner": "Astolfo",
+    "owner_jp": "アストルフォ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1041000.png",
-    "choco_id": 1187
+    "choco_id": [
+      1187,
+      1188
+    ]
   },
   {
     "id": 1128,
+    "owner_id": 203900,
     "owner": "Florence Nightingale (Santa)",
+    "owner_jp": "ナイチンゲール〔サンタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2039000.png",
     "choco_id": 1189
   },
   {
     "id": 1133,
+    "owner_id": 203800,
     "owner": "Super Orion",
+    "owner_jp": "超人オリオン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2038000.png",
     "choco_id": 1190
   },
   {
     "id": 1134,
+    "owner_id": 403900,
     "owner": "Mandricardo",
+    "owner_jp": "マンドリカルド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4039000.png",
     "choco_id": 1191
   },
   {
     "id": 1135,
+    "owner_id": 404000,
     "owner": "Europa",
+    "owner_jp": "エウロペ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4040000.png",
     "choco_id": 1192
   },
   {
     "id": 1145,
+    "owner_id": 2500400,
     "owner": "Yang Guifei",
+    "owner_jp": "楊貴妃",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25004000.png",
     "choco_id": 1193
   },
   {
     "id": 1154,
+    "owner_id": 204000,
     "owner": "Sei Shounagon",
+    "owner_jp": "清少納言",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2040000.png",
     "choco_id": 1194
   },
   {
     "id": 1205,
+    "owner_id": 403800,
     "owner": "Odysseus",
+    "owner_jp": "オデュッセウス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4038000.png",
     "choco_id": 1353
   },
   {
     "id": 1211,
+    "owner_id": 104200,
     "owner": "Dioscuri",
+    "owner_jp": "ディオスクロイ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1042000.png",
-    "choco_id": 1354
+    "choco_id": [
+      1354,
+      1355
+    ]
   },
   {
     "id": 1212,
+    "owner_id": 304100,
     "owner": "Caenis",
+    "owner_jp": "カイニス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3041000.png",
     "choco_id": 1356
   },
   {
     "id": 1213,
+    "owner_id": 304200,
     "owner": "Romulus=Quirinus",
+    "owner_jp": "ロムルス＝クィリヌス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3042000.png",
     "choco_id": 1357
   },
   {
     "id": 1219,
+    "owner_id": 2500500,
     "owner": "Voyager",
+    "owner_jp": "ボイジャー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25005000.png",
     "choco_id": 1358
   },
   {
     "id": 1220,
+    "owner_id": 703700,
     "owner": "Kijyo Koyo",
+    "owner_jp": "鬼女紅葉",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7037000.png",
     "choco_id": 1359
   },
   {
     "id": 1221,
+    "owner_id": 304300,
     "owner": "Utsumi Erice",
+    "owner_jp": "宇津見エリセ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3043000.png",
     "choco_id": 1360
   },
   {
     "id": 1274,
+    "owner_id": 504500,
     "owner": "Altria Caster",
+    "owner_jp": "アルトリア・キャスター",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5045000.png",
     "choco_id": 1361
   },
   {
     "id": 1288,
+    "owner_id": 2300400,
     "owner": "Sessyoin Kiara",
+    "owner_jp": "殺生院キアラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23004000.png",
     "choco_id": 1362
   },
   {
     "id": 1289,
+    "owner_id": 204200,
     "owner": "Illyasviel von Einzbern",
+    "owner_jp": "イリヤスフィール・フォン・アインツベルン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2042000.png",
     "choco_id": 1363
   },
   {
     "id": 1290,
+    "owner_id": 703800,
     "owner": "Brynhild",
+    "owner_jp": "ブリュンヒルデ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7038000.png",
     "choco_id": 1364
   },
   {
     "id": 1291,
+    "owner_id": 304400,
     "owner": "Yu Mei-ren",
+    "owner_jp": "虞美人",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3044000.png",
     "choco_id": 1365
   },
   {
     "id": 1292,
+    "owner_id": 2500700,
     "owner": "Abigail Williams (Summer)",
+    "owner_jp": "アビゲイル・ウィリアムズ〔夏〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25007000.png",
     "choco_id": 1366
   },
   {
     "id": 1293,
+    "owner_id": 104500,
     "owner": "Tomoe Gozen",
+    "owner_jp": "巴御前",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1045000.png",
     "choco_id": 1367
   },
   {
     "id": 1294,
+    "owner_id": 404100,
     "owner": "Murasaki Shikibu",
+    "owner_jp": "紫式部",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4041000.png",
     "choco_id": 1368
   },
   {
     "id": 1303,
+    "owner_id": 901000,
     "owner": "Himiko",
+    "owner_jp": "卑弥呼",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9010000.png",
     "choco_id": 1369
   },
   {
     "id": 1304,
+    "owner_id": 104400,
     "owner": "Saito Hajime",
+    "owner_jp": "斎藤一",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1044000.png",
     "choco_id": 1370
   },
   {
     "id": 1305,
+    "owner_id": 204100,
     "owner": "Oda Nobukatsu",
+    "owner_jp": "織田信勝",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2041000.png",
     "choco_id": 1371
   },
   {
     "id": 1312,
+    "owner_id": 403700,
     "owner": "Nemo",
+    "owner_jp": "ネモ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4037000.png",
     "choco_id": 1373
   },
   {
     "id": 1313,
+    "owner_id": 2500600,
     "owner": "Van Gogh",
+    "owner_jp": "ヴァン・ゴッホ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25006000.png",
     "choco_id": 1372
   },
   {
     "id": 1319,
+    "owner_id": 1001000,
     "owner": "Ashiya Douman",
+    "owner_jp": "蘆屋道満",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10010000.png",
     "choco_id": 1374
   },
   {
     "id": 1320,
+    "owner_id": 104700,
     "owner": "Watanabe-no-Tsuna",
+    "owner_jp": "渡辺綱",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1047000.png",
     "choco_id": 1375
   },
   {
     "id": 1326,
+    "owner_id": 104600,
     "owner": "Ibuki-Douji",
+    "owner_jp": "伊吹童子",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1046000.png",
     "choco_id": 1376
   },
   {
     "id": 1331,
+    "owner_id": 304600,
     "owner": "Vritra",
+    "owner_jp": "ヴリトラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3046000.png",
     "choco_id": 1377
   },
   {
     "id": 1332,
+    "owner_id": 104800,
     "owner": "Karna (Santa)",
+    "owner_jp": "カルナ〔サンタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1048000.png",
     "choco_id": 1378
   },
   {
     "id": 1338,
+    "owner_id": 104900,
     "owner": "Senji Muramasa",
+    "owner_jp": "千子村正",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1049000.png",
     "choco_id": 1379
   },
   {
     "id": 1345,
+    "owner_id": 1101000,
     "owner": "Taira-no-Kagekiyo",
+    "owner_jp": "平景清",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11010000.png",
     "choco_id": 1380
   },
   {
     "id": 1346,
+    "owner_id": 604100,
     "owner": "Kiichi Hogen",
+    "owner_jp": "鬼一法眼",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6041000.png",
     "choco_id": 1381
   },
   {
     "id": 1352,
+    "owner_id": 901100,
     "owner": "Amor (Caren)",
+    "owner_jp": "アムール〔カレン〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9011000.png",
     "choco_id": 1382
   },
   {
     "id": 1398,
+    "owner_id": 703900,
     "owner": "Galatea",
+    "owner_jp": "ガラテア",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7039000.png",
     "choco_id": 1533
   },
   {
     "id": 1403,
+    "owner_id": 504600,
     "owner": "Miss Crane",
+    "owner_jp": "ミス・クレーン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5046000.png",
     "choco_id": 1534
   },
   {
     "id": 1404,
+    "owner_id": 2500800,
     "owner": "Mysterious Idol X (Alter)",
+    "owner_jp": "謎のアイドルX〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25008000.png",
     "choco_id": 1535
   },
   {
     "id": 1416,
+    "owner_id": 704000,
     "owner": "Morgan",
+    "owner_jp": "モルガン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7040000.png",
     "choco_id": 1536
   },
   {
     "id": 1417,
+    "owner_id": 105000,
     "owner": "Tam Lin Gawain",
+    "owner_jp": "妖精騎士ガウェイン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1050000.png",
     "choco_id": 1537
   },
   {
     "id": 1418,
+    "owner_id": 204300,
     "owner": "Tam Lin Tristan",
+    "owner_jp": "妖精騎士トリスタン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2043000.png",
     "choco_id": 1538
   },
   {
     "id": 1419,
+    "owner_id": 304800,
     "owner": "Tam Lin Lancelot",
+    "owner_jp": "妖精騎士ランスロット",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3048000.png",
     "choco_id": 1539
   },
   {
     "id": 1420,
+    "owner_id": 304700,
     "owner": "Percival",
+    "owner_jp": "パーシヴァル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3047000.png",
     "choco_id": 1540
   },
   {
     "id": 1462,
+    "owner_id": 604200,
     "owner": "Koyanskaya of Light",
+    "owner_jp": "光のコヤンスカヤ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6042000.png",
     "choco_id": 1541
   },
   {
     "id": 1464,
+    "owner_id": 404200,
     "owner": "Habetrot",
+    "owner_jp": "ハベトロット",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4042000.png",
     "choco_id": 1542
   },
   {
     "id": 1465,
+    "owner_id": 2800100,
     "owner": "Oberon",
+    "owner_jp": "オベロン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28001000.png",
     "choco_id": 1543
   },
   {
     "id": 1476,
+    "owner_id": 105100,
     "owner": "Okita Souji (Alter)",
+    "owner_jp": "沖田総司〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1051000.png",
     "choco_id": 1544
   },
   {
     "id": 1477,
+    "owner_id": 204400,
     "owner": "Anastasia & Viy",
+    "owner_jp": "アナスタシア＆ヴィイ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2044000.png",
     "choco_id": 1545
   },
   {
     "id": 1478,
+    "owner_id": 504800,
     "owner": "Charlotte Corday",
+    "owner_jp": "シャルロット・コルデー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5048000.png",
     "choco_id": 1546
   },
   {
     "id": 1479,
+    "owner_id": 901200,
     "owner": "Leonardo da Vinci",
+    "owner_jp": "レオナルド・ダ・ヴィンチ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9012000.png",
     "choco_id": 1547
   },
   {
     "id": 1480,
+    "owner_id": 1101100,
     "owner": "Kama",
+    "owner_jp": "カーマ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11011000.png",
     "choco_id": 1548
   },
   {
     "id": 1481,
+    "owner_id": 404500,
     "owner": "Caenis",
+    "owner_jp": "カイニス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4045000.png",
     "choco_id": 1549
   },
   {
     "id": 1482,
+    "owner_id": 704100,
     "owner": "Sei Shounagon",
+    "owner_jp": "清少納言",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7041000.png",
     "choco_id": 1550
   },
   {
     "id": 1492,
+    "owner_id": 2501000,
     "owner": "Jacques de Molay",
+    "owner_jp": "ジャック・ド・モレー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25010000.png",
     "choco_id": 1551
   },
   {
     "id": 1493,
+    "owner_id": 204500,
     "owner": "Zenobia",
+    "owner_jp": "ゼノビア",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2045000.png",
     "choco_id": 1552
   },
   {
     "id": 1494,
+    "owner_id": 404600,
     "owner": "Elisabeth Báthory (Cinderella)",
+    "owner_jp": "エリザベート・バートリー〔シンデレラ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4046000.png",
     "choco_id": 1553
   },
   {
     "id": 1501,
+    "owner_id": 504900,
     "owner": "Izumo-no-Okuni",
+    "owner_jp": "出雲阿国",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5049000.png",
     "choco_id": 1554
   },
   {
     "id": 1502,
+    "owner_id": 1101200,
     "owner": "Mysterious Ranmaru X",
+    "owner_jp": "謎の蘭丸X",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11012000.png",
     "choco_id": 1555
   },
   {
     "id": 1503,
+    "owner_id": 305000,
     "owner": "Sakamoto Ryouma",
+    "owner_jp": "坂本龍馬",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3050000.png",
     "choco_id": 1556
   },
   {
     "id": 1509,
+    "owner_id": 505000,
     "owner": "Martha (Santa)",
+    "owner_jp": "マルタ〔サンタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5050000.png",
     "choco_id": 1557
   },
   {
     "id": 1517,
+    "owner_id": 404300,
     "owner": "Taigong Wang",
+    "owner_jp": "太公望",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4043000.png",
     "choco_id": 1558
   },
   {
     "id": 1518,
+    "owner_id": 404400,
     "owner": "Dobrynya Nikitich",
+    "owner_jp": "ドブルイニャ・ニキチッチ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4044000.png",
     "choco_id": 1559
   },
   {
     "id": 1523,
+    "owner_id": 2500900,
     "owner": "Koyanskaya of Dark",
+    "owner_jp": "闇のコヤンスカヤ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25009000.png",
     "choco_id": 1560
   },
   {
     "id": 1526,
+    "owner_id": 2800200,
     "owner": "Hephaistíon",
+    "owner_jp": "ヘファイスティオン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28002000.png",
     "choco_id": 1561
   },
   {
     "id": 1532,
+    "owner_id": 1001100,
     "owner": "Manannán mac Lir (Bazett)",
+    "owner_jp": "マナナン・マク・リール〔バゼット〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10011000.png",
     "choco_id": 1562
   },
   {
     "id": 1588,
+    "owner_id": 105300,
     "owner": "Hai Bà Trưng",
+    "owner_jp": "徴姉妹",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1053000.png",
     "choco_id": 1757
   },
   {
     "id": 1589,
+    "owner_id": 1001200,
     "owner": "Taisui Xingjun",
+    "owner_jp": "太歳星君",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10012000.png",
     "choco_id": 1758
   },
   {
     "id": 1599,
+    "owner_id": 1001300,
     "owner": "Super Bunyan",
+    "owner_jp": "スーパーバニヤン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10013000.png",
     "choco_id": 1759
   },
   {
     "id": 1600,
+    "owner_id": 504700,
     "owner": "Daikokuten",
+    "owner_jp": "大黒天",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5047000.png",
     "choco_id": 1760
   },
   {
     "id": 1601,
+    "owner_id": 304900,
     "owner": "Mary Anning",
+    "owner_jp": "メアリー・アニング",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3049000.png",
     "choco_id": 1761
   },
   {
     "id": 1602,
+    "owner_id": 404700,
     "owner": "Kōnstantînos XI",
+    "owner_jp": "コンスタンティノス11世",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4047000.png",
     "choco_id": 1762
   },
   {
     "id": 1612,
+    "owner_id": 105200,
     "owner": "Charlemagne",
+    "owner_jp": "シャルルマーニュ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1052000.png",
     "choco_id": 1763
   },
   {
     "id": 1613,
+    "owner_id": 104300,
     "owner": "Roland",
+    "owner_jp": "ローラン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1043000.png",
     "choco_id": 1764
   },
   {
     "id": 1614,
+    "owner_id": 704200,
     "owner": "Kriemhild",
+    "owner_jp": "クリームヒルト",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7042000.png",
     "choco_id": 1765
   },
   {
     "id": 1615,
+    "owner_id": 901300,
     "owner": "James Moriarty",
+    "owner_jp": "ジェームズ・モリアーティ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9013000.png",
     "choco_id": 1766
   },
   {
     "id": 1616,
+    "owner_id": 305100,
     "owner": "Don Quixote",
+    "owner_jp": "ドン・キホーテ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3051000.png",
     "choco_id": 1767
   },
   {
     "id": 1617,
+    "owner_id": 505100,
     "owner": "Zhang Jue",
+    "owner_jp": "張角",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5051000.png",
     "choco_id": 1768
   },
   {
     "id": 1624,
+    "owner_id": 404800,
     "owner": "Kyokutei Bakin",
+    "owner_jp": "曲亭馬琴",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4048000.png",
     "choco_id": 1769
   },
   {
     "id": 1625,
+    "owner_id": 204600,
     "owner": "Minamoto-no-Tametomo",
+    "owner_jp": "源為朝",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2046000.png",
     "choco_id": 1770
   },
   {
     "id": 1671,
+    "owner_id": 2300500,
     "owner": "Archetype: Earth",
+    "owner_jp": "アーキタイプ：アース",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23005000.png",
     "choco_id": 1771
   },
   {
     "id": 1672,
+    "owner_id": 1001400,
     "owner": "Xu Fu",
+    "owner_jp": "徐福",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10014000.png",
     "choco_id": 1772
   },
   {
     "id": 1681,
+    "owner_id": 2800300,
     "owner": "Lady Avalon",
+    "owner_jp": "レディ・アヴァロン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28003000.png",
     "choco_id": 1773
   },
   {
     "id": 1682,
+    "owner_id": 105400,
     "owner": "Gareth",
+    "owner_jp": "ガレス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1054000.png",
     "choco_id": 1774
   },
   {
     "id": 1683,
+    "owner_id": 704300,
     "owner": "Ibuki-Douji",
+    "owner_jp": "伊吹童子",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7043000.png",
     "choco_id": 1775
   },
   {
     "id": 1684,
+    "owner_id": 1101400,
     "owner": "Utsumi Erice",
+    "owner_jp": "宇津見エリセ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11014000.png",
     "choco_id": 1776
   },
   {
     "id": 1685,
+    "owner_id": 901400,
     "owner": "Scáthach-Skadi",
+    "owner_jp": "スカサハ＝スカディ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9014000.png",
     "choco_id": 1777
   },
   {
     "id": 1686,
+    "owner_id": 505200,
     "owner": "Wu Zetian",
+    "owner_jp": "武則天",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5052000.png",
     "choco_id": 1778
   },
   {
     "id": 1687,
+    "owner_id": 604500,
     "owner": "Thrúd",
+    "owner_jp": "スルーズ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6045000.png",
     "choco_id": 1779
   },
   {
     "id": 1688,
+    "owner_id": 604400,
     "owner": "Hildr",
+    "owner_jp": "ヒルド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6044000.png",
     "choco_id": 1780
   },
   {
     "id": 1689,
+    "owner_id": 604300,
     "owner": "Ortlinde",
+    "owner_jp": "オルトリンデ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6043000.png",
     "choco_id": 1781
   },
   {
     "id": 1702,
+    "owner_id": 704400,
     "owner": "Sen-no-Rikyu",
+    "owner_jp": "千利休",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7044000.png",
     "choco_id": 1782
   },
   {
     "id": 1703,
+    "owner_id": 105500,
     "owner": "Yamanami Keisuke",
+    "owner_jp": "山南敬助",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1055000.png",
     "choco_id": 1783
   },
   {
     "id": 1704,
+    "owner_id": 901500,
     "owner": "Iyo",
+    "owner_jp": "壱与",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9015000.png",
     "choco_id": 1784
   },
   {
     "id": 1713,
+    "owner_id": 604600,
     "owner": "Huyan Zhuo",
+    "owner_jp": "呼延灼",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6046000.png",
     "choco_id": 1785
   },
   {
     "id": 1714,
+    "owner_id": 404900,
     "owner": "Huang Feihu",
+    "owner_jp": "黄飛虎",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4049000.png",
     "choco_id": 1786
   },
   {
     "id": 1715,
+    "owner_id": 2800400,
     "owner": "Nine-Tattoo Dragon Elisa",
+    "owner_jp": "九紋竜エリザ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28004000.png",
     "choco_id": 1787
   },
   {
     "id": 1723,
+    "owner_id": 305300,
     "owner": "Britomart",
+    "owner_jp": "ブリトマート",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3053000.png",
     "choco_id": 1788
   },
   {
     "id": 1740,
+    "owner_id": 1001500,
     "owner": "Grigori Rasputin",
+    "owner_jp": "グレゴリー・ラスプーチン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10015000.png",
     "choco_id": 1789
   },
   {
     "id": 1742,
+    "owner_id": 1101500,
     "owner": "Nitocris (Alter)",
+    "owner_jp": "ニトクリス〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11015000.png",
     "choco_id": 1790
   },
   {
     "id": 1749,
+    "owner_id": 604700,
     "owner": "Tezcatlipoca",
+    "owner_jp": "テスカトリポカ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6047000.png",
     "choco_id": 1791
   },
   {
     "id": 1750,
+    "owner_id": 2800500,
     "owner": "Tlaloc",
+    "owner_jp": "トラロック",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28005000.png",
     "choco_id": 1792
   },
   {
     "id": 1751,
+    "owner_id": 2501100,
     "owner": "Kukulcan",
+    "owner_jp": "ククルカン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25011000.png",
     "choco_id": 1793
   },
   {
     "id": 1756,
+    "owner_id": 901600,
     "owner": "Pope Johanna",
+    "owner_jp": "女教皇ヨハンナ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9016000.png",
     "choco_id": 1794
   },
   {
     "id": 1807,
+    "owner_id": 204700,
     "owner": "Takasugi Shinsaku",
+    "owner_jp": "高杉晋作",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2047000.png",
     "choco_id": 1986
   },
   {
     "id": 1816,
+    "owner_id": 1001600,
     "owner": "Larva/Tiamat",
+    "owner_jp": "ラーヴァ／ティアマト",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10016000.png",
     "choco_id": 1987
   },
   {
     "id": 1818,
+    "owner_id": 3300100,
     "owner": "Sodom's Beast/Draco",
+    "owner_jp": "ソドムズビースト／ドラコー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_33001000.png",
     "choco_id": 1988
   },
   {
     "id": 1819,
+    "owner_id": 604800,
     "owner": "Locusta",
+    "owner_jp": "ロクスタ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6048000.png",
     "choco_id": 1989
   },
   {
     "id": 1820,
+    "owner_id": 105700,
     "owner": "Setanta",
+    "owner_jp": "セタンタ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1057000.png",
     "choco_id": 1990
   },
   {
     "id": 1826,
+    "owner_id": 604900,
     "owner": "Kashin Koji",
+    "owner_jp": "果心居士",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6049000.png",
     "choco_id": 1991
   },
   {
     "id": 1833,
+    "owner_id": 305400,
     "owner": "Bhima",
+    "owner_jp": "ビーマ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3054000.png",
     "choco_id": 1992
   },
   {
     "id": 1834,
+    "owner_id": 704600,
     "owner": "Duryodhana",
+    "owner_jp": "ドゥリーヨダナ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7046000.png",
     "choco_id": 1993
   },
   {
     "id": 1835,
+    "owner_id": 204800,
     "owner": "Durga",
+    "owner_jp": "ドゥルガー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2048000.png",
     "choco_id": 1994
   },
   {
     "id": 1842,
+    "owner_id": 105600,
     "owner": "Medusa",
+    "owner_jp": "メドゥーサ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1056000.png",
     "choco_id": 1995
   },
   {
     "id": 1893,
+    "owner_id": 505300,
     "owner": "Aesc the Rain Witch",
+    "owner_jp": "雨の魔女トネリコ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5053000.png",
     "choco_id": 1996
   },
   {
     "id": 1903,
+    "owner_id": 704700,
     "owner": "Altria Caster",
+    "owner_jp": "アルトリア・キャスター",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7047000.png",
     "choco_id": 1997
   },
   {
     "id": 1904,
+    "owner_id": 405000,
     "owner": "Suzuka Gozen (Summer Vacation)",
+    "owner_jp": "鈴鹿御前〔サマバケ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4050000.png",
     "choco_id": 1998
   },
   {
     "id": 1905,
+    "owner_id": 1101600,
     "owner": "Chloe von Einzbern",
+    "owner_jp": "クロエ・フォン・アインツベルン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11016000.png",
     "choco_id": 1999
   },
   {
     "id": 1911,
+    "owner_id": 2501200,
     "owner": "Cnoc na Riabh Yaraan-doo",
+    "owner_jp": "ノクナレア・ヤラアーンドゥ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25012000.png",
     "choco_id": 2000
   },
   {
     "id": 1912,
+    "owner_id": 901700,
     "owner": "Mélusine",
+    "owner_jp": "メリュジーヌ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9017000.png",
     "choco_id": 2001
   },
   {
     "id": 1913,
+    "owner_id": 204900,
     "owner": "UDK-Barghest",
+    "owner_jp": "ＵＤＫ－バーゲスト",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2049000.png",
     "choco_id": 2002
   },
   {
     "id": 1914,
+    "owner_id": 2800600,
     "owner": "Cait Cú Cerpriestess",
+    "owner_jp": "ケット・クー・ミコケル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28006000.png",
     "choco_id": 2003
   },
   {
     "id": 1927,
+    "owner_id": 2501300,
     "owner": "Wandjina",
+    "owner_jp": "ワンジナ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25013000.png",
     "choco_id": 2004
   },
   {
     "id": 1933,
+    "owner_id": 205000,
     "owner": "Ptolemaîos",
+    "owner_jp": "プトレマイオス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2050000.png",
     "choco_id": 2005
   },
   {
     "id": 1934,
+    "owner_id": 205100,
     "owner": "Sugitani Zenjubou",
+    "owner_jp": "杉谷善住坊",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2051000.png",
     "choco_id": 2006
   },
   {
     "id": 1935,
+    "owner_id": 105800,
     "owner": "Theseus",
+    "owner_jp": "テセウス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1058000.png",
     "choco_id": 2007
   },
   {
     "id": 1946,
+    "owner_id": 405200,
     "owner": "Takeda Harunobu",
+    "owner_jp": "武田晴信",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4052000.png",
     "choco_id": 2008
   },
   {
     "id": 1947,
+    "owner_id": 704800,
     "owner": "Nagakura Shinpachi",
+    "owner_jp": "永倉新八",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7048000.png",
     "choco_id": 2009
   },
   {
     "id": 1948,
+    "owner_id": 205200,
     "owner": "Saika Magoichi",
+    "owner_jp": "雑賀孫一",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2052000.png",
     "choco_id": 2010
   },
   {
     "id": 1950,
+    "owner_id": 901800,
     "owner": "Uesugi Kenshin",
+    "owner_jp": "上杉謙信",
     "face": "https://static.atlasacademy.io/JP/Faces/f_9018000.png",
     "choco_id": 2011
   },
   {
     "id": 1955,
+    "owner_id": 405300,
     "owner": "Nemo (Santa)",
+    "owner_jp": "ネモ〔サンタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4053000.png",
     "choco_id": 2012
   },
   {
     "id": 1963,
+    "owner_id": 105900,
     "owner": "Yamato Takeru",
+    "owner_jp": "ヤマトタケル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1059000.png",
-    "choco_id": 2013
+    "choco_id": [
+      2013,
+      2014
+    ]
   },
   {
     "id": 1970,
+    "owner_id": 1101800,
     "owner": "Minamoto-no-Raikou/Ushi Gozen",
+    "owner_jp": "源頼光／丑御前",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11018000.png",
     "choco_id": 2015
   },
   {
     "id": 1971,
+    "owner_id": 505400,
     "owner": "Yui Shousetsu",
+    "owner_jp": "由井正雪",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5054000.png",
     "choco_id": 2016
   },
   {
     "id": 1972,
+    "owner_id": 106000,
     "owner": "Miyamoto Iori",
+    "owner_jp": "宮本伊織",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1060000.png",
     "choco_id": 2017
   },
   {
     "id": 1985,
+    "owner_id": 405500,
     "owner": "Andromeda",
+    "owner_jp": "アンドロメダ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4055000.png",
     "choco_id": 2018
   },
   {
     "id": 2035,
+    "owner_id": 1101300,
     "owner": "Marie Antoinette (Alter)",
+    "owner_jp": "マリー・アントワネット〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11013000.png",
     "choco_id": 2180
   },
   {
     "id": 2036,
+    "owner_id": 605000,
     "owner": "Hassan of the Shining Star",
+    "owner_jp": "耀星のハサン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6050000.png",
     "choco_id": 2181
   },
   {
     "id": 2037,
+    "owner_id": 1101700,
     "owner": "The Count of Monte Cristo",
+    "owner_jp": "巌窟王　モンテ・クリスト",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11017000.png",
     "choco_id": 2182
   },
   {
     "id": 2038,
+    "owner_id": 2800700,
     "owner": "Alessandro di Cagliostro",
+    "owner_jp": "アレッサンドロ・ディ・カリオストロ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28007000.png",
     "choco_id": 2183
   },
   {
     "id": 2048,
+    "owner_id": 2501400,
     "owner": "Aozaki Aoko",
+    "owner_jp": "蒼崎青子",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25014000.png",
     "choco_id": 2184
   },
   {
     "id": 2049,
+    "owner_id": 704900,
     "owner": "Shizuki Soujuurou",
+    "owner_jp": "静希草十郎",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7049000.png",
     "choco_id": 2185
   },
   {
     "id": 2050,
+    "owner_id": 505500,
     "owner": "Kuonji Alice",
+    "owner_jp": "久遠寺有珠",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5055000.png",
     "choco_id": 2186
   },
   {
     "id": 2057,
+    "owner_id": 1001700,
     "owner": "Hibiki & Chikagi",
+    "owner_jp": "ひびき＆千鍵",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10017000.png",
     "choco_id": 2187
   },
   {
     "id": 2105,
+    "owner_id": 3300200,
     "owner": "Ereshkigal",
+    "owner_jp": "エレシュキガル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_33002000.png",
     "choco_id": 2188
   },
   {
     "id": 2116,
+    "owner_id": 2300900,
     "owner": "Mysterious Executor C.I.E.L",
+    "owner_jp": "謎の代行者C.I.E.L",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23009000.png",
     "choco_id": 2189
   },
   {
     "id": 2117,
+    "owner_id": 305500,
     "owner": "Dobrynya Nikitich",
+    "owner_jp": "ドブルイニャ・ニキチッチ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3055000.png",
     "choco_id": 2190
   },
   {
     "id": 2118,
+    "owner_id": 1101900,
     "owner": "Xu Fu",
+    "owner_jp": "徐福",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11019000.png",
     "choco_id": 2191
   },
   {
     "id": 2119,
+    "owner_id": 2300600,
     "owner": "BB Dubai",
+    "owner_jp": "ＢＢドバイ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23006000.png",
     "choco_id": 2192
   },
   {
     "id": 2120,
+    "owner_id": 2301000,
     "owner": "Tenochtitlan",
+    "owner_jp": "テノチティトラン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23010000.png",
     "choco_id": 2193
   },
   {
     "id": 2121,
+    "owner_id": 2501600,
     "owner": "Mysterious Heroine XX (Alter)",
+    "owner_jp": "謎のヒロインXX〔オルタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_25016000.png",
     "choco_id": 2194
   },
   {
     "id": 2126,
+    "owner_id": 2300700,
     "owner": "Kishinami Hakuno",
+    "owner_jp": "岸波白野",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23007000.png",
     "choco_id": 2195
   },
   {
     "id": 2127,
+    "owner_id": 2300800,
     "owner": "Kishinami Hakuno",
+    "owner_jp": "岸波白野",
     "face": "https://static.atlasacademy.io/JP/Faces/f_23008000.png",
     "choco_id": 2196
   },
   {
     "id": 2135,
+    "owner_id": 1001800,
     "owner": "Kazuradrop",
+    "owner_jp": "カズラドロップ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10018000.png",
     "choco_id": 2197
   },
   {
     "id": 2140,
+    "owner_id": 205300,
     "owner": "Tutankhamun",
+    "owner_jp": "ツタンカーメン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2053000.png",
     "choco_id": 2198
   },
   {
     "id": 2141,
+    "owner_id": 305600,
     "owner": "Van Gogh (Miner)",
+    "owner_jp": "ヴァン・ゴッホ〔マイナー〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3056000.png",
     "choco_id": 2199
   },
   {
     "id": 2148,
+    "owner_id": 705000,
     "owner": "Louhi",
+    "owner_jp": "ロウヒ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_7050000.png",
     "choco_id": 2200
   },
   {
     "id": 2149,
+    "owner_id": 2800800,
     "owner": "Abigail Williams (Santa)",
+    "owner_jp": "アビゲイル・ウィリアムズ〔サンタ〕",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28008000.png",
     "choco_id": 2201
   },
   {
     "id": 2154,
+    "owner_id": 2800900,
     "owner": "Phantasmoon",
+    "owner_jp": "ファンタズムーン",
     "face": "https://static.atlasacademy.io/JP/Faces/f_28009000.png",
     "choco_id": 2202
   },
   {
     "id": 2160,
+    "owner_id": 106100,
     "owner": "Richard I",
+    "owner_jp": "リチャードⅠ世",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1061000.png",
     "choco_id": 2203
   },
   {
     "id": 2171,
+    "owner_id": 305700,
     "owner": "Biscione",
+    "owner_jp": "ビショーネ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3057000.png",
     "choco_id": 2204
   },
   {
     "id": 2172,
+    "owner_id": 106200,
     "owner": "Kurohime",
+    "owner_jp": "黒姫",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1062000.png",
     "choco_id": 2205
   },
   {
     "id": 2179,
+    "owner_id": 505800,
     "owner": "Ono no Komachi",
+    "owner_jp": "小野小町",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5058000.png",
     "choco_id": 2206
   },
   {
     "id": 2219,
-    "owner": "Dante Alighieri",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_28010000.png",
     "owner_id": 2801000,
+    "owner": "Dante Alighieri",
+    "owner_jp": "ダンテ・アリギエーリ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28010000.png",
     "choco_id": 2556
   },
   {
     "id": 2227,
-    "owner": "Metatron Jeanne",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_9019000.png",
     "owner_id": 901900,
+    "owner": "Metatron Jeanne",
+    "owner_jp": "メタトロン・ジャンヌ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_9019000.png",
     "choco_id": 2557
   },
   {
     "id": 2228,
-    "owner": "King Ashoka",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3058000.png",
     "owner_id": 305800,
+    "owner": "King Ashoka",
+    "owner_jp": "アショカ王",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3058000.png",
     "choco_id": 2558
   },
   {
     "id": 2229,
+    "owner_id": 800100,
     "owner": "Mash Kyrielight",
+    "owner_jp": "マシュ・キリエライト",
     "face": "https://static.atlasacademy.io/JP/Faces/f_8001000.png",
-    "choco_id": 113
+    "choco_id": [
+      113,
+      761,
+      1195,
+      1383,
+      1563,
+      1795,
+      2019,
+      2207,
+      2582
+    ]
   },
   {
     "id": 2230,
-    "owner": "Lilith",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_7051000.png",
     "owner_id": 705100,
+    "owner": "Lilith",
+    "owner_jp": "リリス",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7051000.png",
     "choco_id": 2559
   },
   {
     "id": 2238,
-    "owner": "Typhon Ephemeros",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_28011000.png",
     "owner_id": 2801100,
+    "owner": "Typhon Ephemeros",
+    "owner_jp": "テュフォン・エフェメロス",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28011000.png",
     "choco_id": 2560
   },
   {
     "id": 2263,
-    "owner": "Indra",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3059000.png",
     "owner_id": 305900,
+    "owner": "Indra",
+    "owner_jp": "インドラ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3059000.png",
     "choco_id": 2561
   },
   {
     "id": 2401,
-    "owner": "U-Olga Marie",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_40001000.png",
     "owner_id": 4000100,
+    "owner": "U-Olga Marie",
+    "owner_jp": "Ｕ－オルガマリー",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_40001000.png",
     "choco_id": 2562
   },
   {
     "id": 2414,
-    "owner": "Passionlip",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_1063000.png",
     "owner_id": 106300,
+    "owner": "Passionlip",
+    "owner_jp": "パッションリップ",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1063000.png",
     "choco_id": 2563
   },
   {
     "id": 2415,
-    "owner": "Kriemhild",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_4058000.png",
     "owner_id": 405800,
+    "owner": "Kriemhild",
+    "owner_jp": "クリームヒルト",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4058000.png",
     "choco_id": 2564
   },
   {
     "id": 2416,
-    "owner": "Huyan Zhuo",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_7052000.png",
     "owner_id": 705200,
+    "owner": "Huyan Zhuo",
+    "owner_jp": "呼延灼",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_7052000.png",
     "choco_id": 2565
   },
   {
     "id": 2417,
-    "owner": "Jade Rabbit",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_23011000.png",
     "owner_id": 2301100,
+    "owner": "Jade Rabbit",
+    "owner_jp": "玉兎",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_23011000.png",
     "choco_id": 2566
   },
   {
     "id": 2418,
-    "owner": "Miyu Edelfelt",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3060000.png",
     "owner_id": 306000,
+    "owner": "Miyu Edelfelt",
+    "owner_jp": "美遊・エーデルフェルト",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3060000.png",
     "choco_id": 2567
   },
   {
     "id": 2419,
-    "owner": "Larva/Tiamat",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_2054000.png",
     "owner_id": 205400,
+    "owner": "Larva/Tiamat",
+    "owner_jp": "ラーヴァ／ティアマト",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_2054000.png",
     "choco_id": 2568
   },
   {
     "id": 2420,
-    "owner": "Jeunesse Crane",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_10019000.png",
     "owner_id": 1001900,
+    "owner": "Jeunesse Crane",
+    "owner_jp": "ジュネス・クレーン",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_10019000.png",
     "choco_id": 2569
   },
   {
     "id": 2441,
-    "owner": "Nemo/Noah",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_4057000.png",
     "owner_id": 405700,
+    "owner": "Nemo/Noah",
+    "owner_jp": "ネモ／ノア",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_4057000.png",
     "choco_id": 2570
   },
   {
     "id": 2465,
-    "owner": "Kawakami Gensai",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_6051000.png",
     "owner_id": 605100,
+    "owner": "Kawakami Gensai",
+    "owner_jp": "河上彦斎",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_6051000.png",
     "choco_id": 2571
   },
   {
     "id": 2466,
-    "owner": "Tōdō Heisuke",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_11021000.png",
     "owner_id": 1102100,
+    "owner": "Tōdō Heisuke",
+    "owner_jp": "藤堂平助",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11021000.png",
     "choco_id": 2572
   },
   {
     "id": 2467,
-    "owner": "Harada Sanosuke",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3061000.png",
     "owner_id": 306100,
+    "owner": "Harada Sanosuke",
+    "owner_jp": "原田左之助",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3061000.png",
     "choco_id": 2573
   },
   {
     "id": 2468,
-    "owner": "Kondo Isami",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_1064000.png",
     "owner_id": 106400,
+    "owner": "Kondo Isami",
+    "owner_jp": "近藤勇",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1064000.png",
     "choco_id": 2574
   },
   {
     "id": 2477,
-    "owner": "Elisabeth Báthory",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_3062000.png",
     "owner_id": 306200,
+    "owner": "Elisabeth Báthory",
+    "owner_jp": "エリザベート・バートリー",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_3062000.png",
     "choco_id": 2575
   },
   {
     "id": 2478,
-    "owner": "Elisabeth of the End",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_11022000.png",
     "owner_id": 1102200,
+    "owner": "Elisabeth of the End",
+    "owner_jp": "終わりのエリザベート",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_11022000.png",
     "choco_id": 2576
   },
   {
     "id": 2511,
+    "owner_id": 2801200,
     "owner": "Solomon",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_28012000.png",
-    "owner_id": 2801200
+    "owner_jp": "ソロモン",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_28012000.png"
   },
   {
     "id": 2539,
-    "owner": "Lord Logres",
-    "face": "https://static.atlasacademy.io/JP/Faces/f_1065000.png",
     "owner_id": 106500,
+    "owner": "Lord Logres",
+    "owner_jp": "ロード・ログレス",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_1065000.png",
     "choco_id": 2577
   },
   {
     "id": 2547,
+    "owner_id": 505900,
     "owner": "Hanasaka no Okina",
+    "owner_jp": "花咲翁",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5059000.png",
     "choco_id": 2578
   },
   {
     "id": 2548,
+    "owner_id": 605200,
     "owner": "Hebi Nyōbō",
+    "owner_jp": "蛇女房",
     "face": "https://static.atlasacademy.io/JP/Faces/f_6052000.png",
     "choco_id": 2579
   },
   {
     "id": 2549,
+    "owner_id": 1002000,
     "owner": "Flora",
+    "owner_jp": "フローラ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10020000.png",
     "choco_id": 2580
   },
   {
     "id": 2555,
+    "owner_id": 306400,
     "owner": "Demeter",
+    "owner_jp": "デメテル",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3064000.png",
     "choco_id": 2581
   },
@@ -2743,48 +3666,56 @@
     "id": 2594,
     "owner_id": 106600,
     "owner": "Jacques de Molay",
+    "owner_jp": "ジャック・ド・モレー",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1066000.png"
   },
   {
     "id": 2604,
     "owner_id": 505600,
     "owner": "François Prélat",
+    "owner_jp": "フランソワ・プレラーティ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_5056000.png"
   },
   {
     "id": 2605,
     "owner_id": 405600,
     "owner": "Hippolyte",
+    "owner_jp": "ヒッポリュテ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_4056000.png"
   },
   {
     "id": 2606,
     "owner_id": 1102000,
     "owner": "John Lackland",
+    "owner_jp": "ジョン・ラックランド",
     "face": "https://static.atlasacademy.io/JP/Faces/f_11020000.png"
   },
   {
     "id": 2611,
     "owner_id": 205500,
     "owner": "ウルズ",
+    "owner_jp": "ウルズ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_2055000.png"
   },
   {
     "id": 2616,
     "owner_id": 1002200,
     "owner": "アスカラポス",
+    "owner_jp": "アスカラポス",
     "face": "https://static.atlasacademy.io/JP/Faces/f_10022000.png"
   },
   {
     "id": 2617,
     "owner_id": 106700,
     "owner": "グレイ・リリィ",
+    "owner_jp": "グレイ・リリィ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_1067000.png"
   },
   {
     "id": 2618,
     "owner_id": 306300,
     "owner": "グレイ・リリィ",
+    "owner_jp": "グレイ・リリィ",
     "face": "https://static.atlasacademy.io/JP/Faces/f_3063000.png"
   }
 ]

@@ -64,6 +64,12 @@ const i18n = {
     ui: {
       searchPlaceholder: "Search by name or ID...",
       viewingShared: "Viewing {id} (read-only)",
+      importConfirm: "This will overwrite your current collection with the data from '{id}'.\n\nThis action cannot be undone. Are you sure you want to import it?",
+      importTooltip: "Click to import this collection as your own (this will overwrite your local data)",
+      markAllConfirm: "This will overwrite your current progress for this category. Are you sure?",
+      copyFail: "Link generated, but failed to copy. Open Trade Hub to manually copy.",
+      invalidId: "ID must be 9 or 12 digits",
+      viewingOnly: "Viewing only — controls are hidden.",
       missingSuffix: ": Missing",
       haveSuffix: ": Have",
       undoSubcategory: "Undo this subcategory",
@@ -172,6 +178,12 @@ const i18n = {
     ui: {
       searchPlaceholder: "名前またはIDで検索...",
       viewingShared: "{id} のコレクションを表示中（閲覧のみ）",
+      importConfirm: "現在のコレクションが「{id}」のデータで上書きされます。\n\nこの操作は取り消せません。本当にインポートしますか？",
+      importTooltip: "クリックしてこのコレクションを自分のものとしてインポートします（現在のデータは上書きされます）",
+      markAllConfirm: "このカテゴリーの現在の進捗が上書きされます。本当によろしいですか？",
+      copyFail: "リンクは生成されましたが、コピーに失敗しました。Trade Hubを開いて手動でコピーしてください。",
+      invalidId: "IDは9桁または12桁である必要があります",
+      viewingOnly: "閲覧専用 — 操作は無効化されています。",
       missingSuffix: "：未所持",
       haveSuffix: "：所持",
       undoSubcategory: "このサブカテゴリを未達成に戻す",
@@ -493,12 +505,19 @@ export default function App() {
     };
     for (const item of bondCeJson) {
       const data = {
-        owner: item.owner.toLowerCase(),
+        owner: (item.owner || "").toLowerCase(),
+        owner_jp: (item.owner_jp || "").toLowerCase(),
         face: item.face
       };
       map.byCollectionNo[item.id] = data;
       if (item.choco_id) {
-        map.byChocoId[item.choco_id] = data;
+        if (Array.isArray(item.choco_id)) {
+          for (const chocoId of item.choco_id) {
+            map.byChocoId[chocoId] = data;
+          }
+        } else {
+          map.byChocoId[item.choco_id] = data;
+        }
       }
     }
     return map;
@@ -1075,7 +1094,7 @@ export default function App() {
     const ownedCount = items.filter(it => collection[it.id]).length;
     if (ownedCount > 2) {
       const confirmed = window.confirm(
-        "This will overwrite your current progress for this category. Are you sure?"
+        i18n[lang].ui.markAllConfirm
       );
       if (!confirmed) {
         return;
@@ -1117,7 +1136,9 @@ export default function App() {
       (it.originalName && it.originalName.toLowerCase().includes(q)) ||
       (!isNaN(qNum) && it.collectionNo === qNum) ||
       (bondCeMap.byCollectionNo[it.collectionNo]?.owner?.includes(q)) ||
-      (bondCeMap.byChocoId[it.collectionNo]?.owner?.includes(q))
+      (bondCeMap.byCollectionNo[it.collectionNo]?.owner_jp?.includes(q)) ||
+      (bondCeMap.byChocoId[it.collectionNo]?.owner?.includes(q)) ||
+      (bondCeMap.byChocoId[it.collectionNo]?.owner_jp?.includes(q))
     );
     setResults(filtered.slice(0, 50));
   }, [query, data, bondCeMap]);
@@ -1531,7 +1552,7 @@ export default function App() {
                       navigator.clipboard.writeText(url);
                     } catch (e) {
                       console.error("Failed to copy link:", e);
-                      alert("Link generated, but failed to copy. Open Trade Hub to manually copy.");
+                      alert(i18n[lang].ui.copyFail);
                     }
                   } else {
                     setActive(cat);
@@ -1646,13 +1667,13 @@ export default function App() {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-3 md:order-3 order-2">
+        <div className="flex flex-wrap items-center gap-3 md:order-3 order-2 w-full md:w-auto justify-center md:justify-start">
           {isViewingShared && (
             <div
-              className="bg-amber-500 text-white px-3 py-1 rounded-xl text-sm font-semibold cursor-pointer hover:bg-amber-400 transition shadow-sm"
-              title="Click to import this collection as your own (this will overwrite your local data)"
+              className="whitespace-nowrap bg-amber-500 text-white px-3 py-1 rounded-xl text-sm font-semibold cursor-pointer hover:bg-amber-400 transition shadow-sm"
+              title={i18n[lang].ui.importTooltip}
               onClick={() => {
-                if (window.confirm(`This will overwrite your current collection with the data from '${sharedUserId}'.\n\nThis action cannot be undone. Are you sure you want to import it?`)) {
+                if (window.confirm(i18n[lang].ui.importConfirm.replace("{id}", sharedUserId))) {
                   setCollection(viewCollection);
                   if (viewLookingFor === "ALL") {
                     setLookingAll(true);
@@ -1675,6 +1696,7 @@ export default function App() {
               {i18n[lang].ui.viewingShared.replace("{id}", sharedUserId)}
             </div>
           )}
+          <div className="flex flex-wrap gap-3">
           <button
             className={`px-4 py-2 rounded-xl transition shadow-sm ${fullOpacityMissing ? 'bg-amber-500 text-white hover:bg-amber-600' : theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
             onClick={() => setFullOpacityMissing(v => !v)}
@@ -1705,6 +1727,7 @@ export default function App() {
           <button className={`px-4 py-2 rounded-xl transition shadow-sm ${theme === 'dark' ? 'bg-yellow-500 text-black hover:bg-yellow-400' : 'bg-blue-500 text-white hover:bg-blue-600'}`} onClick={() => setTheme(t => t === "light" ? "dark" : "light")}>
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
+          </div>
         </div>
       </div>
 
@@ -1797,7 +1820,7 @@ export default function App() {
                       <h3 className="text-lg font-bold mt-4 mb-2">{i18n[lang].ui.previewOffering} {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} ${i18n[lang].ui.itemsCount})` : ""}</h3>
                       <SmallList map={viewOffering} listName="offering" expandAll="offering" dataCollection={viewCollection} />
                       <div className={`mt-6 font-semibold border-t pt-4 ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>{i18n[lang].ui.overallProgress} {getProgress().owned}/{getProgress().total}</div>
-                      <p className="mt-2 text-sm text-gray-400">Viewing only — controls are hidden.</p>
+                      <p className="mt-2 text-sm text-gray-400">{i18n[lang].ui.viewingOnly}</p>
                     </>
                   ) : (
                     <>
@@ -1805,7 +1828,7 @@ export default function App() {
                       <p className={`text-sm mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{i18n[lang].ui.shareInstructions}</p>
                       <input type="text" value={genUserId} onChange={e => setGenUserId(e.target.value.replace(/[^\d]/g, ''))} className={`w-full p-2 mb-3 rounded-xl border ${theme === 'dark' ? 'bg-[#111a36] text-white border-gray-700' : 'bg-white text-black border-gray-300'}`} placeholder="012345678" />
                       <div className="flex flex-wrap gap-2 mb-3">
-                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition shadow-sm" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert('ID must be 9 or 12 digits'); return; } setLastId(genUserId); const url = generateLink(genUserId); debugLink(url); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch { } }}>{i18n[lang].ui.generateHash}</button>
+                        <button className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition shadow-sm" onClick={() => { if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) { alert(i18n[lang].ui.invalidId); return; } setLastId(genUserId); const url = generateLink(genUserId); debugLink(url); setGeneratedUrl(url); try { navigator.clipboard.writeText(url); } catch { } }}>{i18n[lang].ui.generateHash}</button>
                         <button className={`px-4 py-2 rounded-xl transition shadow-sm ${theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-300 text-black hover:bg-gray-400'}`} onClick={() => { setGenUserId(''); setGeneratedUrl(''); }}>{i18n[lang].ui.clear}</button>
                         <button
                           className={`px-4 py-2 rounded-xl transition shadow-sm ${generatedUrl.endsWith("/open")
@@ -1814,7 +1837,7 @@ export default function App() {
                             }`}
                           onClick={() => {
                             if (!/^(?:\d{9}|\d{12})$/.test(genUserId)) {
-                              alert("ID must be 9 or 12 digits");
+                              alert(i18n[lang].ui.invalidId);
                               return;
                             }
 

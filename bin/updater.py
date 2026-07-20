@@ -13,6 +13,8 @@ SERVANT_EXPORT_URL = "https://api.atlasacademy.io/export/JP/basic_servant_lang_e
 SERVANT_EXPORT_CACHE = "basic_servant_lang_en.json"
 SERVANT_EXPORT_TTL = 60 * 60 * 24
 
+MASH_CHOCO_IDS = [113, 761, 1195, 1383, 1563, 1795, 2019, 2207, 2582]
+
 # --- Logic ---
 
 def ensure_servant_export(force_refresh=False):
@@ -39,14 +41,15 @@ def ensure_servant_export(force_refresh=False):
     with open(SERVANT_EXPORT_CACHE, "r", encoding="utf-8") as fh:
         data = json.load(fh)
 
-    # UPDATED: Now stores a dict with name and face
+    # Stores dict with name, owner_jp (originalName), and face
     id_to_data = {}
     for item in data:
         s_id = item.get("id")
         if s_id is not None:
             id_to_data[int(s_id)] = {
                 "name": item.get("name"),
-                "face": item.get("face") # This is the face URL from the export
+                "owner_jp": item.get("originalName"),
+                "face": item.get("face")
             }
     return id_to_data
 
@@ -84,27 +87,15 @@ def find_new_bond_ces(all_ces, known_ids, last_known_id):
             new_ces.append(ce_id)
     return new_ces
 
-def get_choco_id_for_servant(servant_collection_no, all_ces):
-    """
-    Search through all ces to find the valentine equip with matching owner,
-    return its ID (collectionNo) if found.
-    """
-    for ce in all_ces:
-        if ce.get('flag') == 'svtEquipChocolate':
-            owner = ce.get('valentineEquipOwner')
-            if owner == servant_collection_no:
-                return ce.get('collectionNo')
-    return None
-
 def get_owner_data(ce_id):
-    """Returns dict containing servant id, name, face."""
+    """Returns dict containing servant id, name, owner_jp, face."""
     api_url = CE_API_URL.format(ce_id)
     try:
         resp = requests.get(api_url, timeout=15)
         resp.raise_for_status()
         data = resp.json()
     except Exception as e:
-        print(f"ERROR: {e}")
+        print(f"ERROR fetching CE {ce_id}: {e}")
         return None
 
     owner_field = data.get("bondEquipOwner")
@@ -122,47 +113,87 @@ def get_owner_data(ce_id):
         s_data = servant_map.get(owner_id)
         if s_data:
             return {
-                "id": owner_id,       # <-- add this line
+                "id": owner_id,
                 "name": s_data["name"],
+                "owner_jp": s_data["owner_jp"],
                 "face": s_data["face"]
             }
 
     return None
 
 def build_valentine_map(all_ces):
-    """Creates a mapping of Servant ID -> Valentine CE ID."""
+    """Creates a mapping of Servant ID -> Valentine CE ID or List of IDs."""
     val_map = {}
     for ce in all_ces:
         if ce.get('flag') == 'svtEquipChocolate':
             owner_id = ce.get('valentineEquipOwner')
             if owner_id:
-                val_map[owner_id] = ce.get('collectionNo')
+                ce_id = ce.get('collectionNo')
+                if owner_id in val_map:
+                    if isinstance(val_map[owner_id], list):
+                        val_map[owner_id].append(ce_id)
+                    else:
+                        val_map[owner_id] = [val_map[owner_id], ce_id]
+                else:
+                    val_map[owner_id] = ce_id
     return val_map
+
+def format_entry(entry, servant_map, valentine_map):
+    """Formats a single Bond CE entry with correct key order, owner_jp, and choco_id."""
+    owner_id = entry.get("owner_id")
+    owner_name = entry.get("owner")
+    
+    # Mash Kyrielight Special Case
+    is_mash = (owner_name == "Mash Kyrielight" or owner_id == 1)
+
+    s_data = servant_map.get(owner_id) if owner_id else None
+    owner_jp = s_data.get("owner_jp") if s_data else entry.get("owner_jp")
+
+    choco_id = entry.get("choco_id")
+    if is_mash:
+        choco_id = MASH_CHOCO_IDS
+    elif owner_id and owner_id in valentine_map:
+        choco_id = valentine_map[owner_id]
+
+    formatted = {
+        "id": entry["id"]
+    }
+    if owner_id is not None:
+        formatted["owner_id"] = owner_id
+    
+    formatted["owner"] = owner_name
+    if owner_jp:
+        formatted["owner_jp"] = owner_jp
+    formatted["face"] = entry.get("face")
+    
+    if choco_id is not None:
+        formatted["choco_id"] = choco_id
+
+    return formatted
 
 def main():
     existing_data, known_ids, last_known_id = load_existing_bonds()
     all_ces = fetch_all_ces()
+    servant_map = get_servant_map()
     valentine_map = build_valentine_map(all_ces)
     
-    updated_count = 0
+    # --- Part 1: Process and update all existing entries ---
+    print("Updating existing entries with Japanese names and choco IDs...")
+    updated_entries = []
     
-    # --- Part 1: Check existing entries for missing Valentines ---
-    print("Checking existing entries for missing Valentines...")
     for entry in existing_data:
-        if "choco_id" not in entry:
-            # We need the owner_id. If we didn't save it before, 
-            # we have to fetch it once via the API.
+        # Fetch owner_id via API if missing
+        if "owner_id" not in entry:
             owner_info = get_owner_data(entry["id"])
             if owner_info:
-                # Store the ID in the entry for future use
-                entry["owner_id"] = owner_info["id"] 
-                
-                choco_id = valentine_map.get(owner_info["id"])
-                if choco_id:
-                    entry["choco_id"] = choco_id
-                    print(f"Fixed: Found missing Valentine for {entry['owner']}")
-                    updated_count += 1
-            time.sleep(0.2) # Avoid rate limiting
+                entry["owner_id"] = owner_info["id"]
+                entry["owner"] = owner_info["name"]
+                entry["owner_jp"] = owner_info["owner_jp"]
+                entry["face"] = owner_info["face"]
+            time.sleep(0.1)
+
+        formatted = format_entry(entry, servant_map, valentine_map)
+        updated_entries.append(formatted)
 
     # --- Part 2: Find entirely new servants/Bond CEs ---
     new_ce_ids = find_new_bond_ces(all_ces, known_ids, last_known_id)
@@ -173,31 +204,26 @@ def main():
         for ce_id in new_ce_ids:
             owner_info = get_owner_data(ce_id)
             if owner_info:
-                choco_id = valentine_map.get(owner_info["id"])
-                entry = {
+                raw_entry = {
                     "id": ce_id,
-                    "owner_id": owner_info["id"], # Store this!
+                    "owner_id": owner_info["id"],
                     "owner": owner_info["name"],
+                    "owner_jp": owner_info["owner_jp"],
                     "face": owner_info["face"]
                 }
-                if choco_id:
-                    entry["choco_id"] = choco_id
-                
-                new_entries.append(entry)
+                formatted = format_entry(raw_entry, servant_map, valentine_map)
+                new_entries.append(formatted)
                 print(f"Added: {owner_info['name']}")
             time.sleep(0.5)
 
-    # --- Part 3: Save results ---
-    if new_entries or updated_count > 0:
-        existing_data.extend(new_entries)
-        # Sort by Bond CE ID to keep the file clean
-        existing_data.sort(key=lambda x: x.get('id', 0))
+    # --- Part 3: Combine and Save results ---
+    final_data = updated_entries + new_entries
+    final_data.sort(key=lambda x: x.get('id', 0))
+
+    with open(BOND_JSON_PATH, 'w', encoding='utf-8') as f:
+        json.dump(final_data, f, indent=2, ensure_ascii=False)
         
-        with open(BOND_JSON_PATH, 'w', encoding='utf-8') as f:
-            json.dump(existing_data, f, indent=2, ensure_ascii=False)
-        print(f"Done! Updated {updated_count} old entries and added {len(new_entries)} new ones.")
-    else:
-        print("No updates found.")
+    print(f"Done! Saved {len(final_data)} total entries ({len(new_entries)} new added).")
 
 if __name__ == "__main__":
     main()
