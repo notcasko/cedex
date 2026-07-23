@@ -55,7 +55,7 @@ const i18n = {
       "2026 Valentine": "2026 Valentine"
     },
     ui: {
-      searchPlaceholder: "Search by name or ID...",
+      searchPlaceholder: "Search by name, ID, or prefix (bond:, choco:, anni:)...",
       viewingShared: "Viewing {id} (read-only)",
       importConfirm: "This will overwrite your current collection with the data from '{id}'.\n\nThis action cannot be undone. Are you sure you want to import it?",
       importTooltip: "Click to import this collection as your own (this will overwrite your local data)",
@@ -169,7 +169,7 @@ const i18n = {
       "2026 Valentine": "2026バレンタイン"
     },
     ui: {
-      searchPlaceholder: "名前またはIDで検索...",
+      searchPlaceholder: "名前、ID、または絆:・チョコ:・記念:で検索...",
       viewingShared: "{id} のコレクションを表示中（閲覧のみ）",
       importConfirm: "現在のコレクションが「{id}」のデータで上書きされます。\n\nこの操作は取り消せません。本当にインポートしますか？",
       importTooltip: "クリックしてこのコレクションを自分のものとしてインポートします（現在のデータは上書きされます）",
