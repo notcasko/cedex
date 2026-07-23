@@ -1,0 +1,61 @@
+export const categories = [
+  { id: 1, label: "Bond CEs", flag: "svtEquipFriendShip" },
+  { id: 2, label: "Chocolate", flag: "svtEquipChocolate" },
+  { id: 3, label: "Commemorative", flag: "svtEquipCampaign" },
+  { id: 4, label: "Normal", flag: "normal", raritySplit: true },
+  { id: 5, label: "Event gacha", flag: "svtEquipEvent", raritySplit: true },
+  { id: 6, label: "Event free", flags: ["svtEquipEventReward", "svtEquipExp"], raritySplit: true },
+  { id: 7, label: "Manaprism exchange", flag: "svtEquipManaExchange", raritySplit: true },
+  { id: 8, label: "Export data", special: "generate" },
+];
+
+export const bondSubcategories = [
+  { label: "2015", range: [0, 281] },
+  { label: "2016", range: [282, 415] },
+  { label: "2017", range: [416, 708] },
+  { label: "2018", range: [709, 934] },
+  { label: "2019", range: [935, 1144] },
+  { label: "2020", range: [1145, 1337] },
+  { label: "2021", range: [1338, 1522] },
+  { label: "2022", range: [1523, 1739] },
+  { label: "2023", range: [1740, 1962] },
+  { label: "2024", range: [1963, 2159] },
+  { label: "2025", range: [2160, 2538] },
+  { label: "2026", range: [2539, 3000] },
+];
+
+export const commemorativeSubcategories = [
+  { label: "5M Downloads Heroic Portrait", range: [99, 108] },
+  { label: "Fate/EXTELLA Release", range: [361, 366] },
+  { label: "2nd Anni", range: [594, 640] },
+  { label: "3rd Anni", range: [819, 857] },
+  { label: "4th Anni", range: [1038, 1076] },
+  { label: "5th Anni", range: [1222, 1269] },
+  { label: "6th Anni", range: [1421, 1457] },
+  { label: "7th Anni", range: [1626, 1663] },
+  { label: "8th Anni", range: [1843, 1886] },
+  { label: "Stay night 20th Anniversary", range: [1973, 1979] },
+  { label: "9th Anni", range: [2058, 2099] },
+  { label: "10th Anni", range: [2284, 2396] },
+  { label: "Over the Same Sky June", range: [2240, 2258] },
+  { label: "Over the Same Sky July", range: [2265, 2282] },
+  { label: "Over the Same Sky August", range: [2421, 2436] },
+  { label: "Over the Same Sky September", range: [2443, 2458] },
+  { label: "Over the Same Sky October", range: [2479, 2492] },
+  { label: "Over the Same Sky November", range: [2495, 2508] },
+  { label: "Part 2 Finale", range: [2512, 2532] },
+];
+
+export const chocolateSubcategories = [
+  { label: "2016 Valentine", range: [113, 153] },
+  { label: "2017 Valentine", range: [430, 544] },
+  { label: "2018 Valentine", range: [718, 761] },
+  { label: "2019 Valentine", range: [949, 987] },
+  { label: "2020 Valentine", range: [1155, 1195] },
+  { label: "2021 Valentine", range: [1353, 1383] },
+  { label: "2022 Valentine", range: [1533, 1563] },
+  { label: "2023 Valentine", range: [1757, 1795] },
+  { label: "2024 Valentine", range: [1986, 2019] },
+  { label: "2025 Valentine", range: [2180, 2207] },
+  { label: "2026 Valentine", range: [2556, 2581] },
+];

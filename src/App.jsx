@@ -5,298 +5,18 @@ import LZString from "lz-string";
 import bondCeJson from "./data/bond_ces.json";
 import localforage from "localforage";
 
-const i18n = {
-  en: {
-    categories: {
-      "Bond CEs": "Bond CEs",
-      "Chocolate": "Chocolate",
-      "Commemorative": "Commemorative",
-      "Normal": "Normal",
-      "Event gacha": "Event gacha",
-      "Event free": "Event free",
-      "Manaprism exchange": "Manaprism exchange",
-      "Export data": "Export data"
-    },
-    subcategories: {
-      "2015": "2015",
-      "2016": "2016",
-      "2017": "2017",
-      "2018": "2018",
-      "2019": "2019",
-      "2020": "2020",
-      "2021": "2021",
-      "2022": "2022",
-      "2023": "2023",
-      "2024": "2024",
-      "2025": "2025",
-      "2026": "2026",
-      "5M Downloads Heroic Portrait": "5M Downloads Heroic Portrait",
-      "Fate/EXTELLA Release": "Fate/EXTELLA Release",
-      "2nd Anni": "2nd Anni",
-      "3rd Anni": "3rd Anni",
-      "4th Anni": "4th Anni",
-      "5th Anni": "5th Anni",
-      "6th Anni": "6th Anni",
-      "7th Anni": "7th Anni",
-      "8th Anni": "8th Anni",
-      "Stay night 20th Anniversary": "Stay night 20th Anniversary",
-      "9th Anni": "9th Anni",
-      "10th Anni": "10th Anni",
-      "Over the Same Sky June": "Over the Same Sky June",
-      "Over the Same Sky July": "Over the Same Sky July",
-      "Over the Same Sky August": "Over the Same Sky August",
-      "Over the Same Sky September": "Over the Same Sky September",
-      "Over the Same Sky October": "Over the Same Sky October",
-      "Over the Same Sky November": "Over the Same Sky November",
-      "Part 2 Finale": "Part 2 Finale",
-      "2016 Valentine": "2016 Valentine",
-      "2017 Valentine": "2017 Valentine",
-      "2018 Valentine": "2018 Valentine",
-      "2019 Valentine": "2019 Valentine",
-      "2020 Valentine": "2020 Valentine",
-      "2021 Valentine": "2021 Valentine",
-      "2022 Valentine": "2022 Valentine",
-      "2023 Valentine": "2023 Valentine",
-      "2024 Valentine": "2024 Valentine",
-      "2025 Valentine": "2025 Valentine",
-      "2026 Valentine": "2026 Valentine"
-    },
-    ui: {
-      searchPlaceholder: "Search by name or ID...",
-      viewingShared: "Viewing {id} (read-only)",
-      importConfirm: "This will overwrite your current collection with the data from '{id}'.\n\nThis action cannot be undone. Are you sure you want to import it?",
-      importTooltip: "Click to import this collection as your own (this will overwrite your local data)",
-      markAllConfirm: "This will overwrite your current progress for this category. Are you sure?",
-      copyFail: "Link generated, but failed to copy. Open Trade Hub to manually copy.",
-      invalidId: "ID must be 9 or 12 digits",
-      viewingOnly: "Viewing only — controls are hidden.",
-      missingSuffix: ": Missing",
-      haveSuffix: ": Have",
-      undoSubcategory: "Undo this subcategory",
-      completeSubcategory: "Complete this subcategory",
-      noItemsMatch: "No items match the current filter.",
-      categoryProgress: "Category progress:",
-      sortDescending: "Sort Descending",
-      sortAscending: "Sort Ascending",
-      filterItems: "Filter items",
-      changeItemSize: "Change item size",
-      markAllHave: "Mark all have",
-      markAllDontHave: "Mark all don't have",
-      lookingFor: "Looking for",
-      offering: "Offering",
-      undoChange: "Undo Change",
-      pasteLastId: "Paste last ID",
-      close: "Close",
-      shareCollection: "Share Your Collection",
-      shareInstructions: "Enter your 9 or 12 digit ID, then click Generate Hash to create a shareable link.",
-      generateHash: "Generate Hash",
-      clear: "Clear",
-      pointToTradeHub: "Point to Trade Hub",
-      undoOfferEverything: "Undo Offer Everything",
-      offerEverything: "Offer everything I have",
-      undoLookingEverything: "Undo Looking for Everything",
-      lookingEverything: "Looking for everything I don't have",
-      yourLink: "Your link:",
-      tips: "Tips:",
-      tip1: "You can click items in the preview to remove them from explicit lists.",
-      tip2: "Paste your 9/12 digit ID or drag a text onto this window.",
-      tip3: "The link contains your data compressed for sharing.",
-      previewLooking: "Preview: Looking for",
-      previewOffering: "Preview: Offering",
-      overallProgress: "Overall progress:",
-      itemsCount: "items",
-      none: "none",
-      theRest: "The rest",
-      rarity: "Rarity",
-      eventReward: "Event Reward",
-      ceExp: "CE EXP",
-      openTradeHub: "Open Trade Hub",
-      copyLink: "Copy Link",
-      fullOpacityOn: "Missing items shown at full opacity",
-      fullOpacityOff: "Missing items shown with grey opacity",
-      dragSelectOn: "Drag Selection ON (Not for touch screens)",
-      dragSelectOff: "Drag Selection OFF (Made for touch screens)",
-      cacheOn: "Image Caching Enabled",
-      cacheOff: "Image Caching Disabled"
-    }
-  },
-  ja: {
-    categories: {
-      "Bond CEs": "絆礼装",
-      "Chocolate": "チョコ",
-      "Commemorative": "記念",
-      "Normal": "恒常",
-      "Event gacha": "限定",
-      "Event free": "配布",
-      "Manaprism exchange": "マナプリ",
-      "Export data": "データ出力"
-    },
-    subcategories: {
-      "2015": "2015年",
-      "2016": "2016年",
-      "2017": "2017年",
-      "2018": "2018年",
-      "2019": "2019年",
-      "2020": "2020年",
-      "2021": "2021年",
-      "2022": "2022年",
-      "2023": "2023年",
-      "2024": "2024年",
-      "2025": "2025年",
-      "2026": "2026年",
-      "5M Downloads Heroic Portrait": "500万DL突破キャンペーン",
-      "Fate/EXTELLA Release": "「Fate/EXTELLA」発売記念キャンペーン",
-      "2nd Anni": "2周年",
-      "3rd Anni": "3周年",
-      "4th Anni": "4周年",
-      "5th Anni": "5周年",
-      "6th Anni": "6周年",
-      "7th Anni": "7周年",
-      "8th Anni": "8周年",
-      "Stay night 20th Anniversary": "「Fate/stay night」20周年記念キャンペーン",
-      "9th Anni": "9周年",
-      "10th Anni": "10周年",
-      "Over the Same Sky June": "Over the Same Sky 6月",
-      "Over the Same Sky July": "Over the Same Sky 7月",
-      "Over the Same Sky August": "Over the Same Sky 8月",
-      "Over the Same Sky September": "Over the Same Sky 9月",
-      "Over the Same Sky October": "Over the Same Sky 10月",
-      "Over the Same Sky November": "Over the Same Sky 11月",
-      "Part 2 Finale": "第2部 終章",
-      "2016 Valentine": "2016バレンタイン",
-      "2017 Valentine": "2017バレンタイン",
-      "2018 Valentine": "2018バレンタイン",
-      "2019 Valentine": "2019バレンタイン",
-      "2020 Valentine": "2020バレンタイン",
-      "2021 Valentine": "2021バレンタイン",
-      "2022 Valentine": "2022バレンタイン",
-      "2023 Valentine": "2023バレンタイン",
-      "2024 Valentine": "2024バレンタイン",
-      "2025 Valentine": "2025バレンタイン",
-      "2026 Valentine": "2026バレンタイン"
-    },
-    ui: {
-      searchPlaceholder: "名前またはIDで検索...",
-      viewingShared: "{id} のコレクションを表示中（閲覧のみ）",
-      importConfirm: "現在のコレクションが「{id}」のデータで上書きされます。\n\nこの操作は取り消せません。本当にインポートしますか？",
-      importTooltip: "クリックしてこのコレクションを自分のものとしてインポートします（現在のデータは上書きされます）",
-      markAllConfirm: "このカテゴリーの現在の進捗が上書きされます。本当によろしいですか？",
-      copyFail: "リンクは生成されましたが、コピーに失敗しました。Trade Hubを開いて手動でコピーしてください。",
-      invalidId: "IDは9桁または12桁である必要があります",
-      viewingOnly: "閲覧専用 — 操作は無効化されています。",
-      missingSuffix: "：未所持",
-      haveSuffix: "：所持",
-      undoSubcategory: "このサブカテゴリを未達成に戻す",
-      completeSubcategory: "このサブカテゴリを達成にする",
-      noItemsMatch: "該当するアイテムがありません。",
-      categoryProgress: "カテゴリー進捗:",
-      sortDescending: "降順ソート",
-      sortAscending: "昇順ソート",
-      filterItems: "アイテムをフィルター",
-      changeItemSize: "サイズを変更",
-      markAllHave: "すべて所持にする",
-      markAllDontHave: "すべて未所持にする",
-      lookingFor: "募集依頼",
-      offering: "提供可能",
-      undoChange: "変更を元に戻す",
-      pasteLastId: "最後のIDを貼り付け",
-      close: "閉じる",
-      shareCollection: "コレクションを共有する",
-      shareInstructions: "9桁または12桁のIDを入力し、「ハッシュ生成」をクリックして共有リンクを作成します。",
-      generateHash: "ハッシュ生成",
-      clear: "クリア",
-      pointToTradeHub: "トレードハブへ指定",
-      undoOfferEverything: "すべての提供を解除",
-      offerEverything: "所持しているすべてを提供",
-      undoLookingEverything: "すべての募集を解除",
-      lookingEverything: "未所持のすべてを募集",
-      yourLink: "あなたのリンク:",
-      tips: "ヒント:",
-      tip1: "プレビュー内のアイテムをクリックすると、リストから除外できます。",
-      tip2: "9/12桁のIDを貼り付けるか、テキストをこのウィンドウにドラッグしてください。",
-      tip3: "リンクには共有用に圧縮されたデータが含まれています。",
-      previewLooking: "プレビュー: 募集依頼",
-      previewOffering: "プレビュー: 提供可能",
-      overallProgress: "全体の進捗:",
-      itemsCount: "個のアイテム",
-      none: "なし",
-      theRest: "その他",
-      rarity: "レア度",
-      eventReward: "イベント報酬",
-      ceExp: "概念礼装EXP",
-      openTradeHub: "トレードハブを開く",
-      copyLink: "リンクをコピー",
-      fullOpacityOn: "未所持のアイテムを不透明度100%で表示",
-      fullOpacityOff: "未所持のアイテムを半透明で表示",
-      dragSelectOn: "ドラッグ選択 ON (タッチ操作非推奨)",
-      dragSelectOff: "ドラッグ選択 OFF (タッチ操作推奨)",
-      cacheOn: "画像キャッシュ有効",
-      cacheOff: "画像キャッシュ無効"
-    }
+import i18n from "./data/i18n";
+import { categories, bondSubcategories, commemorativeSubcategories, chocolateSubcategories } from "./data/cats";
+
+const getDefaultLang = () => {
+  if (typeof navigator !== "undefined" && navigator.language && navigator.language.toLowerCase().startsWith("ja")) {
+    return "ja";
   }
+  return "en";
 };
 
-const categories = [
-  { id: 1, label: "Bond CEs", flag: "svtEquipFriendShip" },
-  { id: 2, label: "Chocolate", flag: "svtEquipChocolate" },
-  { id: 3, label: "Commemorative", flag: "svtEquipCampaign" },
-  { id: 4, label: "Normal", flag: "normal", raritySplit: true },
-  { id: 5, label: "Event gacha", flag: "svtEquipEvent", raritySplit: true },
-  { id: 6, label: "Event free", flags: ["svtEquipEventReward", "svtEquipExp"], raritySplit: true },
-  { id: 7, label: "Manaprism exchange", flag: "svtEquipManaExchange", raritySplit: true },
-  { id: 8, label: "Export data", special: "generate" },
-];
-
-const bondSubcategories = [
-  { label: "2015", range: [0, 281] },
-  { label: "2016", range: [282, 415] },
-  { label: "2017", range: [416, 708] },
-  { label: "2018", range: [709, 934] },
-  { label: "2019", range: [935, 1144] },
-  { label: "2020", range: [1145, 1337] },
-  { label: "2021", range: [1338, 1522] },
-  { label: "2022", range: [1523, 1739] },
-  { label: "2023", range: [1740, 1962] },
-  { label: "2024", range: [1963, 2159] },
-  { label: "2025", range: [2160, 2538] },
-  { label: "2026", range: [2539, 3000] },
-];
-
-const commemorativeSubcategories = [
-  { label: "5M Downloads Heroic Portrait", range: [99, 108] },
-  { label: "Fate/EXTELLA Release", range: [361, 366] },
-  { label: "2nd Anni", range: [594, 640] },
-  { label: "3rd Anni", range: [819, 857] },
-  { label: "4th Anni", range: [1038, 1076] },
-  { label: "5th Anni", range: [1222, 1269] },
-  { label: "6th Anni", range: [1421, 1457] },
-  { label: "7th Anni", range: [1626, 1663] },
-  { label: "8th Anni", range: [1843, 1886] },
-  { label: "Stay night 20th Anniversary", range: [1973, 1979] },
-  { label: "9th Anni", range: [2058, 2099] },
-  { label: "10th Anni", range: [2284, 2396] },
-  { label: "Over the Same Sky June", range: [2240, 2258] },
-  { label: "Over the Same Sky July", range: [2265, 2282] },
-  { label: "Over the Same Sky August", range: [2421, 2436] },
-  { label: "Over the Same Sky September", range: [2443, 2458] },
-  { label: "Over the Same Sky October", range: [2479, 2492] },
-  { label: "Over the Same Sky November", range: [2495, 2508] },
-  { label: "Part 2 Finale", range: [2512, 2532] },
-];
-
-const chocolateSubcategories = [
-  { label: "2016 Valentine", range: [113, 153] },
-  { label: "2017 Valentine", range: [430, 544] },
-  { label: "2018 Valentine", range: [718, 761] },
-  { label: "2019 Valentine", range: [949, 987] },
-  { label: "2020 Valentine", range: [1155, 1195] },
-  { label: "2021 Valentine", range: [1353, 1383] },
-  { label: "2022 Valentine", range: [1533, 1563] },
-  { label: "2023 Valentine", range: [1757, 1795] },
-  { label: "2024 Valentine", range: [1986, 2019] },
-  { label: "2025 Valentine", range: [2180, 2207] },
-  { label: "2026 Valentine", range: [2556, 2581] },
-];
+const normalizeStr = (str) =>
+  str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
 
 const usePersistedState = (key, initial) => {
   const [state, setState] = useState(() => {
@@ -323,6 +43,7 @@ const CECell = React.memo(({
   bondFace,
   cachingMode,
   owned,
+  isOffering,
   isPulse,
   isAffected,
   itemSize,
@@ -406,7 +127,7 @@ const CECell = React.memo(({
     : 'pan-y';
 
   const showMissingFullOpacity = filterMode === 'missing' && fullOpacityMissing;
-  const baseOpacityClass = owned || showMissingFullOpacity ? "opacity-100" : "opacity-50";
+  const baseOpacityClass = owned || showMissingFullOpacity ? "opacity-100" : "opacity-[0.6]";
 
   return (
     <div
@@ -442,7 +163,7 @@ const CECell = React.memo(({
         href={`https://apps.atlasacademy.io/db/JP/craft-essence/${item.collectionNo}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={`absolute bottom-1 right-1 ${fontClasses[itemSize]} leading-none bg-black/75 text-white px-1 py-0.5 rounded-sm cursor-pointer hover:underline z-10`}
+        className={`absolute bottom-1 right-1 ${fontClasses[itemSize]} leading-none ${isOffering ? "bg-white/90 text-black font-bold" : "bg-black/75 text-white"} px-1 py-0.5 rounded-sm cursor-pointer hover:underline z-10`}
         onClick={(e) => e.stopPropagation()}
       >
         {item.collectionNo}
@@ -455,7 +176,7 @@ CECell.displayName = 'CECell';
 export default function App() {
   const searchInputRef = useRef(null);
   const [theme, setTheme] = usePersistedState("theme", "dark");
-  const [lang, setLang] = usePersistedState("lang", "en");
+  const [lang, setLang] = usePersistedState("lang", getDefaultLang());
   const [active, setActive] = useState(null);
   const [collection, setCollection] = usePersistedState("collection", {});
   const [lookingFor, setLookingFor] = usePersistedState("lookingFor", {});
@@ -468,7 +189,7 @@ export default function App() {
   const [selectionMode, setSelectionMode] = useState("none");
   const [sortAsc, setSortAsc] = usePersistedState("sortAsc", true);
   const [itemSize, setItemSize] = usePersistedState("itemSize", 72);
-  const [cachingMode, setCachingMode] = usePersistedState("cachingMode", false);
+  const [cachingMode, setCachingMode] = usePersistedState("cachingMode", true);
   const [filterMode, setFilterMode] = useState("all");
 
   const [undoState, setUndoState] = useState(null);
@@ -560,7 +281,8 @@ export default function App() {
     return categories.find(cat => {
       if (cat.flag === "normal") return item.flag === "normal" || !Array.isArray(item.flags) || item.flags.length === 0;
       if (cat.flag) return item.flag === cat.flag || (Array.isArray(item.flags) && item.flags.includes(cat.flag));
-      if (cat.flags) return cat.flags.some(f => item.flag === f || (Array.isArray(it.flags) && it.flags.includes(f)));
+      if (cat.flags) return cat.flags.some(f => item.flag === f || (Array.isArray(item.flags) && item.flags.includes(f)));
+      if (cat.range) return item.collectionNo >= cat.range[0] && item.collectionNo <= cat.range[1];
       return false;
     }) || categories[0];
   };
@@ -1072,6 +794,7 @@ export default function App() {
   }, []);
 
   const mapOwned = (id) => (isViewingShared ? !!viewCollection[id] : !!collection[id]);
+  const mapOffering = (id) => (isViewingShared ? (viewOffering === "ALL" || !!viewOffering[id]) : (offerAll || !!offering[id]));
 
   const getProgress = () => {
     const total = data.length;
@@ -1129,17 +852,61 @@ export default function App() {
       setResults([]);
       return;
     }
-    const q = query.toLowerCase();
-    const qNum = Number(query);
-    const filtered = data.filter(it =>
-      (it.name && it.name.toLowerCase().includes(q)) ||
-      (it.originalName && it.originalName.toLowerCase().includes(q)) ||
-      (!isNaN(qNum) && it.collectionNo === qNum) ||
-      (bondCeMap.byCollectionNo[it.collectionNo]?.owner?.includes(q)) ||
-      (bondCeMap.byCollectionNo[it.collectionNo]?.owner_jp?.includes(q)) ||
-      (bondCeMap.byChocoId[it.collectionNo]?.owner?.includes(q)) ||
-      (bondCeMap.byChocoId[it.collectionNo]?.owner_jp?.includes(q))
-    );
+
+    let targetCategoryLabel = null;
+    let searchTerm = query;
+
+    const lowerQuery = query.toLowerCase();
+    const prefixes = [
+      { keys: ["bond:", "絆:"], label: "Bond CEs" },
+      { keys: ["choco:", "チョコ:"], label: "Chocolate" },
+      { keys: ["anni:", "記念:"], label: "Commemorative" }
+    ];
+
+    for (const p of prefixes) {
+      for (const key of p.keys) {
+        if (lowerQuery.startsWith(key.toLowerCase())) {
+          targetCategoryLabel = p.label;
+          searchTerm = query.slice(key.length).trim();
+          break;
+        }
+      }
+      if (targetCategoryLabel) break;
+    }
+
+    const q = normalizeStr(searchTerm);
+    const qNum = Number(searchTerm);
+
+    const targetCat = targetCategoryLabel
+      ? categories.find(c => c.label === targetCategoryLabel)
+      : null;
+
+    const filtered = data.filter(it => {
+      if (targetCat) {
+        if (targetCat.range) {
+          if (it.collectionNo < targetCat.range[0] || it.collectionNo > targetCat.range[1]) return false;
+        } else if (targetCat.flag) {
+          const hasFlag = it.flag === targetCat.flag || (Array.isArray(it.flags) && it.flags.includes(targetCat.flag));
+          if (!hasFlag) return false;
+        } else if (targetCat.flags) {
+          const hasFlags = targetCat.flags.some(f => it.flag === f || (Array.isArray(it.flags) && it.flags.includes(f)));
+          if (!hasFlags) return false;
+        }
+      }
+
+      if (!q) return true;
+
+      return (
+        (it.name && normalizeStr(it.name).includes(q)) ||
+        (it.originalName && normalizeStr(it.originalName).includes(q)) ||
+        (!isNaN(qNum) && searchTerm !== "" && it.collectionNo === qNum) ||
+        (bondCeMap.byCollectionNo[it.collectionNo]?.owner && normalizeStr(bondCeMap.byCollectionNo[it.collectionNo].owner).includes(q)) ||
+        (bondCeMap.byCollectionNo[it.collectionNo]?.owner_jp && normalizeStr(bondCeMap.byCollectionNo[it.collectionNo].owner_jp).includes(q)) ||
+        (bondCeMap.byChocoId[it.collectionNo]?.owner && normalizeStr(bondCeMap.byChocoId[it.collectionNo].owner).includes(q)) ||
+        (bondCeMap.byChocoId[it.collectionNo]?.owner_jp && normalizeStr(bondCeMap.byChocoId[it.collectionNo].owner_jp).includes(q))
+      );
+    });
+
     setResults(filtered.slice(0, 50));
   }, [query, data, bondCeMap]);
 
@@ -1319,6 +1086,7 @@ export default function App() {
                 dragSelectEnabled={dragSelectEnabled}
                 cachingMode={cachingMode}
                 owned={mapOwned(it.id)}
+                isOffering={mapOffering(it.id)}
                 isPulse={highlightId === it.id}
                 isAffected={isDragging && (mapOwned(it.id) !== !!collectionSnapshot.current[it.id])}
                 itemSize={itemSize}
@@ -1371,6 +1139,7 @@ export default function App() {
                   dragSelectEnabled={dragSelectEnabled}
                   cachingMode={cachingMode}
                   owned={mapOwned(it.id)}
+                  isOffering={mapOffering(it.id)}
                   isPulse={highlightId === it.id}
                   isAffected={isDragging && (mapOwned(it.id) !== !!collectionSnapshot.current[it.id])}
                   itemSize={itemSize}
@@ -1630,7 +1399,7 @@ export default function App() {
               }`}
             />
             {results.length > 0 && (
-              <div className={`absolute z-50 top-full left-0 right-0 rounded-xl shadow-lg max-h-96 overflow-auto mt-2 border ${
+              <div className={`absolute z-50 top-full left-0 right-0 rounded-xl shadow-lg max-h-[90vh] overflow-auto mt-2 border ${
                 theme === 'dark' ? 'bg-[#111a36] border-gray-700 text-white' : 'bg-white border-gray-250 text-black'
               }`}>
                 {results.map((item, idx) => {
@@ -1959,6 +1728,7 @@ export default function App() {
                                               dragSelectEnabled={dragSelectEnabled}
                                               cachingMode={cachingMode}
                                               owned={mapOwned(it.id)}
+                                              isOffering={mapOffering(it.id)}
                                               isPulse={highlightId === it.id}
                                               isAffected={isDragging && (mapOwned(it.id) !== !!collectionSnapshot.current[it.id])}
                                               itemSize={itemSize}
