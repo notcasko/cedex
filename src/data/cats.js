@@ -44,6 +44,7 @@ export const commemorativeSubcategories = [
   { label: "Over the Same Sky October", range: [2479, 2492] },
   { label: "Over the Same Sky November", range: [2495, 2508] },
   { label: "Part 2 Finale", range: [2512, 2532] },
+  { label: "11th Anni", range: [2620, 2679] },
 ];
 
 export const chocolateSubcategories = [
