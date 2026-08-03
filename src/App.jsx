@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand, Link as LinkIcon, ExternalLink, Check, CheckCheck, Search } from "lucide-react";
+import { Sun, Moon, ArrowUpNarrowWide, ArrowDownNarrowWide, ZoomIn, Folder, FolderMinus, FolderPlus, Router, Hand, Link as LinkIcon, ExternalLink, Check, CheckCheck, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import LZString from "lz-string";
 import bondCeJson from "./data/bond_ces.json";
 import localforage from "localforage";
@@ -35,8 +35,8 @@ const usePersistedState = (key, initial) => {
   return [state, setState];
 };
 
-const sizeClasses = { 48: 'w-12 h-12', 72: 'w-[72px] h-[72px]', 100: 'w-[100px] h-[100px]', };
-const fontClasses = { 48: 'text-[9px]', 72: 'text-[12px]', 100: 'text-sm', };
+const sizeClasses = { 48: 'w-12 h-12', 72: 'w-[72px] h-[72px]', 100: 'w-[100px] h-[100px]', 125: 'w-[125px] h-[125px]' };
+const fontClasses = { 48: 'text-[9px]', 72: 'text-[12px]', 100: 'text-sm', 125: 'text-base' };
 
 const CECell = React.memo(({
   item,
@@ -178,6 +178,7 @@ export default function App() {
   const [theme, setTheme] = usePersistedState("theme", "dark");
   const [lang, setLang] = usePersistedState("lang", getDefaultLang());
   const [active, setActive] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [collection, setCollection] = usePersistedState("collection", {});
   const [lookingFor, setLookingFor] = usePersistedState("lookingFor", {});
   const [offering, setOffering] = usePersistedState("offering", {});
@@ -245,6 +246,11 @@ export default function App() {
   }, []);
 
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+  // Re-open sidebar gracefully if they navigate to a new modal
+  useEffect(() => {
+    if (active) setSidebarOpen(true);
+  }, [active]);
 
   useEffect(() => {
     if (theme === "dark") {
@@ -1163,7 +1169,7 @@ export default function App() {
     })()
   );
 
-  const SmallList = ({ map, listName, expandAll, dataCollection }) => {
+  const SmallList = ({ map, listName, expandAll, dataCollection, sidebarClosed }) => {
     let ids = [];
     if (map === "ALL") {
       if (expandAll === "offering") ids = Object.keys(dataCollection).filter(k => dataCollection[k]);
@@ -1176,7 +1182,7 @@ export default function App() {
     return (
       <>
         <p className={`text-xs mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{ids.length} {i18n[lang].ui.itemsCount}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className={`grid grid-cols-1 ${sidebarClosed ? 'sm:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-1 lg:grid-cols-2'} gap-2.5`}>
           {ids.map(id => {
             const item = data.find(d => String(d.id) === String(id));
             if (!item) return null;
@@ -1507,87 +1513,118 @@ export default function App() {
       <AnimatePresence>
         {active && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/75 flex justify-center items-center z-50 p-2 sm:p-4" onClick={(e) => { if (e.target === e.currentTarget) { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); } }}>
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-2xl w-full max-w-7xl h-[90vh] max-h-[90vh] overflow-hidden flex flex-col md:flex-row ${theme === 'dark' ? 'bg-[#0a0f1d] text-white' : 'bg-white text-black'}`}>
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className={`rounded-2xl shadow-2xl w-[calc(100vw-32px)] md:w-[calc(100vw-144px)] max-w-none h-[90vh] max-h-[90vh] overflow-visible flex flex-col md:flex-row relative ${theme === 'dark' ? 'bg-[#0a0f1d] text-white' : 'bg-white text-black'}`}>
               
-              <div className={`w-full md:w-1/4 p-4 border-b md:border-b-0 md:border-r flex flex-col gap-3 overflow-y-auto sticky top-0 md:relative z-20 shrink-0 max-h-[45vh] md:max-h-full shadow-sm md:shadow-none ${
+              <div className={`relative w-full ${sidebarOpen ? 'md:w-1/4 md:flex' : 'md:hidden'} border-b md:border-b-0 md:border-r flex flex-col z-20 shrink-0 shadow-sm md:shadow-none ${
                 theme === 'dark' ? 'bg-[#111a36] border-gray-800 text-white' : 'bg-[#e2e8f0] border-gray-300 text-black'
               }`}>
-                <div className="flex flex-col gap-1">
-                  <h2 className={`text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{i18n[lang].categories[active.label] || active.label}</h2>
-                  {active.special !== "generate" && (
-                    <div className={`text-xs font-bold mt-0.5 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-400'}`}>
-                      {i18n[lang].ui.categoryProgress} {getCategoryProgress(active).owned}/{getCategoryProgress(active).total} ({getCategoryProgress(active).percentage}%)
-                    </div>
-                  )}
+                <div className="p-4 flex flex-col gap-3 overflow-y-auto sticky top-0 md:relative h-full max-h-[45vh] md:max-h-full">
+                  <div className="flex flex-col gap-1">
+                    <h2 className={`text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{i18n[lang].categories[active.label] || active.label}</h2>
+                    {active.special !== "generate" && (
+                      <div className={`text-xs font-bold mt-0.5 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-400'}`}>
+                        {i18n[lang].ui.categoryProgress} {getCategoryProgress(active).owned}/{getCategoryProgress(active).total} ({getCategoryProgress(active).percentage}%)
+                      </div>
+                    )}
+                  </div>
+
+                  {(active.label === "Bond CEs" ||
+                    active.label === "Chocolate" ||
+                    active.label === "Commemorative" ||
+                    active.label === "Event free" ||
+                    (active.raritySplit && active.special !== "generate")) && (
+                      <div className={`w-full p-1.5 rounded-xl flex items-center justify-around shadow-sm border my-1 ${
+                        theme === 'dark' ? 'bg-[#0a0f1d] border-gray-800' : 'bg-white border-gray-200'
+                      }`}>
+                        <button onClick={() => setSortAsc((prev) => !prev)} className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`} title={sortAsc ? i18n[lang].ui.sortDescending : i18n[lang].ui.sortAscending}>
+                          {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
+                        </button>
+                        <button
+                          onClick={() => setFilterMode(f => f === 'all' ? 'missing' : f === 'missing' ? 'completed' : 'all')}
+                          className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`}
+                          title={i18n[lang].ui.filterItems}
+                        >
+                          {filterMode === 'all' ? <Folder size={20} /> : filterMode === 'missing' ? <FolderMinus size={20} /> : <FolderPlus size={20} />}
+                        </button>
+                        <button
+                          onClick={() => setItemSize(s => s === 72 ? 100 : s === 100 ? 125 : s === 125 ? 48 : 72)}
+                          className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`}
+                          title={i18n[lang].ui.changeItemSize}
+                        >
+                          <ZoomIn size={20} />
+                        </button>
+                      </div>
+                    )
+                  }
+
+                  <div className="grid grid-cols-2 md:flex md:flex-col gap-2 mt-1">
+                    {active.special !== "generate" && !isViewingShared && (
+                      <>
+                        <button className="px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition shadow-xs" onClick={() => markAll(getItems(active), true)}>{i18n[lang].ui.markAllHave}</button>
+                        <button className="px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-yellow-600 hover:bg-yellow-500 text-white transition shadow-xs" onClick={() => markAll(getItems(active), false)}>{i18n[lang].ui.markAllDontHave}</button>
+                        <button className={`px-3 py-2 text-xs md:text-sm font-semibold rounded-xl border transition shadow-xs ${selectionMode === "looking" ? "bg-blue-600 border-blue-600 text-white" : theme === 'dark' ? "bg-[#0a0f1d] text-white border-gray-700 hover:bg-[#111a36]" : "bg-white text-black border-gray-300 hover:bg-gray-50"}`} onClick={() => setSelectionMode(s => s === "looking" ? "none" : "looking")}>{i18n[lang].ui.lookingFor}</button>
+                        <button className={`px-3 py-2 text-xs md:text-sm font-semibold rounded-xl border transition shadow-xs ${selectionMode === "offering" ? "bg-blue-600 border-blue-600 text-white" : theme === 'dark' ? "bg-[#0a0f1d] text-white border-gray-700 hover:bg-[#111a36]" : "bg-white text-black border-gray-300 hover:bg-gray-50"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>{i18n[lang].ui.offering}</button>
+                      </>
+                    )}
+                    {active.special !== "generate" && showUndo && (
+                      <button
+                        className="col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-pink-600 text-white hover:bg-pink-500 transition shadow-xs"
+                        onClick={() => {
+                          if (undoState) {
+                            setCollection(prev => ({ ...prev, ...undoState }));
+                            setUndoState(null);
+                            setShowUndo(false);
+                          }
+                        }}
+                      >
+                        {i18n[lang].ui.undoChange}
+                      </button>
+                    )}
+                    {active.special === "generate" && lastId && !isViewingShared && (
+                      <button className={`col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl transition shadow-xs ${theme === 'dark' ? 'bg-purple-700 text-white hover:bg-purple-600' : 'bg-purple-600 text-white hover:bg-purple-500'}`} onClick={() => setGenUserId(lastId)}>{i18n[lang].ui.pasteLastId} ({lastId})</button>
+                    )}
+                    <button className="col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-red-600 hover:bg-red-500 text-white transition shadow-xs" onClick={() => { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); }}>{i18n[lang].ui.close}</button>
+                  </div>
                 </div>
 
-                {(active.label === "Bond CEs" ||
-                  active.label === "Chocolate" ||
-                  active.label === "Commemorative" ||
-                  active.label === "Event free" ||
-                  (active.raritySplit && active.special !== "generate")) && (
-                    <div className={`w-full p-1.5 rounded-xl flex items-center justify-around shadow-sm border my-1 ${
-                      theme === 'dark' ? 'bg-[#0a0f1d] border-gray-800' : 'bg-white border-gray-200'
-                    }`}>
-                      <button onClick={() => setSortAsc((prev) => !prev)} className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`} title={sortAsc ? i18n[lang].ui.sortDescending : i18n[lang].ui.sortAscending}>
-                        {sortAsc ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
-                      </button>
-                      <button
-                        onClick={() => setFilterMode(f => f === 'all' ? 'missing' : f === 'missing' ? 'completed' : 'all')}
-                        className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`}
-                        title={i18n[lang].ui.filterItems}
-                      >
-                        {filterMode === 'all' ? <Folder size={20} /> : filterMode === 'missing' ? <FolderMinus size={20} /> : <FolderPlus size={20} />}
-                      </button>
-                      <button
-                        onClick={() => setItemSize(s => s === 72 ? 100 : s === 100 ? 48 : 72)}
-                        className={`p-2 rounded-lg transition ${theme === 'dark' ? 'text-gray-300 hover:bg-[#111a36]' : 'text-gray-700 hover:bg-gray-200'}`}
-                        title={i18n[lang].ui.changeItemSize}
-                      >
-                        <ZoomIn size={20} />
-                      </button>
-                    </div>
-                  )
-                }
-
-                <div className="grid grid-cols-2 md:flex md:flex-col gap-2 mt-1">
-                  {active.special !== "generate" && !isViewingShared && (
-                    <>
-                      <button className="px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition shadow-xs" onClick={() => markAll(getItems(active), true)}>{i18n[lang].ui.markAllHave}</button>
-                      <button className="px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-yellow-600 hover:bg-yellow-500 text-white transition shadow-xs" onClick={() => markAll(getItems(active), false)}>{i18n[lang].ui.markAllDontHave}</button>
-                      <button className={`px-3 py-2 text-xs md:text-sm font-semibold rounded-xl border transition shadow-xs ${selectionMode === "looking" ? "bg-blue-600 border-blue-600 text-white" : theme === 'dark' ? "bg-[#0a0f1d] text-white border-gray-700 hover:bg-[#111a36]" : "bg-white text-black border-gray-300 hover:bg-gray-50"}`} onClick={() => setSelectionMode(s => s === "looking" ? "none" : "looking")}>{i18n[lang].ui.lookingFor}</button>
-                      <button className={`px-3 py-2 text-xs md:text-sm font-semibold rounded-xl border transition shadow-xs ${selectionMode === "offering" ? "bg-blue-600 border-blue-600 text-white" : theme === 'dark' ? "bg-[#0a0f1d] text-white border-gray-700 hover:bg-[#111a36]" : "bg-white text-black border-gray-300 hover:bg-gray-50"}`} onClick={() => setSelectionMode(s => s === "offering" ? "none" : "offering")}>{i18n[lang].ui.offering}</button>
-                    </>
-                  )}
-                  {active.special !== "generate" && showUndo && (
-                    <button
-                      className="col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-pink-600 text-white hover:bg-pink-500 transition shadow-xs"
-                      onClick={() => {
-                        if (undoState) {
-                          setCollection(prev => ({ ...prev, ...undoState }));
-                          setUndoState(null);
-                          setShowUndo(false);
-                        }
-                      }}
-                    >
-                      {i18n[lang].ui.undoChange}
-                    </button>
-                  )}
-                  {active.special === "generate" && lastId && !isViewingShared && (
-                    <button className={`col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl transition shadow-xs ${theme === 'dark' ? 'bg-purple-700 text-white hover:bg-purple-600' : 'bg-purple-600 text-white hover:bg-purple-500'}`} onClick={() => setGenUserId(lastId)}>{i18n[lang].ui.pasteLastId} ({lastId})</button>
-                  )}
-                  <button className="col-span-2 md:col-span-1 px-3 py-2 text-xs md:text-sm font-semibold rounded-xl bg-red-600 hover:bg-red-500 text-white transition shadow-xs" onClick={() => { setActive(null); setSelectionMode("none"); setShowUndo(false); setUndoState(null); setFilterMode("all"); }}>{i18n[lang].ui.close}</button>
-                </div>
+                {/* Hide sidebar button (Positioned neatly inside the sidebar edge) */}
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className={`hidden md:flex absolute right-0 bottom-[120px] w-10 h-10 rounded-l-xl rounded-r-none border-r-0 items-center justify-center cursor-pointer z-30 transition border shadow-md ${
+                    theme === 'dark'
+                      ? 'bg-[#0a0f1d] border-gray-700 text-white hover:bg-gray-800'
+                      : 'bg-white border-gray-300 text-black hover:bg-gray-100'
+                  }`}
+                  title="Collapse Sidebar"
+                >
+                  <ChevronLeft size={20} />
+                </button>
               </div>
+
+              {/* Restore sidebar button (Positioned neatly inside the modal left edge) */}
+              {!sidebarOpen && (
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className={`hidden md:flex absolute left-0 bottom-[150px] w-10 h-10 rounded-r-none rounded-l-xl items-center justify-center cursor-pointer z-30 transition shadow-md border border-box ${
+                    theme === 'dark'
+                      ? 'bg-[#0a0f1d] border-gray-700 text-white hover:bg-gray-800'
+                      : 'bg-white border-gray-300 text-black hover:bg-gray-100'
+                  }`}
+                  style={{ transform: 'translateX(calc(-100%))' }}
+                  title="Expand Sidebar"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              )}
 
               {active.special === "generate" ? (
                 <div className={`flex-1 p-6 overflow-y-auto ${theme === 'dark' ? 'bg-[#0a0f1d] text-white' : 'bg-white text-black'}`}>
                   {isViewingShared ? (
                     <>
                       <h3 className="text-lg font-bold mb-2">{i18n[lang].ui.previewLooking} {viewLookingFor === "ALL" ? `(${data.filter(d => !viewCollection[d.id]).length} ${i18n[lang].ui.itemsCount})` : ""}</h3>
-                      <SmallList map={viewLookingFor} listName="looking" expandAll="looking" dataCollection={viewCollection} />
+                      <SmallList map={viewLookingFor} listName="looking" expandAll="looking" dataCollection={viewCollection} sidebarClosed={!sidebarOpen} />
                       <h3 className="text-lg font-bold mt-4 mb-2">{i18n[lang].ui.previewOffering} {viewOffering === "ALL" ? `(${Object.keys(viewCollection).filter(k => viewCollection[k]).length} ${i18n[lang].ui.itemsCount})` : ""}</h3>
-                      <SmallList map={viewOffering} listName="offering" expandAll="offering" dataCollection={viewCollection} />
+                      <SmallList map={viewOffering} listName="offering" expandAll="offering" dataCollection={viewCollection} sidebarClosed={!sidebarOpen} />
                       <div className={`mt-6 font-semibold border-t pt-4 ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>{i18n[lang].ui.overallProgress} {getProgress().owned}/{getProgress().total}</div>
                       <p className="mt-2 text-sm text-gray-400">{i18n[lang].ui.viewingOnly}</p>
                     </>
@@ -1635,11 +1672,11 @@ export default function App() {
                       <div className="mt-6 space-y-6">
                         <div>
                           <h4 className={`font-bold text-lg mb-2 border-b pb-1 ${theme === 'dark' ? 'text-white border-gray-800' : 'text-gray-900 border-gray-200'}`}>{i18n[lang].ui.previewLooking} {lookingAll ? `(${data.filter(d => !collection[d.id]).length} ${i18n[lang].ui.itemsCount})` : ""}</h4>
-                          <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" dataCollection={collection} />
+                          <SmallList map={lookingAll ? "ALL" : lookingFor} listName="looking" expandAll="looking" dataCollection={collection} sidebarClosed={!sidebarOpen} />
                         </div>
                         <div>
                           <h4 className={`font-bold text-lg mb-2 border-b pb-1 ${theme === 'dark' ? 'text-white border-gray-800' : 'text-gray-900 border-gray-200'}`}>{i18n[lang].ui.previewOffering} {offerAll ? `(${Object.keys(collection).filter(k => collection[k]).length} ${i18n[lang].ui.itemsCount})` : ""}</h4>
-                          <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" dataCollection={collection} />
+                          <SmallList map={offerAll ? "ALL" : offering} listName="offering" expandAll="offering" dataCollection={collection} sidebarClosed={!sidebarOpen} />
                         </div>
                       </div>
                       <div className={`mt-6 font-semibold border-t pt-4 ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>{i18n[lang].ui.overallProgress} {getProgress().owned}/{getProgress().total}</div>
